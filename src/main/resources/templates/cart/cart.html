@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6" xmlns="http://www.w3.org/1999/html">
+<head th:replace = "fragments :: page_head">
+<body>
+<div th:replace="navigation :: nav"></div>
+
+<div class="container-fluid" >
+    <div th:if="${message != null}"
+         class="alert alert-success text-center">[[${message}]]
+    </div>
+    <div class="text-center">
+        <h2>Giỏ hàng của bạn </h2>
+    </div>
+    <div th:if = "${gioHang == null or gioHang.isEmpty()}" class="h1 text-center">
+        Hình như bạn chưa có gì trong giỏ hàng cả ?
+    </div>
+    <div class="row m-1" >
+        <div class="col-8">
+            <th:block th:each = "item,status : ${gioHang}" class = "cart" >
+                <div class="row border rounded p-1 cart" th:with = "sanpham = ${item.sanPham}" th:id="'row' + ${status.count}">
+                    <div class="col-1">
+                        <div class="divCount">[[${status.count}]]</div>
+                        <div>
+                            <a class="fa fa-trash icon-dark linkRemove" th:rowNumber="${status.count}"
+                               th:href="@{'/cart/remove/' + ${sanpham.id}}"></a>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <img th:src="@{${sanpham.photosImagePath}}" class="img-fluid" />
+                    </div>
+                    <div class="col-6">
+                        <div>
+                            <a th:href="@{'/product_details/' + ${sanpham.id}}" target="_blank"
+                               th:title="${sanpham.ten}">
+                                <b>[[${sanpham.ten}]]</b>
+                            </a>
+                        </div>
+
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item">
+                                    <form th:action = "@{'/cart/updateMinus/' + ${sanpham.id}}" method="post" class="form-update">
+                                      <button type="submit"  class="page-link linkMinus" th:pid="${sanpham.id}"><b>-</b></button>
+                                    </form>
+                                </li>
+                                <li class="page-item">
+                                    <input type="text" th:value="${item.soLuong}" th:id="'quantity' + ${sanpham.id}" th:name = "quantity"
+                                           onkeydown="return false;"
+                                           class="form-control text-center" style="width: 55px" />
+                                </li>
+                                <li class="page-item">
+                                       <form th:action = "@{'/cart/updatePlus/' + ${sanpham.id}}" method="post" class="form-update">
+                                       <button  type="submit" class="page-link linkPlus" th:pid="${sanpham.id}" ><b>+</b></button>
+                                       </form>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div>
+                            <span>X&nbsp;</span>
+                            <div>[[${sanpham.gia}]] đồng </div>
+                        </div>
+                        <div>
+                            <span>=&nbsp;</span>
+                            <span th:id="'subtotal' + ${sanpham.id}" class="h4 subtotal">[[${item.tongGia}]] đồng</span>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+        <div class="col-4" th:if = "${gioHang != null and !gioHang.isEmpty()}" >
+            <div>
+
+                   <span class="h3">Tổng tiền:</span>
+            </div>
+            <div class="mt-2">
+                <span class = "h4">[[${tongTien}]] đồng </span>
+            </div>
+            <div class="mt-2">
+                <a th:href = "@{/hoadon/save}">
+                <button class="btn btn-danger p-3 mt-2">Thanh toán</button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+</script>
+</body>
+
+</html>

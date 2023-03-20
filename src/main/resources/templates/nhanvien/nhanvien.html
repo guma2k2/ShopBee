@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"> 
+<head th:replace = "fragments :: page_head"/>
+<body>
+	<div th:replace = "navigation :: nav"></div>
+
+	<div class="container-fluid">
+		<h2>Quan ly Nhan Vien</h2>
+		<a class = "btn btn-primary" th:href="@{/nhanvien/new}">
+			<i class="fa fa-plus"></i>
+		</a>
+		
+		<div>
+			<form th:action="@{/nhanvien/page/1}" class="form-inline m-3">
+				<input type="hidden" name="sortField" th:value="${sortField}" /> <input
+					type="hidden" name="sortDir" th:value="${sortDir}" />
+
+				Filter:&nbsp; <input type="search" name="keyword"
+					th:value="${keyword}" class="form-control" required />
+				&nbsp;&nbsp;
+				<button type="submit" class="btn btn-primary">
+					<i class="fa fa-search"></i>
+				</button>
+				&nbsp;&nbsp;
+				<button type="button" class="btn btn-secondary"
+					onclick="clearFilter()">
+					<i class="fa fa-eraser"></i>
+				</button>
+			</form>
+
+			<div th:if="${message != null}"
+				class="alert alert-success text-center">[[${message}]]</div>
+		</div>
+		<table class="table table-bordered table-striped table-hover">
+			<thead class="thead-light">
+				<tr>
+					<th th:replace = "fragments :: column-link('id','Mã nhân viên' , '/nhanvien/page/')">
+					</th>
+					<th>Ảnh đại diện</th>
+					<th th:replace = "fragments :: column-link('ho' , 'Họ' ,'/nhanvien/page/')">
+					</th>
+					<th th:replace = "fragments :: column-link('ten' , 'Tên','/nhanvien/page/')">
+					</th>
+					<th class="text-black">Email</th>
+					<th class="text-black">Vai tro</th>
+					<th><a th:if="${sortField != 'trangThai'}" class = "icon-dark"
+						th:href="@{'/nhanvien/page/' + ${currentPage} +'?sortField=trangThai&sortDir=' + ${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}">Trang
+							Thai</a> <a th:if="${sortField == 'trangThai'}" class = "icon-dark"
+						th:href="@{'/nhanvien/page/' + ${currentPage} +'?sortField=trangThai&sortDir=' + ${reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">Trang
+							Thai</a> <span th:if="${sortField == 'trangThai'}"
+						th:class="${sortDir == 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down'}"></span>
+					</th>
+					<th></th>
+				</tr>
+				<tr>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="nv : ${listNhanVien}">
+					<td>[[${nv.id}]]</td>
+					<td>
+						<span th:if="${nv.photos == null}"
+						class="fa fa-portrait fa-3x">
+
+						</span>
+						<img class="image-profile"
+						th:if="${nv.photos != null}" th:src="@{${nv.photosImagePath}}">
+					</td>
+					<td>[[${nv.ho}]]</td>
+					<td>[[${nv.ten}]]</td>
+					<td>[[${nv.email}]]</td>
+					<td>[[${nv.roles}]]</td>
+					<td><a th:if="${nv.trangThai == true}"
+						class="fa fa-check-circle fa-2x icon-green"
+						th:href="@{'/nhanvien/' + ${nv.id} + '/enabled/false'}"></a> <a
+						th:if="${nv.trangThai != true}"
+						class="fa fa-check-circle fa-2x icon-silver "
+						th:href="@{'/nhanvien/' + ${nv.id} + '/enabled/true'}"></a></td>
+					<td><a class="fa fa-edit fa-2x mr-2"
+						th:href="@{'/nhanvien/edit/' +${nv.id}}"></a> &nbsp; <a
+						class="fa fa-trash fa-2x link-delete"
+						th:href="@{'/nhanvien/delete/' + ${nv.id}}" th:userId="${nv.id}"></a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div th:replace = "fragments :: pagination('nhan vien' , '/nhanvien/page/')"></div>
+	
+	<div class="modal fade text-center" id="confirmModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modalTitle">Delete Information</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<div class="modal-body">
+					<span id="confirmText"></span>
+				</div>
+
+				<div class="modal-footer">
+					<a href="" class="btn btn-success" id="YesButton">Yes</a>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(
+				function() {
+					$(".link-delete")
+							.on(
+									'click',
+									function(e) {
+										e.preventDefault()
+										link = $(this);
+										userId = link.attr("userId");
+										$("#YesButton").attr("href",
+												link.attr("href"));
+										$("#confirmText").text(
+												"Are u want to delete the user id  "
+														+ userId + "?");
+										$("#confirmModal").modal();
+									})
+				});
+		function clearFilter() {
+			window.location = "[[@{/nhanvien}]]";
+		}
+	</script>
+</body>
+</html>

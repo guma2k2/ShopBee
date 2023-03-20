@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "fragments :: page_head">
+<body>
+<div th:replace="navigation :: nav"></div>
+
+   <div class="container-fluid">
+    <div class="main-container">
+        <div class="main-title">
+            <h2>DASHBOARD</h2>
+        </div>
+        <div class="main-cards">
+            <div class="card_doanhthu">
+                <div class="card-inner">
+                    <h3>Sản phẩm</h3>
+                    <span class="material-icons-outlined">inventory_2</span>
+                </div>
+                <h1>249</h1>
+            </div>
+
+            <div class="card_doanhthu">
+                <div class="card-inner">
+                    <h3>Số loại sản phẩm</h3>
+                    <span class="material-icons-outlined">category</span>
+                </div>
+                <h1>25</h1>
+            </div>
+
+            <div class="card_doanhthu">
+                <div class="card-inner">
+                    <h3>Khách hàng</h3>
+                    <span class="material-icons-outlined">groups</span>
+                </div>
+                <h1>1500</h1>
+            </div>
+
+            <div class="card_doanhthu">
+                <div class="card-inner">
+                    <h3>Doanh thu</h3>
+                    <span class="material-icons-outlined">notification_important</span>
+                </div>
+                <h1>56000000 đồng </h1>
+            </div>
+
+        </div>
+        <input type="hidden" />
+        <form th:action = "@{/doanhthu/search}" method="post" >
+        <div class = "row seach_panel">
+            <div class="col-1">
+                <label>Tu ngay: </label>
+            </div>
+            <div class="col-3">
+                <input class="input_search_date" type="date" name="from_date" th:value="${from_date}" />
+            </div>
+            <div class="col-1">
+                <label>Tu ngay: </label>
+            </div>
+            <div class="col-3">
+                <input class="input_search_date" type="date" name = "to_date" th:value="${to_date}" />
+            </div>
+            <div class="col-2">
+               <div type="submit" class="btn btn-primary">Search</div>
+            </div>
+        </div>
+        </form>
+        <div class="main-title">
+            <h2>Top 5 sản phẩm bán chạy nhất</h2>
+        </div>
+</div>
+</div>
+</body>
+</html>

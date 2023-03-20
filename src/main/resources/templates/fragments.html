@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment = "page_head" th:remove="${remove}">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0">
+<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+<title>My shop</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/common.js}" ></script>
+	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" ></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+	<a th:fragment="page_link(pageNum , label ,moduleURL)" class="page-link"
+		th:href="@{${moduleURL} + ${pageNum} +'?sortField=' + ${sortField}+ '&sortDir='+${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${label}]]</a>
+	<th th:fragment="column-link(fieldName , columnLabel ,moduleURL)">
+		<a class="icon-dark"
+		th:href="@{ ${moduleURL} + ${currentPage}  + '?sortField=' + ${fieldName} +'&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${columnLabel}]]</a>
+		<span th:if="${sortField == fieldName}" class="icon-dark"
+		th:class="${sortDir == 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down'}"></span>
+	</th>
+	<div th:fragment="pagination(entityName , moduleURL)" th:remove="tag">
+		<div th:if="${totalItems > 0}" class="text-center m-1">
+			<span>[[${start}]] to [[${end}]] of [[${totalPages}]]</span>
+		</div>
+		<div th:unless="${totalItems > 0}" class="text-center m-1">
+			<span>Khong co [[${entityName}]] nao de tim kiem</span>
+		</div>
+		<div th:if="${totalPages > 1}">
+			<nav aria-label="Page navigation ">
+				<ul class="pagination justify-content-center">
+					<li
+						th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+						<a th:replace="fragments :: page_link(1, 'First' , ${moduleURL})"></a>
+					</li>
+					<li
+						th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+						<a
+						th:replace="fragments :: page_link(${currentPage - 1}, 'Previous', ${moduleURL})"></a>
+					</li>
+					<li
+						th:class="${currentPage != i ? 'page-item': 'page-item active'}"
+						th:each="i : ${#numbers.sequence(1, totalPages)}"><a
+						th:replace="fragments :: page_link(${i}, ${i} , ${moduleURL})"></a></li>
+
+					<li
+						th:class="${currentPage < totalPages  ? 'page-item' : 'page-item disabled'}">
+						<a th:replace="fragments :: page_link(${currentPage + 1}, 'Next', ${moduleURL})"></a>
+					</li>
+					<li
+						th:class="${currentPage < totalPages  ? 'page-item' : 'page-item disabled'}">
+						<a th:replace="fragments :: page_link(${totalPages}, 'Last', ${moduleURL})"></a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+
+	</div>
+	<div th:fragment = "quantityControl(sanphamId , quantity)"  >
+		<nav>
+			<ul class="pagination">
+				<li class="page-item">
+					<a class="page-link linkMinus" th:pid="${sanphamId}" href=""><b>-</b></a>
+				</li>
+				<li class="page-item">
+					<input type="text" th:value="${quantity}" th:id="'quantity' + ${sanphamId}" th:name = "quantity"
+						   onkeydown="return false;"
+						   class="form-control text-center" style="width: 55px" />
+				</li>
+				<li class="page-item">
+					<a class="page-link linkPlus" th:pid="${sanphamId}" href=""><b>+</b></a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+<div th:fragment = "navbar">
+	<header>
+		<a class="logo" href="#">
+			<img th:src="@{/images/Spring_logo.png}" alt="logo" class="logo" >
+		</a>
+		<nav>
+			<ul class="nav__links">
+				<li><a href="#">Services</a></li>
+				<li><a href="#">Projects</a></li>
+				<li><a href="#">About</a></li>
+				<li>
+					<a th:href = "@{/cart}">
+						<i class="fa fa-solid fa-shopping-cart fa-2x"></i>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<a class="cta" href="#">Login</a>
+	</header>
+</div>
+</body>
+</html>

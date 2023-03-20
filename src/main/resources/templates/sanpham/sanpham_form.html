@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="fragments :: page_head"/>
+<body>
+
+<div th:replace = "navigation :: nav"></div>
+<div>
+    <h2>Quản lý loại sản phẩm > [[${pageTitle}]]</h2>
+</div>
+<div class = "container-fluid">
+    <form th:action = "@{/sanpham/save}" method = "POST"
+          enctype="multipart/form-data" th:object = "${sanpham}"
+          style="max-width: 700px; margin: 0 auto"
+          onsubmit = "return checkUnique(this);">
+        <input type="hidden" th:field="*{id}" />
+        <div class="border border-secondary rounded p-3">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">Tổng quan</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#description" role="tab">Mô tả</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active p-3" id="overview" role="tabpanel">
+                    <div th:replace="sanpham/sanpham_tongquan :: content"></div>
+                </div>
+                <div class="tab-pane" id="description" role="tabpanel">
+                    <div th:replace="sanpham/sanpham_mota :: content"></div>
+                </div>
+            </div>
+            <div class = "addNv text-center">
+                <input type ="submit" class = "btn btn-primary" value = "Save" />
+                <input type="button" class = "btn btn-secondary" value = "Cancel" id = "buttonCancel"/>
+            </div>
+        </div>
+    </form>
+
+    <div class="modal fade text-center" id="modalDialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Warning</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <span id="modalBody"></span>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src = "@{/js/common_form.js}"></script>
+<script type="text/javascript">
+   moduleURL = "[[@{/sanpham}]]";
+   function checkUnique(form){
+       url = "[[@{/sanpham/checkUnique}]]";
+       loaiId = $("#id").val();
+       tenLoai = $("#ten").val();
+       csrfValue = $("input[name = '_csrf']").val();
+       params = { id : loaiId , ten : tenLoai , _csrf : csrfValue};
+       $.post(url , params, function(res) {
+            if(res == "SUCCESSFUL"){
+               form.submit();
+            }else if(res == "DUPDICATED"){
+               showModalDialog("Error" , "Vui lòng tên khác !!");
+            }else{
+                showModalDialog("Error" , "Error from server");
+            }
+       }).fail(function(){
+		   showModalDialog("Error" , "Could not connect to the server" );
+	   });
+	   return false ;
+   }
+   function showModalDialog(title , message){
+	   $("#modalTitle").text(title);
+	   $("#modalBody").text(message);
+	   $("#modalDialog").modal();
+   }
+</script>
+</body>
+</html>

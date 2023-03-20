@@ -1,0 +1,276 @@
+*{
+  font-family: 'Open Sans', sans-serif;
+}
+.navbar {
+	height : 60px;
+}
+.navbar img{
+	width: 90px;
+	height: 90px;
+	object-fit:cover;
+}
+.navbar-nav , .nav-item{
+	margin-left : 40px;
+	
+}
+.navbar-light .navbar-nav .nav-link {
+    color: black;
+}
+table , h2{
+	margin-top : 30px;
+}
+
+h2{
+	margin-bottom: 30px;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    margin-right: 20px;
+    width: 90px;
+}
+.btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    width: 90px;
+    border-color: #6c757d;
+}
+.image-profile{
+	width : 70px;
+	height: 70px;
+	border-radius:50%;
+	object-fit:cover;
+}
+.image-SP{
+  width : 70px ;
+  height : 70px;
+  border-radius : 15% ;
+  object-fit: cover;
+}
+.nav-user{
+  display :flex;
+  align-items: center ;
+  justify-content: space-between;
+}
+.containerSp{
+    padding: 30px;
+    color: black;
+    display: flex ;
+    gap: 10px;
+}
+.cards{
+    flex: 7 ;
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -30px;
+}
+.card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    width: calc(25% - 30px);
+    background-color: white;
+    margin-left: 30px;
+    margin-bottom: 20px;
+    height: 450px;
+    cursor: pointer;
+    transform: translateZ(0);
+    transition: transform 0.25s ease-out;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+.card-img{
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.content{
+    border-top-color: black;
+    margin-top: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex:1;
+}
+.left_content{
+   flex : 2 ;
+}
+.categories {
+  display:flex;
+  gap: 10px ;
+  flex-direction: column;
+}
+.category {
+  cursor :pointer ;
+}
+
+
+*.icon-white {color: white}
+*.icon-silver {color: silver}
+*.icon-green {color: green}
+*.icon-dark {color: gray}
+
+.product{
+    margin: 30px;
+    display: flex;
+    gap:30px;
+    height: 500px ;
+    text-decoration: none;
+}
+.product_image{
+    width: 50%;
+    border: 1px solid black;
+}
+.product_details{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.product_name{
+   font-size: 50px;
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+.product_price{
+    margin-bottom: 20px;
+}
+.product_detail{
+  font-size: 40px;
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+.product_button{
+    width: 120px;
+    height: 50px;
+    float: right;
+    font-weight: 600;
+    font-size : 20px
+    cursor: pointer;
+    color: white;
+    background-color:black;
+    border-radius: 15px;
+}
+.product_button:hover{
+    background-color: white;
+    color: black;
+}
+.link_product{
+   color: black;
+}
+.link_product:hover { text-decoration: none; }
+.link_product:link {
+    text-decoration: none;
+ }
+.link_product:active { text-decoration: none; }
+
+.navigation_product{
+  padding: 20px 30px;
+}
+.card-message{
+   text-align: center;
+}
+.add2cart{
+   display:flex;
+   flex-direction: column;
+}
+.cart{
+   margin-bottom : 15px;
+   width: 730px;
+   height: 205px;
+}
+.cart_sum{
+  margin-bottom : 20px
+}
+
+-------------------------------------Doanh thu---------------------------------------
+.main-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px
+}
+.main-cards{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom:20px;
+
+}
+.card_doanhthu{
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  background-color:rgba(0,0,0,.03);
+  width: 300px;
+  margin-bottom: 30px;
+  box-shadow: 5px 10px #888888;
+}
+
+header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 30px 10%;
+  background-color: #24252a;
+}
+.logo{
+  object-fit:cover ;
+  width : 50px;
+  height : 50px;
+  border-radius: 50%;
+  flex : 1;
+}
+
+.logo {
+  margin-right: auto;
+}
+
+.nav__links {
+  list-style: none;
+  display: flex;
+}
+
+.nav__links a,
+.cta,
+.overlay__content a {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  color: #edf0f1;
+  text-decoration: none;
+}
+
+.nav__links li {
+  padding: 0px 20px;
+}
+
+.nav__links li a {
+  transition: all 0.3s ease 0s;
+}
+
+.nav__links li a:hover {
+  color: #0088a9;
+}
+
+.cta {
+  margin-left: 20px;
+  padding: 9px 25px;
+  background-color: rgba(0, 136, 169, 1);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease 0s;
+}
+
+.cta:hover {
+  background-color: rgba(0, 136, 169, 0.8);
+}
+.input_search_date{
+   width:200px;
+}
+.seach_panel{
+}

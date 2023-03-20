@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "fragments :: page_head"/>
+<body>
+<div th:replace = "navigation :: nav"></div>
+
+<div class="container-fluid">
+    <h2>Quản lý hóa đơn</h2>
+    <a class = "btn btn-primary" th:href="@{/nhanvien/new}">
+        <i class="fa fa-plus"></i>
+    </a>
+
+    <div>
+        <form th:action="@{/hoadon/page/1}" class="form-inline m-3">
+            <input type="hidden" name="sortField" th:value="${sortField}" /> <input
+                type="hidden" name="sortDir" th:value="${sortDir}" />
+
+            Filter:&nbsp; <input type="search" name="keyword"
+                                 th:value="${keyword}" class="form-control" required />
+            &nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary"
+                    onclick="clearFilter()">
+                <i class="fa fa-eraser"></i>
+            </button>
+        </form>
+
+        <div th:if="${message != null}"
+             class="alert alert-success text-center">[[${message}]]</div>
+    </div>
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-light">
+        <tr>
+            <th>Mã hóa đơn</th>
+            <th>Mã nhân viên</th>
+            <th>Ngày tạo</th>
+            <th>Tổng tiền</th>
+            <th>Hành động</th>
+        </tr>
+        <tr>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="hd : ${listHd}">
+            <td>[[${hd.id}]]</td>
+            <td>[[${hd.nhanVien.id}]]</td>
+            <td>[[${hd.ngayTao}]]</td>
+            <td>
+                [[${#numbers.formatInteger(hd.thanhTien,3,'POINT')}]] đồng
+            </td>
+            <td>
+                <a class="fa fa-file fa-solid fa-2x link-detail"
+                   th:href="@{'/hoadon/view/' +${hd.id}}">
+                </a> &nbsp;
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="detailModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<!--<div th:replace = "fragments :: pagination('nhan vien' , '/nhanvien/page/')"></div>-->
+
+<script type="text/javascript">
+$(document).ready(function(){
+   $(".link-detail").on('click' , function(e){
+      e.preventDefault();
+      linkDetail = $(this).attr("href");
+      $("#detailModal").modal("show").find(".modal-content").load(linkDetail);
+   });
+})
+</script>
+</body>
+</html>
