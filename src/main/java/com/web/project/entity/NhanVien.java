@@ -44,40 +44,7 @@ public class NhanVien{
 
 
 
-	public NhanVien() {
-	}
 
-	public NhanVien(String ho, String ten, String sdt, String diaChi, boolean trangThai, String email,
-			String password) {
-		this.ho = ho;
-		this.ten = ten;
-		this.sdt = sdt;
-		this.DiaChi = diaChi;
-		this.trangThai = trangThai;
-		this.email = email;
-		this.password = password;
-	}
-
-
-
-
-
-	public NhanVien(Integer id, String ho, String ten, String sdt, String email) {
-		super();
-		this.id = id;
-		this.ho = ho;
-		this.ten = ten;
-		this.sdt = sdt;
-		this.email = email;
-	}
-
-	public NhanVien( String ho, String ten, String sdt, String email) {
-		this.ho = ho;
-		this.ten = ten;
-		this.sdt = sdt;
-		this.email = email;
-		
-	}
 
 	@Column(name = "dia_chi")
 	private String DiaChi;
@@ -109,6 +76,38 @@ public class NhanVien{
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 			)
 	private Set<Role> roles = new HashSet<>();
+
+
+	public NhanVien() {
+	}
+
+	public NhanVien(String ho, String ten, String sdt, String diaChi, boolean trangThai, String email,
+					String password) {
+		this.ho = ho;
+		this.ten = ten;
+		this.sdt = sdt;
+		this.DiaChi = diaChi;
+		this.trangThai = trangThai;
+		this.email = email;
+		this.password = password;
+	}
+
+	public NhanVien(Integer id, String ho, String ten, String sdt, String email) {
+		super();
+		this.id = id;
+		this.ho = ho;
+		this.ten = ten;
+		this.sdt = sdt;
+		this.email = email;
+	}
+
+	public NhanVien( String ho, String ten, String sdt, String email) {
+		this.ho = ho;
+		this.ten = ten;
+		this.sdt = sdt;
+		this.email = email;
+
+	}
 
 	public Integer getId() {
 		return id;
