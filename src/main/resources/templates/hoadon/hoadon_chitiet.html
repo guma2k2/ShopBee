@@ -2,7 +2,7 @@
   <h4 class="modal-title">Chi tiết hóa đơn</h4>
   <button type="button" class="close" data-dismiss="modal">&times;</button>
 </div>
-<div>
+<div class="modal-content" >
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Mã người lập:</label>
     <div class="col-sm-10">
@@ -16,21 +16,28 @@
     </div>
   </div>
   <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Cụ thể :</label>
-    <div class="col-sm-10" >
-      <div th:each = "ct : ${listCthd}">
-      - [[${ct.sanPham.ten}]] - [[${ct.soLuong}]] - [[${#numbers.formatInteger(ct.gia,3,'POINT')}]] đồng
-      </div>
-    </div>
+    <table class="table table-bordered table-striped table-hover top">
+      <thead class="thead-light">
+        <tr>
+          <th>Ten san pham</th>
+          <th>So luong </th>
+          <th>Tong so tien</th>
+        </tr>
+       </thead>
+      <tbody>
+       <tr th:each = "ct : ${listCthd}" >
+         <td>[[${ct.sanPham.ten}]]</td>
+         <td>[[${ct.soLuong}]]</td>
+         <td>[[${#numbers.formatInteger(ct.gia,3,'POINT')}]] đồng</td>
+       </tr>
+      <tr>
+        <td >Tong tien</td>
+        <td></td>
+        <td >[[${#numbers.formatInteger(hoaDon.thanhTien,3,'POINT')}]] đồng</td>
+      </tr>
+      </tbody>
+    </table>
   </div>
-  <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Tổng tiền :</label>
-    <div class="col-sm-10">
-      <span>[[${#numbers.formatInteger(hoaDon.thanhTien,3,'POINT')}]] đồng</span>
-    </div>
-  </div>
-
-
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>

@@ -54,12 +54,12 @@ public class SanPhamController {
             end = (int) page.getTotalElements() ;
         }
         String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+        model.addAttribute("listSP", listSP);
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("start", start);
         model.addAttribute("end", end);
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("listSP", listSP);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("keyword", keyword);

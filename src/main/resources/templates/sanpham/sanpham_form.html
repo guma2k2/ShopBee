@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<head th:replace="fragments :: page_head"/>
+<head th:replace = "~{fragments :: page_head}">
 <body>
 
-<div th:replace = "navigation :: nav"></div>
-<div>
-    <h2>Quản lý loại sản phẩm > [[${pageTitle}]]</h2>
-</div>
+<div th:replace="~{navigation :: nav}"></div>
+
 <div class = "container-fluid">
+    <div>
+        <h2>Quản lý sản phẩm > [[${pageTitle}]]</h2>
+    </div>
     <form th:action = "@{/sanpham/save}" method = "POST"
           enctype="multipart/form-data" th:object = "${sanpham}"
-          style="max-width: 700px; margin: 0 auto"
-          onsubmit = "return checkUnique(this);">
-        <input type="hidden" th:field="*{id}" />
-        <div class="border border-secondary rounded p-3">
+          onsubmit = "return checkUnique(this);" >
+        <input type="hidden" th:field="*{id}"  />
+
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">Tổng quan</a>
@@ -25,17 +25,16 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active p-3" id="overview" role="tabpanel">
-                    <div th:replace="sanpham/sanpham_tongquan :: content"></div>
+                    <div th:replace="~{sanpham/sanpham_tongquan :: content}"></div>
                 </div>
                 <div class="tab-pane" id="description" role="tabpanel">
-                    <div th:replace="sanpham/sanpham_mota :: content"></div>
+                    <div th:replace="~{sanpham/sanpham_mota :: content}"></div>
                 </div>
             </div>
             <div class = "addNv text-center">
                 <input type ="submit" class = "btn btn-primary" value = "Save" />
                 <input type="button" class = "btn btn-secondary" value = "Cancel" id = "buttonCancel"/>
             </div>
-        </div>
     </form>
 
     <div class="modal fade text-center" id="modalDialog">
@@ -59,7 +58,11 @@
 </div>
 <script th:src = "@{/js/common_form.js}"></script>
 <script type="text/javascript">
+
    moduleURL = "[[@{/sanpham}]]";
+   $(document).ready(function(){
+       $("#moTa").richText();
+   })
    function checkUnique(form){
        url = "[[@{/sanpham/checkUnique}]]";
        loaiId = $("#id").val();

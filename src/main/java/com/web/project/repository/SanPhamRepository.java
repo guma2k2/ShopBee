@@ -28,4 +28,10 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
     @Query("SELECT s FROM SanPham s WHERE s.ten LIKE %?1%")
     public Page<SanPham> findAll(String keyword , Pageable pageable);
+
+    @Query("SELECT s FROM SanPham s WHERE s.ten LIKE %?2% AND  s.loaiSanPham.id = ?1")
+    public  Page<SanPham> findByCategory(Integer idLoai,String keyword , Pageable pageable);
+
+    @Query("SELECT s FROM SanPham s WHERE s.loaiSanPham.id = ?1")
+    public  Page<SanPham> findByCategory(int idLoai, Pageable pageable);
 }

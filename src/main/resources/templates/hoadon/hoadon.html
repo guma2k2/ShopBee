@@ -1,37 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<head th:replace = "fragments :: page_head"/>
+<head th:replace = "~{fragments :: page_head}">
 <body>
-<div th:replace = "navigation :: nav"></div>
+<div th:replace="~{navigation :: nav}"></div>
 
 <div class="container-fluid">
     <h2>Quản lý hóa đơn</h2>
-    <a class = "btn btn-primary" th:href="@{/nhanvien/new}">
-        <i class="fa fa-plus"></i>
-    </a>
-
-    <div>
-        <form th:action="@{/hoadon/page/1}" class="form-inline m-3">
-            <input type="hidden" name="sortField" th:value="${sortField}" /> <input
-                type="hidden" name="sortDir" th:value="${sortDir}" />
-
-            Filter:&nbsp; <input type="search" name="keyword"
-                                 th:value="${keyword}" class="form-control" required />
-            &nbsp;&nbsp;
-            <button type="submit" class="btn btn-primary">
-                <i class="fa fa-search"></i>
-            </button>
-            &nbsp;&nbsp;
-            <button type="button" class="btn btn-secondary"
-                    onclick="clearFilter()">
-                <i class="fa fa-eraser"></i>
-            </button>
-        </form>
-
-        <div th:if="${message != null}"
-             class="alert alert-success text-center">[[${message}]]</div>
-    </div>
     <table class="table table-bordered table-striped table-hover">
         <thead class="thead-light">
         <tr>

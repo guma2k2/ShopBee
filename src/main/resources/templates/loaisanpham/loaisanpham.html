@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"> 
-<head th:replace = "fragments :: page_head"/>
+xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "~{fragments :: page_head}">
 <body>
-	<div th:replace = "navigation :: nav"></div>
+   <div th:replace="~{navigation :: nav}"></div>
 
 	<div class="container-fluid">
 		<h2>Quan ly loai san pham</h2>
@@ -35,9 +35,9 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 		<table class="table table-bordered table-striped table-hover">
 			<thead class="thead-light">
 				<tr>
-					<th th:replace = "fragments :: column-link('id' , 'Mã loại sản phẩm' , '/loaisanpham/page/')"></th>
+					<th th:replace = "~{fragments :: column-link('id' , 'Mã loại sản phẩm' , '/loaisanpham/page/')}"></th>
 					<th>Ảnh</th>
-					<th th:replace = "fragments :: column-link('ten' , 'Tên loại' , '/loaisanpham/page/')"></th>
+					<th th:replace = "~{fragments :: column-link('ten' , 'Tên loại' , '/loaisanpham/page/')}"></th>
 					<th>Trạng thái</th>
 					<th></th>
 				</tr>
@@ -72,7 +72,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 			</tbody>
 		</table>
 	</div>
-	<div th:replace = "fragments :: pagination('loai san pham' , '/loaisanpham/page/')"></div>
+	<div th:replace = "~{fragments :: pagination('loai san pham' , '/loaisanpham/page/')}"></div>
 	<div class="modal fade text-center" id="confirmModal">
 		<div class="modal-dialog">
 			<div class="modal-content">

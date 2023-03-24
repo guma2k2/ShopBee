@@ -23,4 +23,11 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
 	@Query("UPDATE nhanviens n SET n.trangThai = ?2 WHERE n.id = ?1")
 	@Modifying
 	public void updateTrangThai(Integer id , boolean TrangThai);
+
+	@Query("UPDATE nhanviens n SET n.trangThai = true , n.verificationCode = null WHERE n.id = ?1")
+	@Modifying
+	public void updateTrangThaiCustomer(Integer id);
+
+	@Query("SELECT k FROM nhanviens k WHERE  k.verificationCode = ?1 ")
+	public NhanVien findByVerificationCode(String verificationCode);
 }

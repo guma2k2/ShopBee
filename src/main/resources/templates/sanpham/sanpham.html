@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<head th:replace="fragments :: page_head"/>
+<head th:replace = "~{fragments :: page_head}">
 <body>
-<div th:replace="navigation :: nav"></div>
+<div th:replace="~{navigation :: nav}"></div>
 
 <div class="container-fluid">
     <h2>Quản lý sản phẩm</h2>
@@ -13,11 +13,11 @@
 
     <div>
         <form th:action="@{/sanpham/page/1}" class="form-inline m-3">
-            <input type="hidden" name="sortField" th:value="${sortField}"/> <input
-                type="hidden" name="sortDir" th:value="${sortDir}"/>
+            <input type="hidden" name="sortField" th:value="${sortField}"/>
+            <input type="hidden" name="sortDir" th:value="${sortDir}"/>
 
-            Filter:&nbsp; <input type="search" name="keyword"
-                                 th:value="${keyword}" class="form-control" required/>
+            Filter:&nbsp;
+            <input type="search" name="keyword" th:value="${keyword}" class="form-control" required/>
             &nbsp;&nbsp;
             <button type="submit" class="btn btn-primary">
                 <i class="fa fa-search"></i>
@@ -36,14 +36,12 @@
     <table class="table table-bordered table-striped table-hover">
         <thead class="thead-light">
         <tr>
-            <th th:replace = "fragments :: column-link('id' , 'Mã sản phẩm' , '/sanpham/page/')"></th>
+            <th th:replace = "~{fragments :: column-link('id' , 'Mã sản phẩm' , '/sanpham/page/')}"></th>
             <th>Ảnh</th>
-            <th th:replace = "fragments :: column-link('ten' ,'Tên sản phẩm' , '/sanpham/page/')"></th>
+            <th th:replace = "~{fragments :: column-link('ten' ,'Tên sản phẩm' , '/sanpham/page/')}"></th>
             <th>Loại sản phẩm</th>
             <th>Trạng thái</th>
             <th></th>
-        </tr>
-        <tr>
         </tr>
         </thead>
         <tbody>
@@ -76,7 +74,7 @@
         </tbody>
     </table>
 </div>
-<div th:replace = "fragments :: pagination('Sản phẩm' , '/sanpham/page/')"></div>
+<div th:replace = "~{fragments :: pagination('Sản phẩm' , '/sanpham/page/')}"></div>
 <div class="modal fade text-center" id="confirmModal">
     <div class="modal-dialog">
         <div class="modal-content">

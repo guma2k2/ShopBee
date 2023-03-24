@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.web.project.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -20,7 +21,7 @@ import com.web.project.entity.NhanVien;
 import com.web.project.security.MyShopUserDetail;
 import com.web.project.service.NhanVienService;
 
-@Controller 
+@Controller
 public class AccountController {
 
 	

@@ -3,6 +3,7 @@ package com.web.project.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.web.project.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +16,6 @@ import com.web.project.entity.NhanVien;
 import com.web.project.entity.Role;
 import com.web.project.repository.NhanVienRepository;
 import com.web.project.repository.RoleRepository;
-
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -55,7 +55,7 @@ public class NhanVienService {
 		boolean isUpdate = (nhanvien.getId() != null);
 		if(isUpdate) {
 			NhanVien UpdatednhanVien = nhanVienrRepo.findById(nhanvien.getId()).get();
-			if(UpdatednhanVien.getPassword().isEmpty()) {
+			if(nhanvien.getPassword().isEmpty()) {
 				nhanvien.setPassword(UpdatednhanVien.getPassword());
 			}else {
 				encodePassword(nhanvien);
@@ -63,7 +63,6 @@ public class NhanVienService {
 		}else {
 			encodePassword(nhanvien);
 		}
-		
 		return nhanVienrRepo.save(nhanvien);
 	}
 	
@@ -124,5 +123,28 @@ public class NhanVienService {
 		nhanVien.setDiaChi(account.getDiaChi());
 		nhanVien.setSdt(account.getSdt());
 		return nhanVienrRepo.save(nhanVien);
+	}
+
+	public void  saveCustomer(NhanVien customer){
+		encodePassword(customer);
+		customer.setTrangThai(false);
+		String randomCode = RandomString.make(64);
+		customer.setVerificationCode(randomCode);
+		System.out.println(randomCode);
+		nhanVienrRepo.save(customer);
+	}
+
+	public boolean checkUniqueEmailCustomer(String email){
+		return nhanVienrRepo.findByEmail(email) == null;
+	}
+
+	public boolean verify(String verification){
+		NhanVien customer = nhanVienrRepo.findByVerificationCode(verification);
+		if(customer == null || customer.isTrangThai()){
+			return false ;
+		}else {
+			nhanVienrRepo.updateTrangThaiCustomer(customer.getId());
+			return true;
+		}
 	}
 }

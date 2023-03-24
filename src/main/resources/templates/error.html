@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
-<head th:replace = "fragments :: page_head"/>
+<head th:replace = "~{fragments :: page_head}"/>
 <body>
-	<div th:replace="navigation :: nav"></div>
+	<div th:replace="~{navigation :: nav}"></div>
 	<div class = "text-center">
 	   <h2>Một lỗi không ngờ tới đã diễn ra</h2>
 	</div>

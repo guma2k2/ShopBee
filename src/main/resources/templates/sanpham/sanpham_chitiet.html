@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<head th:replace = "fragments :: page_head">
+<head th:replace = "~{fragments :: page_head}">
 <body>
-	<div th:replace="navigation :: nav"></div>
+  <div th:replace="~{navigation :: nav}"></div>
 			<nav class = "navigation_product">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item">
@@ -25,10 +25,9 @@
 		<div class="product_details">
 			<h1 class="product_name" >[[${sanpham.ten}]]</h1>
 			<h2 class="product_price">[[${sanpham.gia}]] đồng </h2>
-			<p class="product_detail">[[${sanpham.moTa}]]</p>
-			<form th:action = "@{'/cart/add/' + ${sanpham.id}}" method="post" class="add2cart"
-				  >
-			  <div th:replace = "fragments :: quantityControl(${sanpham.id} , 1)" ></div>
+			<div class="product_detail" th:utext ="${sanpham.moTa}"></div>
+			<form th:action = "@{'/cart/add/' + ${sanpham.id}}" method="post" class="add2cart">
+			  <div th:replace = "~{fragments :: quantityControl(${sanpham.id} , 1)}" ></div>
 			  <button type="submit" class="product_button">ADD TO CART</button>
 			</form>
 		</div>

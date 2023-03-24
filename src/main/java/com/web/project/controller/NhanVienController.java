@@ -46,7 +46,10 @@ public class NhanVienController {
 		return "nhanvien/nhanvien_form";
 	}
 	@PostMapping("/nhanvien/save")
-	public String save(NhanVien nhanvien , RedirectAttributes re , @RequestParam("image")MultipartFile multipartFile) throws IOException {
+	public String save(NhanVien nhanvien ,
+					   RedirectAttributes re ,
+					   @RequestParam("image")MultipartFile multipartFile) throws IOException {
+		System.out.println(nhanvien.getPassword());
 		if (!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 			nhanvien.setPhotos(fileName);

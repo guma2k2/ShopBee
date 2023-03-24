@@ -28,7 +28,7 @@ import lombok.ToString;
 
 @Entity(name = "nhanviens")
 @Table(name = "nhanviens")
-public class NhanVien{
+public class NhanVien {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,9 +41,6 @@ public class NhanVien{
 	private String ten;
 	@Column(name = "sdt" , length = 20 , nullable = false)
 	private String sdt ;
-
-
-
 
 
 	@Column(name = "dia_chi")
@@ -68,7 +65,12 @@ public class NhanVien{
 	
 	@OneToMany(mappedBy = "nhanVien" , cascade = CascadeType.ALL)
 	private List<HoaDon> hoaDon  ;
-	
+
+	@Column(name = "verification_code", length = 64)
+	private String verificationCode;
+
+
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "nhanviens_roles",
@@ -226,6 +228,13 @@ public class NhanVien{
 	public void setHoaDon(List<HoaDon> hoaDon) {
 		this.hoaDon = hoaDon;
 	}
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
 
 
 
@@ -243,6 +252,10 @@ public class NhanVien{
 		return "NhanVien [id=" + id + ", Ho=" + ho + ", ten=" + ten + ", Sdt=" + sdt + ", email=" + email + "]";
 	}
 
+	@Transient
+	public String getFullName(){
+		return this.ho + " " + this.ten;
+	}
 	
 	
 }

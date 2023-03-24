@@ -2,9 +2,7 @@ package com.web.project.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,7 @@ public class SanPham {
 	@Column(name = "size")
 	private String size ;
 	
-	@Column(name = "mo_ta" , length = 100)
+	@Column(name = "mo_ta" , length = 800)
 	private String moTa ;
 	
 	@Column(name = "trang_thai")
@@ -37,6 +35,8 @@ public class SanPham {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "loai_san_pham_id")
 	private LoaiSanPham loaiSanPham;
+
+
 
 	@Transient
 	public String getPhotosImagePath() {
@@ -121,6 +121,5 @@ public class SanPham {
 	public void setLoaiSanPham(LoaiSanPham loaiSanPham) {
 		this.loaiSanPham = loaiSanPham;
 	}
-
 
 }

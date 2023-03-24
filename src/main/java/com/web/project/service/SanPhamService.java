@@ -18,7 +18,7 @@ import java.util.Optional;
 @Transactional
 public class SanPhamService {
 
-    public static final  int sanPhamMoiPage = 5 ;
+    public static final  int sanPhamMoiPage = 8 ;
 
     @Autowired
     private SanPhamRepository repo;
@@ -78,5 +78,19 @@ public class SanPhamService {
 
     public List<SanPham> getSpTheoLoai(Integer id){
         return repo.listSpTheoLoai(id);
+    }
+
+    public Page<SanPham> listSanPhamByCategory(Integer idLoai ,
+                                               String keyword ,
+                                               String sortDir ,
+                                               String sortField ,
+                                               int numPage){
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(numPage - 1 , sanPhamMoiPage , sort);
+        if(keyword != null){
+            return repo.findByCategory(idLoai , keyword , pageable);
+        }
+        return repo.findByCategory(idLoai , pageable);
     }
 }

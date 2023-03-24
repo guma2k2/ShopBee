@@ -10,6 +10,8 @@
 	<script type="text/javascript" th:src="@{/js/common.js}" ></script>
 	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" ></script>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="stylesheet" th:href="@{/richtext/richtext.min.css}" />
+	<script th:src="@{/richtext/jquery.richtext.min.js}"></script>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
@@ -36,25 +38,25 @@
 				<ul class="pagination justify-content-center">
 					<li
 						th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-						<a th:replace="fragments :: page_link(1, 'First' , ${moduleURL})"></a>
+						<a th:replace="~{fragments :: page_link(1, 'First' , ${moduleURL})}"></a>
 					</li>
 					<li
 						th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
 						<a
-						th:replace="fragments :: page_link(${currentPage - 1}, 'Previous', ${moduleURL})"></a>
+						th:replace="~{fragments :: page_link(${currentPage - 1}, 'Previous', ${moduleURL})}"></a>
 					</li>
 					<li
 						th:class="${currentPage != i ? 'page-item': 'page-item active'}"
 						th:each="i : ${#numbers.sequence(1, totalPages)}"><a
-						th:replace="fragments :: page_link(${i}, ${i} , ${moduleURL})"></a></li>
+						th:replace="~{fragments :: page_link(${i}, ${i} , ${moduleURL})}"></a></li>
 
 					<li
 						th:class="${currentPage < totalPages  ? 'page-item' : 'page-item disabled'}">
-						<a th:replace="fragments :: page_link(${currentPage + 1}, 'Next', ${moduleURL})"></a>
+						<a th:replace="~{fragments :: page_link(${currentPage + 1}, 'Next', ${moduleURL})}"></a>
 					</li>
 					<li
 						th:class="${currentPage < totalPages  ? 'page-item' : 'page-item disabled'}">
-						<a th:replace="fragments :: page_link(${totalPages}, 'Last', ${moduleURL})"></a>
+						<a th:replace="~{fragments :: page_link(${totalPages}, 'Last', ${moduleURL})}"></a>
 					</li>
 				</ul>
 			</nav>

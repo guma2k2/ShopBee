@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"> 
-<head th:replace = "fragments :: page_head"/>
+xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "~{fragments :: page_head}">
 <body>
-	<div th:replace = "navigation :: nav"></div>
+    <div th:replace="~{navigation :: nav}"></div>
 
 	<div class="container-fluid">
 		<h2>Quan ly Nhan Vien</h2>
@@ -30,17 +30,18 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 			</form>
 
 			<div th:if="${message != null}"
-				class="alert alert-success text-center">[[${message}]]</div>
+				class="alert alert-success text-center">[[${message}]]
+			</div>
 		</div>
 		<table class="table table-bordered table-striped table-hover">
 			<thead class="thead-light">
 				<tr>
-					<th th:replace = "fragments :: column-link('id','Mã nhân viên' , '/nhanvien/page/')">
+					<th th:replace = "~{fragments :: column-link('id','Mã nhân viên' , '/nhanvien/page/')}">
 					</th>
 					<th>Ảnh đại diện</th>
-					<th th:replace = "fragments :: column-link('ho' , 'Họ' ,'/nhanvien/page/')">
+					<th th:replace = "~{fragments :: column-link('ho' , 'Họ' ,'/nhanvien/page/')}">
 					</th>
-					<th th:replace = "fragments :: column-link('ten' , 'Tên','/nhanvien/page/')">
+					<th th:replace = "~{fragments :: column-link('ten' , 'Tên','/nhanvien/page/')}">
 					</th>
 					<th class="text-black">Email</th>
 					<th class="text-black">Vai tro</th>
@@ -52,8 +53,6 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 						th:class="${sortDir == 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down'}"></span>
 					</th>
 					<th></th>
-				</tr>
-				<tr>
 				</tr>
 			</thead>
 			<tbody>
@@ -85,7 +84,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 			</tbody>
 		</table>
 	</div>
-	<div th:replace = "fragments :: pagination('nhan vien' , '/nhanvien/page/')"></div>
+	<div th:replace = "~{fragments :: pagination('nhan vien' , '/nhanvien/page/')}"></div>
 	
 	<div class="modal fade text-center" id="confirmModal">
 		<div class="modal-dialog">

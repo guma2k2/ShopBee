@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<head th:replace = "fragments :: page_head">
+<head th:replace = "~{fragments :: page_head}">
 <body>
-	<div th:replace="navigation :: nav"></div>
+	<div th:replace="~{navigation :: nav}"></div>
+
     <div class = "containerSp">
 		<div class="left_content">
 			<div class="categories">
@@ -13,12 +14,40 @@
 				</div>
 				<div class="category" th:each ="loai : ${listLoai}">
 					<a th:href = "@{'/listSpTheoLoai/'+ ${loai.id}}" class="link_product" >
-						<span>[[${loai.ten}]]</span>
+						<th:block th:if="${idLoai == loai.id}" >
+							<span class="sp activee"  >[[${loai.ten}]]</span>
+						</th:block>
+						<th:block th:if="${idLoai != loai.id}" >
+							<span  class="sp" >[[${loai.ten}]]</span>
+						</th:block>
 					</a>
 				</div>
 			</div>
 		</div>
-		<div class="cards" >
+		<div class="card_wrap" >
+			<div class="search_sp" >
+				<form th:action="@{ '/page/' + ${idLoai != null ? idLoai +'/' : ''} +'1' }" class="form-inline m-3">
+					<input type="hidden" name="sortField" th:value="${sortField}" />
+					<input type="hidden" name="sortDir" th:value="${sortDir}" />
+					<input type="hidden" name="idLoai" th:value="${idLoai}" />
+					Filter:&nbsp; <input type="search" name="keyword"
+										 th:value="${keyword}" class="form-control" required />
+					&nbsp;&nbsp;
+					<button type="submit" class="btn btn-primary">
+						<i class="fa fa-search"></i>
+					</button>
+					&nbsp;&nbsp;
+					<button type="button" class="btn btn-secondary"
+							onclick="clearFilter()">
+						<i class="fa fa-eraser"></i>
+					</button>
+				</form>
+
+				<div th:if="${message != null}"
+					 class="alert alert-success text-center">[[${message}]]
+				</div>
+			</div>
+			<div class="cards">
 			 <div th:if = "${listSP != null}" class="card" th:each ="sp : ${listSP}" >
 				 <a th:href = "@{'/product_details/'+ ${sp.id}}" class="link_product">
 				  <img class="card-img" th:src="@{${sp.photosImagePath}}" alt="not found" />
@@ -29,10 +58,21 @@
 				 </a>
 			 </div>
 			<h2 th:if ="${listSP.size() == 0}" class = "card-message">Xin lỗi sản phẩm này hiện nay đã hết hàng !!</h2>
+			</div>
+			<th:block th:if = "${idLoai == null}">
+			<div class="pagination"  th:replace = "~{fragments :: pagination('san pham' , '/page/')}"></div>
+			</th:block>
+			<th:block th:if = "${idLoai != null}">
+				<div class="pagination"  th:replace = "~{fragments :: pagination('san pham' , '/page/' + ${idLoai} + '/')}"></div>
+			</th:block>
 		</div>
 
 	</div>
-
+<script type="text/javascript">
+	function clearFilter() {
+		window.location = "[[@{/}]]";
+	}
+</script>
 </body>
 
 </html>

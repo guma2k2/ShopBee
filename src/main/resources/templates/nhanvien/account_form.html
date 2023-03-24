@@ -1,13 +1,16 @@
  <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"> 
-<head th:replace = "fragments :: page_head"/>
+xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+ <head th:replace = "~{fragments :: page_head}">
 <body>
 
-    <div th:replace = "navigation :: nav"></div>
+    <div th:replace="~{navigation :: nav}"></div>
      <div>
        <h2 class = "text-center">Account</h2>
      </div>
+	<div th:if="${message != null}"
+		 class="alert alert-success text-center">[[${message}]]
+	</div>
      
       <div class = "container-fluid">   
      <form th:action = "@{/account/update}" method = "POST" enctype="multipart/form-data" th:object = "${nhanvien}" style="max-width: 700px; margin: 0 auto">

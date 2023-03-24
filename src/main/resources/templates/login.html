@@ -14,6 +14,21 @@ height: 100%;
 font-family: 'Numans', sans-serif;
 }
 
+.home-page{
+  width: 120px;
+  height: 50px;
+  display:flex ;
+  gap: 10px;
+  background-color: #FFC312 ;
+  margin-top: 15px;
+}
+.home-title{
+  font-size:30px;
+}
+.home-page:hover{
+  text-decoration: none;
+}
+
 .container{
 height: 100%;
 align-content: center;
@@ -97,17 +112,22 @@ margin-left: 4px;
 <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script type="text/javascript"
 	th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 	<div class="container">
+		<a class="home-page" th:href = "@{/}" >
+			<i  class="fa fa-solid fa-arrow-left fa-3x "></i>
+			<span class="home-title">Back</span>
+		</a>
 	<div class="d-flex justify-content-center h-100">
 		<div class="card">
 			<div class="card-header">
 				<h3>Sign In</h3>
 				<div class="d-flex justify-content-end social_icon">
-					<span><i class="fab fa-facebook-square"></i></span>
-					<span><i class="fab fa-google-plus-square"></i></span>
-					<span><i class="fab fa-twitter-square"></i></span>
+					<span><i class="fa fa-facebook-square"></i></span>
+					<span><i class="fa fa-google-plus-square"></i></span>
+					<span><i class="fa fa-twitter-square"></i></span>
 				</div>
 			</div>
 			<div class="card-body">
@@ -120,14 +140,14 @@ margin-left: 4px;
 					</div>
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"><i class="fas fa-user"></i></span>
+							<span class="input-group-text"><i class="fa fa-user"></i></span>
 						</div>
 						<input type="email" name = "email" class="form-control" placeholder="username" required >
 						
 					</div>
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"><i class="fas fa-key"></i></span>
+							<span class="input-group-text"><i class="fa fa-key"></i></span>
 						</div>
 						<input type="password" name ="password" class="form-control" placeholder="password" required >
 					</div>
@@ -141,7 +161,8 @@ margin-left: 4px;
 			</div>
 			<div class="card-footer">
 				<div class="d-flex justify-content-center links">
-					Don't have an account?<a href="#">Sign Up</a>
+					Don't have an account?
+					<a th:href="@{/register}">Sign Up</a>
 				</div>
 				<div class="d-flex justify-content-center">
 					<a href="#">Forgot your password?</a>

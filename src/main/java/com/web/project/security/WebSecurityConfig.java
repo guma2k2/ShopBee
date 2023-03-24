@@ -45,9 +45,11 @@ public class WebSecurityConfig {
 	 SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	   return http
 			   .authorizeHttpRequests()
-			    .requestMatchers("/**").hasAuthority("Admin")
-			    .requestMatchers("/client/**" , "/").hasAuthority("Customer")
-			    .anyRequest().authenticated().and()
+			    .requestMatchers("/nhanvien/**" , "/loaisanpham/**" , "/sanpham/**" ,
+						"/hoadon/**" , "/doanhthu/**" , "/account/**" , "/cart/**" ).authenticated()
+			    .anyRequest()
+			    .permitAll()
+			    .and()
 				.formLogin().loginPage("/login").usernameParameter("email").permitAll().and()
 				.logout().permitAll().and()
 				.rememberMe().key("AbcDefgHijKlmnOpqrs_1234567890")
@@ -56,7 +58,7 @@ public class WebSecurityConfig {
 	}
 	@Bean
 	 WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("/images/**", "/js/**" , "/webjars/**","/richtext/**" ,"/webfonts/**" );
+		return (web) -> web.ignoring().requestMatchers("/images/**", "/js/**" , "/webjars/**","/webfonts/**" );
 	}
 
 }

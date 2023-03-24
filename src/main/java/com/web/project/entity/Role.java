@@ -33,7 +33,6 @@ public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id ;
-	
 	@Column(name = "ten" , nullable = false , unique = true )
 	private String name ;
 	@Column(name = "mo_Ta", length = 40)

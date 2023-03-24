@@ -24,7 +24,7 @@ public class HoaDon {
 	
 	
 	@Column(name = "ngay_tao")
-	private String ngayTao ;
+	private LocalDateTime ngayTao ;
 
 	@Column(name = "thanh_tien" , nullable = false , length = 50)
 	private Double thanhTien ;
@@ -36,12 +36,13 @@ public class HoaDon {
 	// YYYY-DD-MM HH:MM:SS
 
 
+
 	public HoaDon(Double thanhTien, NhanVien nhanVien) {
 		this.thanhTien = thanhTien;
 		this.nhanVien = nhanVien;
 	}
 
-	public HoaDon(String ngayTao, Double thanhTien, NhanVien nhanVien) {
+	public HoaDon(LocalDateTime ngayTao, Double thanhTien, NhanVien nhanVien) {
 		this.ngayTao = ngayTao;
 		this.thanhTien = thanhTien;
 		this.nhanVien = nhanVien;

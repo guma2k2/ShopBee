@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<head th:replace = "fragments :: page_head">
+<head th:replace = "~{fragments :: page_head}">
 <body>
-<div th:replace="navigation :: nav"></div>
+<div th:replace="~{navigation :: nav}"></div>
 
    <div class="container-fluid">
     <div class="main-container">
@@ -16,7 +16,7 @@
                     <h3>Sản phẩm</h3>
                     <span class="material-icons-outlined">inventory_2</span>
                 </div>
-                <h1>249</h1>
+                <h1>[[${products}]]</h1>
             </div>
 
             <div class="card_doanhthu">
@@ -24,50 +24,77 @@
                     <h3>Số loại sản phẩm</h3>
                     <span class="material-icons-outlined">category</span>
                 </div>
-                <h1>25</h1>
+                <h1>[[${categories}]]</h1>
             </div>
 
             <div class="card_doanhthu">
                 <div class="card-inner">
-                    <h3>Khách hàng</h3>
+                    <h3>Số hóa đơn</h3>
                     <span class="material-icons-outlined">groups</span>
                 </div>
-                <h1>1500</h1>
+                <h1>[[${bills}]]</h1>
             </div>
 
             <div class="card_doanhthu">
                 <div class="card-inner">
-                    <h3>Doanh thu</h3>
+                    <h3>Tổng doanh thu</h3>
                     <span class="material-icons-outlined">notification_important</span>
                 </div>
-                <h1>5600 đồng </h1>
+                <h1> [[${#numbers.formatInteger(revenue,3,'POINT')}]] đồng </h1>
             </div>
 
         </div>
         <input type="hidden" />
-        <form th:action = "@{/doanhthu/search}" method="post" >
-        <div class = "row seach_panel">
+        <form th:action = "@{/doanhthu/search}" method="post" onsubmit="return myfunction(this);" >
+        <div class = "row search_panel ">
             <div class="col-1">
                 <label>Tu ngay: </label>
             </div>
             <div class="col-3">
-                <input class="input_search_date" type="date" name="from_date" th:value="${from_date}" />
+                <input class="input_search_date" type="date" th:name="from_date" th:value="${from_date}" />
             </div>
             <div class="col-1">
                 <label>Tu ngay: </label>
             </div>
             <div class="col-3">
-                <input class="input_search_date" type="date" name = "to_date" th:value="${to_date}" />
+                <input class="input_search_date" type="date" th:name = "to_date" th:value="${to_date}" />
             </div>
             <div class="col-2">
-               <div type="submit" class="btn btn-primary">Search</div>
+               <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </div>
         </form>
         <div class="main-title">
-            <h2>Top 5 sản phẩm bán chạy nhất</h2>
+            <h2>Top 10 sản phẩm bán chạy nhất</h2>
         </div>
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="thead-light">
+            <tr>
+                <th>Mã san pham</th>
+                <th>Ten san pham</th>
+                <th>So luong</th>
+                <th>Tổng tiền</th>
+            </tr>
+            <tr>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="hd : ${listDoanhThu}">
+                <td>[[${hd.idSanPham}]]</td>
+                <td>[[${hd.tenSanPham}]]</td>
+                <td>[[${hd.soLuong}]]</td>
+                <td>
+                    [[${#numbers.formatInteger(hd.tongTien,3,'POINT')}]] đồng
+                </td>
+            </tr>
+            </tbody>
+        </table>
 </div>
 </div>
+<script type="text/javascript">
+    function myfunction(form){
+       form.submit();
+    }
+</script>
 </body>
 </html>
