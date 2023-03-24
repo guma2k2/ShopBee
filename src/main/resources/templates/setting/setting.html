@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "~{fragments :: page_head}">
+<body>
+
+<div th:replace="~{navigation :: nav}"></div>
+
+<div class = "container-fluid">
+  <div>
+    <h2>Cài đặt</h2>
+  </div>
+  <div th:if="${message != null}"
+       class="alert alert-success text-center">[[${message}]]
+  </div>
+  <form th:action = "@{/setting/save}" method = "POST"
+        enctype="multipart/form-data" >
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">Mail Server</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#description" role="tab">Mail template</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active p-3" id="overview" role="tabpanel">
+        <div th:replace="~{setting/mail_server :: content}"></div>
+      </div>
+      <div class="tab-pane" id="description" role="tabpanel">
+        <div th:replace="~{setting/mail_template :: content}"></div>
+      </div>
+    </div>
+    <div class = "addNv text-center">
+      <input type ="submit" class = "btn btn-primary" value = "Save" />
+      <input type="button" class = "btn btn-secondary" value = "Cancel" id = "buttonCancel"/>
+    </div>
+  </form>
+
+  <div class="modal fade text-center" id="modalDialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modalTitle">Warning</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <span id="modalBody"></span>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script th:src = "@{/js/common_form.js}"></script>
+<script type="text/javascript">
+   moduleURL = "[[@{/}]]";
+   $(document).ready(function(){
+       $("#customerVerificationContent").richText();
+   })
+
+
+</script>
+</body>
+</html>
