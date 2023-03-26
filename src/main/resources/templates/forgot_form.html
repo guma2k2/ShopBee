@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "~{fragments :: page_head}">
+<body>
+<div th:replace="~{navigation :: nav}"></div>
+<div class="container-fluid text-center" >
+    <div>
+        <h2>Reset your password</h2>
+    </div>
+        <form th:action = "@{/reset_password}"  method="post" style="max-width : 450px ; margin : 0 auto ;" >
+            <input type="hidden" name="token" th:value = "${token}"  />
+            <div class="border border-secondary rounded p-3">
+                <div>
+                    <p>
+                        <input type="password"
+                               name ="password"
+                               id="password"
+                               minlength="8"
+                               maxlength="20"
+                               placeholder="Fill out the password"
+                               required = "required"
+                               class="form-control"
+                        />
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <input type="password"
+                               id ="confirm_password"
+                               placeholder="Confirm the password"
+                               required = "required"
+                               class="form-control"
+                               oninput="checkPasswordMatch(this)"
+                        />
+                    </p>
+                </div>
+                <div>
+                    <p>
+                       <input class="btn btn-primary" value="Xac nhan" type="submit" />
+                    </p>
+                </div>
+            </div>
+        </form>
+
+</div>
+
+<script type="text/javascript">
+	function checkPasswordMatch(confirmPassword) {
+	if (confirmPassword.value != $("#password").val()) {
+		confirmPassword.setCustomValidity("Passwords do not match!");
+	} else {
+		confirmPassword.setCustomValidity("");
+	}
+}
+</script>
+</body>
+
+</html>
