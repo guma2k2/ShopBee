@@ -21,4 +21,6 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
     @Query("SELECT h FROM HoaDon h WHERE h.nhanVien.email = ?1")
     public List<HoaDon> findByEmail(String email );
 
+    @Query("SELECT h FROM HoaDon h WHERE h.nhanVien.id = ?1")
+    public List<HoaDon> findByIdNhanVien(Integer id);
 }

@@ -57,13 +57,12 @@
 				  </div>
 				 </a>
 			 </div>
-			<h2 th:if ="${listSP.size() == 0}" class = "card-message">Xin lỗi sản phẩm này hiện nay đã hết hàng !!</h2>
 			</div>
 			<th:block th:if = "${idLoai == null}">
-			<div class="pagination"  th:replace = "~{fragments :: pagination('san pham' , '/page/')}"></div>
+			<div class="pagination"  th:replace = "~{fragments :: pagination('loại sản phẩm' , '/page/')}"></div>
 			</th:block>
 			<th:block th:if = "${idLoai != null}">
-				<div class="pagination"  th:replace = "~{fragments :: pagination('san pham' , '/page/' + ${idLoai} + '/')}"></div>
+				<div class="pagination"  th:replace = "~{fragments :: pagination('loại sản phẩm' , '/page/' + ${idLoai} + '/')}"></div>
 			</th:block>
 		</div>
 

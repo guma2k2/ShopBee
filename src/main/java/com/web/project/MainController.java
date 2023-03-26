@@ -65,7 +65,7 @@ public class MainController {
 		Page<SanPham> listSanPham =
 				sanPhamService.listSanPhamByCategory(idLoai, keyword, sortDir, sortField, pageNum);
 		List<SanPham> listSP = listSanPham.getContent();
-		List<LoaiSanPham> listLoai = loaiSanPhamService.listAll();
+		List<LoaiSanPham> listLoai = loaiSanPhamService.listAllEnable();
 		int start = (pageNum - 1) * SanPhamService.sanPhamMoiPage + 1;
 		int end = start + SanPhamService.sanPhamMoiPage - 1;
 		if(end > listSanPham.getTotalElements()) {
@@ -92,8 +92,8 @@ public class MainController {
 								 @Param("keyword") String keyword ,
 								 @PathVariable("pageNum") int pageNum
 								  ) {
-		List<LoaiSanPham> listLoai = loaiSanPhamService.listAll();
-		Page<SanPham> page = sanPhamService.listByPage( sortDir, sortField , keyword , pageNum );
+		List<LoaiSanPham> listLoai = loaiSanPhamService.listAllEnable();
+		Page<SanPham> page = sanPhamService.listByPageEnable( sortDir, sortField , keyword , pageNum );
 		List<SanPham> listSP = page.getContent();
 		int start = (pageNum - 1) * SanPhamService.sanPhamMoiPage + 1;
 		int end = start + SanPhamService.sanPhamMoiPage - 1;
@@ -182,9 +182,6 @@ public class MainController {
 		helper.setText(content, true);
 
 		mailSender.send(message);
-
-//		System.out.println("to Address: " + toAddress);
-//		System.out.println("Verify URL: " + verifyURL);
 	}
 
 	@GetMapping("/verify")
@@ -211,5 +208,76 @@ public class MainController {
 		return "lichsu";
 	}
 
+	@GetMapping("/forgotpassword")
+	public String pageForgotPassword (){
+		return "forgotpassword";
+	}
+	@PostMapping("/verifypassword")
+	public String forgotPassword(HttpServletRequest request ,Model model){
+		String email = request.getParameter("email");
+		try {
+			String codeVerify = nhanVienService.updatePasswordCustomer(email);
+			String link =  Utility.getSiteURL(request) +  "/reset_password?token=" + codeVerify;
+			sendVerifyPassword(request ,email,link);
+			model.addAttribute("message" , "Gui email thanh cong !!" );
+		} catch (NhanVienNotFoundException e) {
+			model.addAttribute("error" , "Mat khau ban nhap sai hoac khong ton tai !!");
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			model.addAttribute("error" , "Khong the gui email");
+		}
+		return "forgotpassword";
+	}
+	@GetMapping("/reset_password")
+	public String forgotPasswordForm(@Param("token") String token,
+									 Model model) {
+		NhanVien customer = nhanVienService.findByToken(token);
+		if(customer != null) {
+			model.addAttribute("token" ,token);
+			return "forgot_form";
+		}else{
+			model.addAttribute("pageTitle" ,"Reset password" );
+			model.addAttribute("message" , "Reset password fail");
+			return "message";
+		}
+	}
+
+	private void sendVerifyPassword(HttpServletRequest request, String email , String link)
+			throws MessagingException, UnsupportedEncodingException {
+		JavaMailSenderImpl mailSender = Utility.prepareMailSender(settingService);
+		String toAddress = email;
+		String subject = "Xác nhân email và thay đổi mật khẩu " ;
+		String content = "<p>Xin chao,</p>" +
+						"<p> Ban da yeu cau thay doi mat khau </p>" +
+				 		"Vui long chon link ben duoi de thay doi mat khau:" +
+						"<p> <a href =\"" +link+ "\">Thay doi mat khau</a> </p>" +
+						"<br>" +
+						"<p>Xoa mail neu ban muon, ngay khi thay doi duoc mat khau</p>";
+
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setFrom(settingService.getFromAddress(), settingService.getSenderName());
+		helper.setTo(toAddress);
+		helper.setSubject(subject);
+		helper.setText(content, true);
+
+		mailSender.send(message);
+	}
+
+	@PostMapping("/reset_password")
+	public String verifyResetPassword(HttpServletRequest request , Model model ) {
+		String token = request.getParameter("token");
+		String password = request.getParameter("password");
+		try {
+			nhanVienService.updatePasswordReset(token,password);
+			model.addAttribute("pageTitle" , "Reset password");
+			model.addAttribute("message" ,"Reset password successful !!");
+			return "message";
+		} catch (NhanVienNotFoundException e) {
+			model.addAttribute("pageTitle" , "Reset password");
+			model.addAttribute("message" , "fail");
+			return "message";
+		}
+	}
 
 }

@@ -30,4 +30,6 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
 
 	@Query("SELECT k FROM nhanviens k WHERE  k.verificationCode = ?1 ")
 	public NhanVien findByVerificationCode(String verificationCode);
+
+	public NhanVien findByForgotPassword(String token);
 }

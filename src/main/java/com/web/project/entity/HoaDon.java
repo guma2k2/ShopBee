@@ -33,9 +33,6 @@ public class HoaDon {
 	@JoinColumn(name = "nhan_vien_id")
 	private NhanVien nhanVien ;
 
-	// YYYY-DD-MM HH:MM:SS
-
-
 
 	public HoaDon(Double thanhTien, NhanVien nhanVien) {
 		this.thanhTien = thanhTien;

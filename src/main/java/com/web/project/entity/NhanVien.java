@@ -69,6 +69,9 @@ public class NhanVien {
 	@Column(name = "verification_code", length = 64)
 	private String verificationCode;
 
+	@Column(name = "forgot_password_code" ,length = 100)
+	private String forgotPassword ;
+
 
 
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -108,8 +111,8 @@ public class NhanVien {
 		this.ten = ten;
 		this.sdt = sdt;
 		this.email = email;
-
 	}
+
 
 	public Integer getId() {
 		return id;
@@ -236,6 +239,14 @@ public class NhanVien {
 		this.verificationCode = verificationCode;
 	}
 
+
+	public String getForgotPassword() {
+		return forgotPassword;
+	}
+
+	public void setForgotPassword(String forgotPassword) {
+		this.forgotPassword = forgotPassword;
+	}
 
 
 	@Transient

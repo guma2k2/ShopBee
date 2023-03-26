@@ -26,7 +26,10 @@ public class LoaiSanPhamService {
 	public List<LoaiSanPham> listAll(){
 		return repo.findAll();
 	}
-	
+	public List<LoaiSanPham> listAllEnable(){
+		return repo.findAllEnable();
+	}
+
 	public Page<LoaiSanPham> listByPage(String sortDir , String sortField , String keyword , int pageNum){
 		Sort sort = Sort.by(sortField);
 		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();

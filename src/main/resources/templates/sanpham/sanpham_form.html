@@ -10,11 +10,12 @@
     <div>
         <h2>Quản lý sản phẩm > [[${pageTitle}]]</h2>
     </div>
+    <div th:if="${message != null}"
+         class="alert alert-success text-center">[[${message}]]
+    </div>
     <form th:action = "@{/sanpham/save}" method = "POST"
-          enctype="multipart/form-data" th:object = "${sanpham}"
-          onsubmit = "return checkUnique(this);" >
+          enctype="multipart/form-data" th:object = "${sanpham}">
         <input type="hidden" th:field="*{id}"  />
-
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">Tổng quan</a>
@@ -63,30 +64,6 @@
    $(document).ready(function(){
        $("#moTa").richText();
    })
-   function checkUnique(form){
-       url = "[[@{/sanpham/checkUnique}]]";
-       loaiId = $("#id").val();
-       tenLoai = $("#ten").val();
-       csrfValue = $("input[name = '_csrf']").val();
-       params = { id : loaiId , ten : tenLoai , _csrf : csrfValue};
-       $.post(url , params, function(res) {
-            if(res == "SUCCESSFUL"){
-               form.submit();
-            }else if(res == "DUPDICATED"){
-               showModalDialog("Error" , "Vui lòng tên khác !!");
-            }else{
-                showModalDialog("Error" , "Error from server");
-            }
-       }).fail(function(){
-		   showModalDialog("Error" , "Could not connect to the server" );
-	   });
-	   return false ;
-   }
-   function showModalDialog(title , message){
-	   $("#modalTitle").text(title);
-	   $("#modalBody").text(message);
-	   $("#modalDialog").modal();
-   }
 </script>
 </body>
 </html>

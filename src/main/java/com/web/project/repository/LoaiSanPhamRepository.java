@@ -22,6 +22,10 @@ public interface LoaiSanPhamRepository extends JpaRepository<LoaiSanPham, Intege
 	
 	@Query("SELECT l FROM LoaiSanPham l WHERE l.ten LIKE %?1%")
 	public Page<LoaiSanPham> findAll(String keywork,Pageable pageable);
+
+	@Query("SELECT l FROM LoaiSanPham l WHERE l.trangThai = true ")
+	public List<LoaiSanPham> findAllEnable();
+
 	
 	public Long countById(Integer id);
 

@@ -31,7 +31,7 @@
 			<span>[[${start}]] to [[${end}]] of [[${totalPages}]]</span>
 		</div>
 		<div th:unless="${totalItems > 0}" class="text-center m-1">
-			<span>Khong co [[${entityName}]] nao de tim kiem</span>
+			<h2>Không có [[${entityName}]] nào để tìm kiếm !!</h2>
 		</div>
 		<div th:if="${totalPages > 1}">
 			<nav aria-label="Page navigation ">

@@ -47,4 +47,9 @@ public class CthdService {
     public List<LichSuSanPham> listByDay(LocalDateTime date){
         return repo.listDoanhThuByExactDay(date);
     }
+
+
+    public boolean canDeleteSp(Integer idSp){
+        return repo.listProductById(idSp).isEmpty();
+    }
 }

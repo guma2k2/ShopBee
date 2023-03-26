@@ -3,10 +3,7 @@ package com.web.project.controller;
 import com.web.project.FileUploadUtil;
 import com.web.project.entity.LoaiSanPham;
 import com.web.project.entity.SanPham;
-import com.web.project.service.LoaiSanPhamService;
-import com.web.project.service.NhanVienService;
-import com.web.project.service.SanPhamNotFoundException;
-import com.web.project.service.SanPhamService;
+import com.web.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -32,6 +29,8 @@ public class SanPhamController {
     @Autowired
     private LoaiSanPhamService loaiService;
 
+    @Autowired
+    private CthdService cthdService;
 
     @GetMapping("sanpham")
     public String sanPhamPage(Model model){
@@ -79,8 +78,14 @@ public class SanPhamController {
     @PostMapping("/sanpham/save")
     public String luuSanPham(RedirectAttributes redirectAttributes ,
                              Model model , SanPham sanPham ,
-                             @RequestParam("image")MultipartFile multipartFile)
+                             @RequestParam("image")MultipartFile multipartFile )
                              throws IOException {
+        if (!service.checkTenUnique(sanPham.getTen(),sanPham.getId() )){
+            model.addAttribute("message" , "tên sản phẩm này đã được sử dung!!");
+            model.addAttribute("sanpham" , sanPham);
+            model.addAttribute("pageTitle" , sanPham.getId() != null ? "Sửa sản phẩm" : "Thêm sản phẩm");
+            return "sanpham/sanpham_form";
+        }
         if(!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             sanPham.setAnh(fileName);
@@ -119,6 +124,10 @@ public class SanPhamController {
     @GetMapping("/sanpham/delete/{id}")
     public String delete(@PathVariable("id")Integer id ,RedirectAttributes redirectAttributes){
         try {
+            if(!cthdService.canDeleteSp(id)){
+                redirectAttributes.addFlashAttribute("message" , "Không thể xóa sản phẩm này");
+                return "redirect:/sanpham";
+            }
             service.delete(id);
             redirectAttributes.addFlashAttribute("message", "Xóa sản phầm thành công");
         } catch (SanPhamNotFoundException e) {

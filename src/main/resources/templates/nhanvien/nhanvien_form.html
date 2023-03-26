@@ -9,8 +9,12 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
        <h2>Quan ly nhan vien > [[${pageTitle}]]</h2>
      </div>
 
-      <div class = "container-fluid">   
-       <div class="modal fade text-center" id="modalDialog">
+      <div class = "container-fluid">
+		  <div th:if="${message != null}"
+			   class="alert alert-success text-center">
+			  [[${message}]]
+		  </div>
+          <div class="modal fade text-center" id="modalDialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -28,8 +32,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 			</div>
 		</div>
 	</div>
-		  <form th:action = "@{/nhanvien/save}" method = "POST" enctype="multipart/form-data" th:object = "${nhanvien}" style="max-width: 700px; margin: 0 auto"
-				onsubmit = "return IsEmailUnique(this);">
+		  <form th:action = "@{/nhanvien/save}" method = "POST" enctype="multipart/form-data" th:object = "${nhanvien}" style="max-width: 700px; margin: 0 auto">
 			  <input type="hidden" th:field="*{id}" />
 			  <div class="border border-secondary rounded p-3">
 				  <div class="form-group row">
@@ -103,32 +106,6 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <script th:src = "@{/js/common_form.js}"></script>
 <script type="text/javascript">
    moduleURL = "[[@{/nhanvien}]]";
-   function IsEmailUnique(form){
-	   url = "[[@{/nhanVien/check_email}]]";
-	   email = $("#email").val();
-	   csrfValue = $("input[name = '_csrf']").val();
-	   nhanVienId = $("#id").val();
-	   params = {id : nhanVienId,email : email , _csrf : csrfValue};
-	   
-	   $.post(url , params , function(res){
-		  if(res == "SUCCESSFUL"){
-			   form.submit(); 
-		  }else if (res == "DUPDICATED") {
-			  showModalDialog("Warning" , "Dubdicated Email");
-		  } else {
-			  showModalDialog("Error" , "Error from server");
-		  }
-	   }).fail(function(){
-		   showModalDialog("Error" , "Could not connect to the server" );
-	   });
-	   return false ;
-   }
-   function showModalDialog(title , message){
-	   $("#modalTitle").text(title);
-	   $("#modalBody").text(message);
-	   $("#modalDialog").modal();
-	   
-   }
 </script>
 </body>
 </html>

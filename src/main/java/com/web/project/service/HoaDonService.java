@@ -46,4 +46,8 @@ public class HoaDonService {
     public List<HoaDon> findByEmail(String email){
         return hoaDonRepository.findByEmail(email);
     }
+
+    public boolean canDeleteNv(Integer id) {
+        return hoaDonRepository.findByIdNhanVien(id).isEmpty();
+    }
 }

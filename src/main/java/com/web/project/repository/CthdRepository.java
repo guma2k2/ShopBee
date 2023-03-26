@@ -3,6 +3,7 @@ package com.web.project.repository;
 import com.web.project.dto.DoanhThuTheoSanPham;
 import com.web.project.dto.LichSuSanPham;
 import com.web.project.entity.ChiTietHoaDon;
+import com.web.project.entity.SanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -45,4 +46,7 @@ public interface CthdRepository extends JpaRepository<ChiTietHoaDon , Integer> {
             " JOIN c.hoaDon h " +
             " WHERE (h.ngayTao) = ?1" )
     public List<LichSuSanPham> listDoanhThuByExactDay(LocalDateTime date);
+
+    @Query("SELECT c FROM ChiTietHoaDon c WHERE c.sanPham.id = ?1")
+    public List<SanPham> listProductById(Integer idSp);
 }

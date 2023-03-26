@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.web.project.FileUploadUtil;
+import com.web.project.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -27,6 +28,9 @@ public class NhanVienController {
 
 	@Autowired
 	private NhanVienService service;
+
+	@Autowired
+	private HoaDonService hoaDonService;
 	
 	
 	@GetMapping("/nhanvien")
@@ -41,15 +45,25 @@ public class NhanVienController {
 		NhanVien nhanVien = new NhanVien();
 		nhanVien.setTrangThai(true);
 		model.addAttribute("nhanvien", nhanVien);
-		model.addAttribute("pageTitle", "Them nhan vien");
+		model.addAttribute("pageTitle", "Thêm nhân viên");
 		
 		return "nhanvien/nhanvien_form";
 	}
 	@PostMapping("/nhanvien/save")
 	public String save(NhanVien nhanvien ,
 					   RedirectAttributes re ,
-					   @RequestParam("image")MultipartFile multipartFile) throws IOException {
-		System.out.println(nhanvien.getPassword());
+					   @RequestParam("image")MultipartFile multipartFile,
+					   RedirectAttributes redirectAttributes ,
+					   Model model) throws IOException {
+
+		if(!service.isEmailUnique(nhanvien.getId() , nhanvien.getEmail())){
+			model.addAttribute("message" ,"Email của bạn đã được sử dụng!!");
+			model.addAttribute("nhanvien" ,nhanvien );
+			model.addAttribute("pageTitle" , nhanvien.getId() != null ? "Sửa nhân viên" : "Thêm nhân viên" );
+			return "nhanvien/nhanvien_form";
+		}
+
+
 		if (!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 			nhanvien.setPhotos(fileName);
@@ -66,7 +80,7 @@ public class NhanVienController {
 		}
 		
 		
-		re.addFlashAttribute("message", "The user has been saved successfully.");
+		re.addFlashAttribute("message", "Lưu nhân viên thành công");
 		return "redirect:/nhanvien";
 	}
 	@GetMapping("/nhanvien/edit/{id}")
@@ -76,7 +90,7 @@ public class NhanVienController {
 			List<Role> roles = service.listRoles();
 			model.addAttribute("nhanvien",nv);
 			model.addAttribute("listRoles", roles);
-			model.addAttribute("pageTitle", "Sua nhan vien");
+			model.addAttribute("pageTitle", "Sửa nhân viên");
 			return "nhanvien/nhanvien_form";
 		} catch (NhanVienNotFoundException e) {
 			redirectAttributes.addFlashAttribute("message", e.getMessage());
@@ -89,6 +103,11 @@ public class NhanVienController {
 	@GetMapping("/nhanvien/delete/{id}")
 	public String delete (@PathVariable("id")Integer id,RedirectAttributes redirectAttributes , Model model) {
 		try {
+			if(!hoaDonService.canDeleteNv(id)){
+				redirectAttributes.addFlashAttribute("message", "Không thể xóa nhân viên này");
+				return "redirect:/nhanvien";
+			}
+
 			service.delete(id);
 			redirectAttributes.addFlashAttribute("message" , "Xóa thành công!");
 		} catch (NhanVienNotFoundException e) {

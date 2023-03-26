@@ -147,4 +147,30 @@ public class NhanVienService {
 			return true;
 		}
 	}
+
+	public String updatePasswordCustomer(String email) throws NhanVienNotFoundException {
+		NhanVien customer = nhanVienrRepo.findByEmail(email);
+		if(customer != null){
+			String code = RandomString.make(64);
+			customer.setForgotPassword(code);
+			nhanVienrRepo.save(customer);
+			return code ;
+		}else {
+			throw  new NhanVienNotFoundException("Email của bạn đã nhập sai hoặc không tồn tại !!");
+		}
+	}
+
+	public NhanVien findByToken(String token) {
+		return nhanVienrRepo.findByForgotPassword(token);
+	}
+
+	public void updatePasswordReset(String token , String password) throws NhanVienNotFoundException {
+		NhanVien customer = nhanVienrRepo.findByForgotPassword(token);
+		if(customer == null){
+			throw new NhanVienNotFoundException("Khong tim thay nhan vien do token sai");
+		}
+		customer.setPassword(password);
+		encodePassword(customer);
+		nhanVienrRepo.save(customer);
+	}
 }

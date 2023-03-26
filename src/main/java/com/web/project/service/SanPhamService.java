@@ -36,6 +36,15 @@ public class SanPhamService {
         }
         return repo.findAll(pageable);
     }
+    public Page<SanPham> listByPageEnable(String sortDir , String sortField , String keyword , int pageNum){
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNum - 1 , sanPhamMoiPage , sort);
+        if(keyword != null){
+            return repo.findAllEnable(keyword , pageable);
+        }
+        return repo.findAllEnable(pageable);
+    }
 
     public List<SanPham> listAll(){
         return repo.findAll();
@@ -92,5 +101,9 @@ public class SanPhamService {
             return repo.findByCategory(idLoai , keyword , pageable);
         }
         return repo.findByCategory(idLoai , pageable);
+    }
+
+    public boolean canDeleteLoai(Integer idLoai){
+        return repo.listSpTheoLoai(idLoai).size() == 0;
     }
 }
