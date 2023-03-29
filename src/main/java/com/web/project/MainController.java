@@ -7,6 +7,7 @@ import com.web.project.entity.*;
 import com.web.project.service.*;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -20,11 +21,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -47,8 +48,25 @@ public class MainController {
 
 	@Autowired
 	private LoaiSanPhamService loaiSanPhamService;
+
+	@Autowired
+	private CartService cartService;
 	@GetMapping("/")
-	public String viewHomePage(Model model ) {
+	public String viewHomePage(Model model , HttpServletRequest request ,HttpSession session ) {
+		 String email = Utility.getEmailOfAuthenticatedCustomer(request);
+		 NhanVien nhanVien = nhanVienService.findByEmail(email);
+		 if (nhanVien != null) {
+			 if (nhanVien.getPhotos() != null && !nhanVien.getPhotos().isEmpty()) {
+				 String imagePath = nhanVien.getPhotosImagePath();
+				 session.setAttribute("imagePath", imagePath);
+			 }else{
+				 session.setAttribute("imagePath" , null);
+			 }
+		 }else{
+			 session.setAttribute("imagePath" , null);
+		 }
+
+
 		 return listByNoCategory(model,"desc","gia",null,1);
 	}
 	@GetMapping("/listSpTheoLoai/{idLoai}")
@@ -204,6 +222,7 @@ public class MainController {
 			lichSuGiaoDich.setTongTien(hoaDon.getThanhTien());
 			history.add(lichSuGiaoDich);
 		}
+		history.stream().sorted(Comparator.comparing(LichSuGiaoDich::getNgayGiaoDich));
 		model.addAttribute("history" , history);
 		return "lichsu";
 	}

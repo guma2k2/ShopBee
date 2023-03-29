@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"> 
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
 <body>
 <div th:fragment = "nav">
        <nav class = "navbar navbar-expand navbar-light bg-light">
@@ -12,7 +8,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
           <input type ="submit"/> 
        </form>
           <a class = "navbar-brand" th:href = "@{/}">
-            <img  th:src="@{/images/Spring_logo.png}"/>
+            <img class="img-logo"  th:src="@{/images/Spring_logo.png}"/>
              ShopBee
           </a>
           
@@ -59,7 +55,13 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                  </th:block>
                 <li class = "nav-item dropdown nav-user" sec:authorize="isAuthenticated()" >
                     <a  id ="photo" th:href = "@{account}">
-                       <span class = "fa fa-user fa-2x fa-solid"></span>
+                        <th:block th:if="${session.imagePath == null}">
+                           <i  class = "fa fa-user fa-2x fa-solid"></i>
+                        </th:block>
+
+                        <th:block th:if="${session.imagePath != null}">
+                            <img class="image-profiles" th:src="@{${session.imagePath}}">
+                        </th:block>
                     </a>
                   <a class = "nav-link dropdown-toggle" data-toggle = "dropdown"
                      sec:authentication = "principal.fullName">

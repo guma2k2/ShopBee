@@ -24,6 +24,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.Builder;
 import lombok.ToString;
 
 @Entity(name = "nhanviens")
@@ -39,7 +40,7 @@ public class NhanVien {
 	private String ho ;
 	@Column(name = "ten" , length = 40 , nullable = false)
 	private String ten;
-	@Column(name = "sdt" , length = 20 , nullable = false)
+	@Column(name = "sdt" , length = 20 )
 	private String sdt ;
 
 
@@ -71,6 +72,11 @@ public class NhanVien {
 
 	@Column(name = "forgot_password_code" ,length = 100)
 	private String forgotPassword ;
+
+
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "authentication_type" )
+	private AuthenticationType authenticationType;
 
 
 
@@ -256,7 +262,13 @@ public class NhanVien {
 		return "/nhanvien-photos/" + this.id + "/" + this.photos;
 	}
 
+	public AuthenticationType getAuthenticationType() {
+		return authenticationType;
+	}
 
+	public void setAuthenticationType(AuthenticationType authenticationType) {
+		this.authenticationType = authenticationType;
+	}
 
 	@Override
 	public String toString() {

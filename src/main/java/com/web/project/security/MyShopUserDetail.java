@@ -77,5 +77,8 @@ public class MyShopUserDetail implements UserDetails {
 		this.nhanVien.setTen(ten);
 	}
 
+	public NhanVien getUser(){
+		return nhanVien;
+	}
 
 }

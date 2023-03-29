@@ -1,5 +1,6 @@
 package com.web.project.repository;
 
+import com.web.project.entity.AuthenticationType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.web.project.entity.NhanVien;
+import org.springframework.security.core.Authentication;
 
 
 public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
@@ -32,4 +34,8 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
 	public NhanVien findByVerificationCode(String verificationCode);
 
 	public NhanVien findByForgotPassword(String token);
+
+	@Modifying
+	@Query("UPDATE nhanviens n SET n.authenticationType = ?1 WHERE n.id = ?2")
+	public void updateAuthenticationType(AuthenticationType type , Integer id );
 }

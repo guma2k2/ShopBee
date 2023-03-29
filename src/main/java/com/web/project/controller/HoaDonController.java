@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -27,6 +28,7 @@ public class HoaDonController {
     @GetMapping("/hoadon")
     public String listHoaDon(Model model){
         List<HoaDon> listHd = hoaDonService.listAll();
+        listHd.stream().sorted(Comparator.comparing(HoaDon::getNgayTao));
         model.addAttribute("listHd" , listHd);
         return "hoadon/hoadon";
     }

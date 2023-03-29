@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.web.project.RandomString;
+import com.web.project.entity.AuthenticationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -130,6 +131,7 @@ public class NhanVienService {
 		customer.setTrangThai(false);
 		String randomCode = RandomString.make(64);
 		customer.setVerificationCode(randomCode);
+		customer.setAuthenticationType(AuthenticationType.DATABASE);
 		System.out.println(randomCode);
 		nhanVienrRepo.save(customer);
 	}
@@ -173,4 +175,33 @@ public class NhanVienService {
 		encodePassword(customer);
 		nhanVienrRepo.save(customer);
 	}
+
+
+
+	public void addNewCustomerOauth(String name , String email){
+		NhanVien customer = new NhanVien();
+		setName(name , customer);
+		customer.addRole(new Role(3));
+		customer.setEmail(email);
+		customer.setTrangThai(true);
+		customer.setDiaChi("");
+		customer.setPhotos("");
+		customer.setPassword("");
+		customer.setSdt("");
+		nhanVienrRepo.save(customer);
+
+	}
+	public void setName(String name ,NhanVien customer ){
+		String[] full = name.split(" ");
+		if(full.length < 2){
+
+			customer.setHo(name);
+			customer.setTen("");
+		}else{
+			String first = full[0];
+			customer.setHo(first);
+			customer.setTen(name.replace(first , ""));
+		}
+	}
+
 }

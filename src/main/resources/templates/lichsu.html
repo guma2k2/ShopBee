@@ -18,7 +18,7 @@
 		  <tr  >
 			  <td>[[${status.count}]]</td>
 			  <td>[[${his.idHoaDon}]]</td>
-			  <td>[[${his.ngayGiaoDich}]]</td>
+			  <td th:text ="${#temporals.format(his.ngayGiaoDich, 'dd-MM-yyyy HH:mm')}" ></td>
 			  <td>
 				 <th:block th:each = "sp : ${his.listSP}" >
 					 <div>[[${sp.tenSanPham}]] / [[${sp.soLuong}]] / [[${#numbers.formatInteger(sp.gia,3,'POINT')}]] đồng  </div>

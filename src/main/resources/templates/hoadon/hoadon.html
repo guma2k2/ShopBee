@@ -23,7 +23,7 @@
         <tr th:each="hd : ${listHd}">
             <td>[[${hd.id}]]</td>
             <td>[[${hd.nhanVien.id}]]</td>
-            <td>[[${hd.ngayTao}]]</td>
+            <td th:text ="${#temporals.format(hd.ngayTao, 'dd-MM-yyyy HH:mm')}" ></td>
             <td>
                 [[${#numbers.formatInteger(hd.thanhTien,3,'POINT')}]] đồng
             </td>

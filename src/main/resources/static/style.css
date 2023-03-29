@@ -4,9 +4,10 @@
 .navbar {
 	height : 60px;
 }
-.navbar img{
-	width: 90px;
-	height: 90px;
+.img-logo {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
 	object-fit:cover;
 }
 .navbar-nav , .nav-item{
@@ -41,6 +42,12 @@ h2{
 	height: 70px;
 	border-radius:50%;
 	object-fit:cover;
+}
+.image-profiles{
+  width: 40px ;
+  height: 40px;
+  border-radius: 50%;
+  object-fit:cover;
 }
 .image-SP{
   width : 70px ;
@@ -299,4 +306,36 @@ header {
    padding: 20px;
 }
 
+
+.cart-size{
+  color: #ee4d2d;
+}
+.table-invoice{
+  border-radius: 5px;
+  margin: 20px;
+  border-collapse : collapse;
+  width: 100%;
+}
+.table-invoice thead tr {
+   border-bottom : 1px dashed grey;
+}
+.table-invoice tfoot tr {
+   border-top : 1px dashed grey;
+
+}
+.table-invoice thead tr td {
+ font-size: 18px ;
+ letter-spacing: 1px;
+ padding: 8px ;
+ color: grey;
+}
+.table-invoice tfoot tr td {
+ font-size: 18px ;
+ letter-spacing: 1px;
+ padding: 8px ;
+ color: green;
+}
+.table-invoice tbody tr td {
+ padding: 8px ;
+}
 
