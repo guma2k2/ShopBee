@@ -15,7 +15,7 @@ import org.springframework.cglib.core.Local;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "orders")
+@Table(name = "donDatHang")
 public class HoaDon {
 
 	@Id
@@ -31,7 +31,7 @@ public class HoaDon {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id")
-	private NhanVien customer ;
+	private Customer customer ;
 
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status ;
@@ -41,12 +41,12 @@ public class HoaDon {
 	private List<OrderTrack> tracks = new ArrayList<>();
 
 
-	public HoaDon(Double thanhTien, NhanVien customer) {
+	public HoaDon(Double thanhTien, Customer customer) {
 		this.thanhTien = thanhTien;
 		this.customer = customer;
 	}
 
-	public HoaDon(LocalDateTime ngayTao, Double thanhTien, NhanVien customer) {
+	public HoaDon(LocalDateTime ngayTao, Double thanhTien, Customer customer) {
 		this.ngayTao = ngayTao;
 		this.thanhTien = thanhTien;
 		this.customer = customer;

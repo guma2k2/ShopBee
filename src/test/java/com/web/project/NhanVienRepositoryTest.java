@@ -8,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 
 import com.web.project.entity.NhanVien;
@@ -25,14 +27,14 @@ public class NhanVienRepositoryTest {
 	
 	@Autowired
 	private TestEntityManager entityManager;
-	
+
+
 	@Test
 	public void testCreateNhanVien() {
-		NhanVien nhanVien = new NhanVien(2 , "Ngo" ,"Thuan" , "asfafafa" , "asfasf" );
-		Role roleAdmin = entityManager.find(Role.class, 1);
-		
+		NhanVien nhanVien = new NhanVien(2 , "Ngo" ,"Thuan" , "0918462888" , "thuanngo723@yahoo.com" );
+		Role roleAdmin = entityManager.find(Role.class, 2);
+
 		nhanVien.addRole(roleAdmin);
-		
 		NhanVien NV = repo.save(nhanVien);
 		assertThat(NV.getId()).isGreaterThan(0);
 	}
@@ -55,11 +57,11 @@ public class NhanVienRepositoryTest {
 	}
 	@Test 
 	public void testUpdateNhanVien() {
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		NhanVien nv = repo.findById(1).get();
-		Role role = new Role(1);
-		nv.getRoles().remove(role);
+		String pass = "thuan2023" ;
+		nv.setPassword(bCryptPasswordEncoder.encode(pass));
 		repo.save(nv);
-		
 	}
 	@Test 
 	public void testDelete() {

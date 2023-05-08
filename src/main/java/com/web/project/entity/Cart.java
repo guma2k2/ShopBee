@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-@Table(name = "carts")
+@Table(name = "gioHang")
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class Cart {
 
     @ManyToOne(cascade = CascadeType.ALL )
     @JoinColumn(name = "khach_hang_id")
-    private NhanVien khachHang ;
+    private Customer khachHang ;
 
     @ManyToOne(cascade = CascadeType.ALL )
     @JoinColumn(name = "san_pham_id")

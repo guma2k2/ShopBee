@@ -23,14 +23,13 @@ import jakarta.persistence.Transient;
 import lombok.Builder;
 import lombok.ToString;
 
-@Entity(name = "nhanviens")
-@Table(name = "nhanviens")
+@Entity
+@Table(name = "nhanVien")
 public class NhanVien {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id ;
-	
 	
 	@Column(name = "ho" , length = 40 , nullable = false)
 	private String ho ;
@@ -57,8 +56,6 @@ public class NhanVien {
 	@Column(length = 64)
 	private String photos;
 	
-	@OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL)
-	private List<HoaDon> hoaDon  ;
 
 	@Column(name = "verification_code", length = 64)
 	private String verificationCode;
@@ -213,13 +210,6 @@ public class NhanVien {
 		this.id = id;
 	}
 
-	public List<HoaDon> getHoaDon() {
-		return hoaDon;
-	}
-
-	public void setHoaDon(List<HoaDon> hoaDon) {
-		this.hoaDon = hoaDon;
-	}
 	public String getVerificationCode() {
 		return verificationCode;
 	}
@@ -241,7 +231,6 @@ public class NhanVien {
 	@Transient
 	public String getPhotosImagePath() {
 		if (id == null || photos == null) return "/images/default-user.png";
-		
 		return "/nhanvien-photos/" + this.id + "/" + this.photos;
 	}
 

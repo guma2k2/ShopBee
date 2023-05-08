@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "reviews")
+@Table(name = "review")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,7 +33,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "khachHang_id")
-    private NhanVien khachHang;
+    private Customer khachHang;
 
 
     @OneToMany(mappedBy = "review")

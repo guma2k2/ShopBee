@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "loaisanphams")
+@Table(name = "loaiSanPham")
 public class LoaiSanPham {
 
 

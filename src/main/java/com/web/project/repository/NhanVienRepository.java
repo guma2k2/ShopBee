@@ -15,28 +15,28 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
 
-	@Query("SELECT n FROM nhanviens n WHERE n.email = ?1")
+	@Query("SELECT n FROM NhanVien n WHERE n.email = ?1")
 	public NhanVien findByEmail(String email);
 	
-	@Query("SELECT n FROM nhanviens n WHERE CONCAT(n.ho,' ' ,n.ten) LIKE %?1%")
+	@Query("SELECT n FROM NhanVien n WHERE CONCAT(n.ho,' ' ,n.ten) LIKE %?1%")
 	public Page<NhanVien> findAll(String keyword , Pageable pageable);
 	
 	public Long countById(Integer id );
 	
-	@Query("UPDATE nhanviens n SET n.trangThai = ?2 WHERE n.id = ?1")
+	@Query("UPDATE NhanVien n SET n.trangThai = ?2 WHERE n.id = ?1")
 	@Modifying
 	public void updateTrangThai(Integer id , boolean TrangThai);
 
-	@Query("UPDATE nhanviens n SET n.trangThai = true , n.verificationCode = null WHERE n.id = ?1")
+	@Query("UPDATE NhanVien n SET n.trangThai = true , n.verificationCode = null WHERE n.id = ?1")
 	@Modifying
 	public void updateTrangThaiCustomer(Integer id);
 
-	@Query("SELECT k FROM nhanviens k WHERE  k.verificationCode = ?1 ")
+	@Query("SELECT k FROM NhanVien k WHERE  k.verificationCode = ?1 ")
 	public NhanVien findByVerificationCode(String verificationCode);
 
 	public NhanVien findByForgotPassword(String token);
 
 	@Modifying
-	@Query("UPDATE nhanviens n SET n.authenticationType = ?1 WHERE n.id = ?2")
+	@Query("UPDATE NhanVien n SET n.authenticationType = ?1 WHERE n.id = ?2")
 	public void updateAuthenticationType(AuthenticationType type , Integer id );
 }

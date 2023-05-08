@@ -26,6 +26,7 @@ public class ReviewService {
     private  CthdRepository cthdRepository ;
 
     @Autowired NhanVienService nhanVienService ;
+    @Autowired CustomerService customerService ;
 
     @Autowired
     private ReviewVoteRepository reviewVoteRepository ;
@@ -34,7 +35,7 @@ public class ReviewService {
 
     public void saveOrUpdateVote(String email, Long reviewId) throws ReviewNotFoundException {
         Review review = get(reviewId) ;
-        NhanVien khachHang = nhanVienService.findByEmail(email) ;
+        Customer khachHang = customerService.findByEmailCustomer(email) ;
         Optional<ReviewVote> vote  = reviewVoteRepository.findByCustomerAndReview(email, reviewId);
         boolean update = vote.isPresent();
         if(!update) {
@@ -77,7 +78,8 @@ public class ReviewService {
     public boolean canCustomerReviewProduct(String email, Integer productId) {
         return cthdRepository.countByCustomerProductStatus(email, productId, OrderStatus.DELIVERED) > 0 ;
     }
-    public Review saveReview(Review review , NhanVien customer , SanPham sanPham) {
+    public Review saveReview(Review review , NhanVien khachHang , SanPham sanPham) {
+        Customer customer = customerService.findByEmailCustomer(khachHang.getEmail()) ;
         review.setReviewTime(LocalDateTime.now());
         review.setKhachHang(customer);
         review.setSanPham(sanPham);

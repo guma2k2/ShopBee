@@ -24,7 +24,7 @@ import jakarta.transaction.Transactional;
 public class NhanVienService {
 	public static final int NhanVienPerPage = 5 ;
 	@Autowired
-	private NhanVienRepository nhanVienrRepo;
+	private NhanVienRepository nhanVienRepository;
 	
 	@Autowired
 	private RoleRepository roleRepo ;
@@ -33,7 +33,7 @@ public class NhanVienService {
 	private PasswordEncoder passwordEncoder ;
 	
 	public List<NhanVien> listAll(){
-		return nhanVienrRepo.findAll();
+		return nhanVienRepository.findAll();
 	}
 	
 	public List<Role> listRoles(){
@@ -46,16 +46,16 @@ public class NhanVienService {
 		
 		Pageable pageable = PageRequest.of(pageNum - 1, NhanVienPerPage , sort);
 		if(keyword != null) {
-			return nhanVienrRepo.findAll(keyword, pageable);
+			return nhanVienRepository.findAll(keyword, pageable);
 		}
-		return nhanVienrRepo.findAll(pageable);
+		return nhanVienRepository.findAll(pageable);
 		
 	}
 
 	public NhanVien save(NhanVien nhanvien) {
 		boolean isUpdate = (nhanvien.getId() != null);
 		if(isUpdate) {
-			NhanVien UpdatednhanVien = nhanVienrRepo.findById(nhanvien.getId()).get();
+			NhanVien UpdatednhanVien = nhanVienRepository.findById(nhanvien.getId()).get();
 			if(nhanvien.getPassword().isEmpty()) {
 				nhanvien.setPassword(UpdatednhanVien.getPassword());
 			}else {
@@ -64,7 +64,7 @@ public class NhanVienService {
 		}else {
 			encodePassword(nhanvien);
 		}
-		return nhanVienrRepo.save(nhanvien);
+		return nhanVienRepository.save(nhanvien);
 	}
 	
 	public void encodePassword(NhanVien user) {
@@ -73,7 +73,7 @@ public class NhanVienService {
 	}
 	
 	public boolean isEmailUnique(Integer id , String email) {
-		NhanVien nhanVien = nhanVienrRepo.findByEmail(email);
+		NhanVien nhanVien = nhanVienRepository.findByEmail(email);
 		if(nhanVien == null) return true;
 		boolean isCreateNew = (id == null);
 		
@@ -91,27 +91,27 @@ public class NhanVienService {
 	}
 	public NhanVien getById(Integer id) throws NhanVienNotFoundException {
 		try {
-			return nhanVienrRepo.findById(id).get();
+			return nhanVienRepository.findById(id).get();
 		} catch (NoSuchElementException e) {
 			throw new NhanVienNotFoundException("Khong tim thay nhan vien nao");
 		}
 	}
 	public void delete(Integer id ) throws NhanVienNotFoundException {
-		Long countedId = nhanVienrRepo.countById(id);
+		Long countedId = nhanVienRepository.countById(id);
 		if(countedId == null || countedId == 0) {
 			throw new NhanVienNotFoundException("Khong tim thay nhan vien nao"); 
 		}
-		nhanVienrRepo.deleteById(id);
+		nhanVienRepository.deleteById(id);
 	}
 	public void updateTrangThaiNV(Integer id , boolean trangThai) {
-		nhanVienrRepo.updateTrangThai(id, trangThai);
+		nhanVienRepository.updateTrangThai(id, trangThai);
 	}
 
 	public NhanVien findByEmail(String email) {
-		return nhanVienrRepo.findByEmail(email);
+		return nhanVienRepository.findByEmail(email);
 	}
 	public NhanVien updateAccount(NhanVien account) {
-		NhanVien nhanVien = nhanVienrRepo.findById(account.getId()).get();
+		NhanVien nhanVien = nhanVienRepository.findById(account.getId()).get();
 		if(!account.getPassword().isEmpty()) {
 			nhanVien.setPassword(account.getPassword());
 			encodePassword(nhanVien);
@@ -123,7 +123,7 @@ public class NhanVienService {
 		nhanVien.setTen(account.getTen());
 		nhanVien.setDiaChi(account.getDiaChi());
 		nhanVien.setSdt(account.getSdt());
-		return nhanVienrRepo.save(nhanVien);
+		return nhanVienRepository.save(nhanVien);
 	}
 
 	public void  saveCustomer(NhanVien customer){
@@ -133,29 +133,29 @@ public class NhanVienService {
 		customer.setVerificationCode(randomCode);
 		customer.setAuthenticationType(AuthenticationType.DATABASE);
 		System.out.println(randomCode);
-		nhanVienrRepo.save(customer);
+		nhanVienRepository.save(customer);
 	}
 
 	public boolean checkUniqueEmailCustomer(String email){
-		return nhanVienrRepo.findByEmail(email) == null;
+		return nhanVienRepository.findByEmail(email) == null;
 	}
 
 	public boolean verify(String verification){
-		NhanVien customer = nhanVienrRepo.findByVerificationCode(verification);
+		NhanVien customer = nhanVienRepository.findByVerificationCode(verification);
 		if(customer == null || customer.isTrangThai()){
 			return false ;
 		}else {
-			nhanVienrRepo.updateTrangThaiCustomer(customer.getId());
+			nhanVienRepository.updateTrangThaiCustomer(customer.getId());
 			return true;
 		}
 	}
 
 	public String updatePasswordCustomer(String email) throws NhanVienNotFoundException {
-		NhanVien customer = nhanVienrRepo.findByEmail(email);
+		NhanVien customer = nhanVienRepository.findByEmail(email);
 		if(customer != null){
 			String code = RandomString.make(64);
 			customer.setForgotPassword(code);
-			nhanVienrRepo.save(customer);
+			nhanVienRepository.save(customer);
 			return code ;
 		}else {
 			throw  new NhanVienNotFoundException("Email của bạn đã nhập sai hoặc không tồn tại !!");
@@ -163,17 +163,17 @@ public class NhanVienService {
 	}
 
 	public NhanVien findByToken(String token) {
-		return nhanVienrRepo.findByForgotPassword(token);
+		return nhanVienRepository.findByForgotPassword(token);
 	}
 
 	public void updatePasswordReset(String token , String password) throws NhanVienNotFoundException {
-		NhanVien customer = nhanVienrRepo.findByForgotPassword(token);
+		NhanVien customer = nhanVienRepository.findByForgotPassword(token);
 		if(customer == null){
 			throw new NhanVienNotFoundException("Khong tim thay nhan vien do token sai");
 		}
 		customer.setPassword(password);
 		encodePassword(customer);
-		nhanVienrRepo.save(customer);
+		nhanVienRepository.save(customer);
 	}
 
 
@@ -188,7 +188,7 @@ public class NhanVienService {
 		customer.setPhotos("");
 		customer.setPassword("");
 		customer.setSdt("");
-		nhanVienrRepo.save(customer);
+		nhanVienRepository.save(customer);
 
 	}
 	public void setName(String name ,NhanVien customer ){

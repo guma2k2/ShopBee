@@ -74,7 +74,7 @@
 									border-radius: 50%;">
 				  </div>
 				  <div class="col-11 d-flex flex-column "  >
-					  <span class="mb-2" style="font-size: 12px;" >[[${customer.fullName}]]</span>
+					  <span class="mb-2" style="font-size: 12px;" >[[${customer.email}]]</span>
 					  <input type="text" class="product-detail-rating mb-2" dir="ltr" data-size = "xs" th:value="${review.rating}" />
 					  <span style="color: rgba(0,0,0,.54);" class="mb-2"  th:text ="${#temporals.format(review.reviewTime, 'dd-MM-yyyy HH:mm')}" ></span>
 					  <span style="color: rgba(0,0,0,.87); font-size: 20px;" class="mb-2">[[${review.headline}]]</span>

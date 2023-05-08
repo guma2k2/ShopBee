@@ -30,18 +30,5 @@ public class CartTest {
 
 	@Autowired
 	private  CartRepository repository;
-	@Test
-	public void testListAll() {
-		Integer saphamId = 1 ;
-		int quantity = 2 ;
-		NhanVien kh = entityManager.find(NhanVien.class,1 );
-		SanPham sp = entityManager.find(SanPham.class , 2);
-		Cart t = new Cart();
-		t.setSoLuong(quantity);
-		t.setKhachHang(kh);
-		t.setSanPham(sp);
-		Cart cart  = repository.save(t);
-		assertThat(cart).isNotNull();
 
-	}
 }

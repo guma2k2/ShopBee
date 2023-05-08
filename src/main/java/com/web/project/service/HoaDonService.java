@@ -1,9 +1,6 @@
 package com.web.project.service;
 
-import com.web.project.entity.HoaDon;
-import com.web.project.entity.NhanVien;
-import com.web.project.entity.OrderStatus;
-import com.web.project.entity.OrderTrack;
+import com.web.project.entity.*;
 import com.web.project.repository.HoaDonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,12 +19,14 @@ public class HoaDonService {
     @Autowired
     private OrderTrackService orderTrackService ;
 
+    @Autowired
+    private CustomerService customerService ;
+
     public HoaDon saveHoaDon(Double tongTien , NhanVien khachHang ){
         LocalDateTime now = LocalDateTime.now();
-        HoaDon hoaDon = new HoaDon(now, tongTien , khachHang );
+        Customer customer = customerService.findByEmailCustomer(khachHang.getEmail()) ;
+        HoaDon hoaDon = new HoaDon(now, tongTien , customer );
         hoaDon.setStatus(OrderStatus.NEW);
-
-
         return hoaDonRepository.save(hoaDon);
     }
 

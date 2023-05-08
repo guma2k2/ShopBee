@@ -46,6 +46,8 @@ public class MainController {
 
 	@Autowired
 	private ReviewService reviewService ;
+	@Autowired
+	private CustomerService customerService ;
 
 	@Autowired
 	private LoaiSanPhamService loaiSanPhamService;
@@ -162,9 +164,6 @@ public class MainController {
 			if(email != null) {
 				reviewService.updateVoteForUser(email, reviews) ;
 			}
-//			for (Review review : reviews) {
-//				System.out.println(review.voted);
-//			}
 			model.addAttribute("reviews", reviews) ;
 			model.addAttribute("sanpham" , sanPham);
 			return "sanpham/sanpham_chitiet";
@@ -213,7 +212,9 @@ public class MainController {
 		newCustomer.setPassword(customer.getPassword());
 		newCustomer.setDiaChi(customer.getDiaChi());
 		newCustomer.setSdt(customer.getSdt());
+		newCustomer.setPhotos(customer.getPhotos());
 		customer.addRole(role);
+		customerService.saveCustomer(newCustomer) ;
 		nhanVienService.saveCustomer(customer);
 		sendVerificationEmail(request , customer);
 		return "register_success";

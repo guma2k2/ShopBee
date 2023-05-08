@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "sanphams")
+@Table(name = "sanPham")
 public class SanPham {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(name = "ten" , nullable = false, length = 30)
+	@Column(name = "ten" , nullable = false, length = 100)
 	private String ten ;
 	
 	private int gia;

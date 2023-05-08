@@ -12,8 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "roles")
-@Table(name = "roles")
+@Entity
+@Table(name = "vaiTro")
 public class Role {
 	
 	public Role() {

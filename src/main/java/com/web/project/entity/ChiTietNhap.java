@@ -6,23 +6,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "reviewVote")
+@Table(name = "ct_nhap_hang")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ReviewVote {
-
+public class ChiTietNhap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
 
-    @ManyToOne
-    @JoinColumn(name = "review_id")
-    private Review review ;
 
     @ManyToOne
-    @JoinColumn(name = "khachHang_id")
-    private Customer khachHang ;
+    @JoinColumn(name = "nhanVien_id")
+    private NhanVien nhanVien ;
 
-    private boolean voted  ; // only vote Up : if true : was vote else false : undo voted
+    @ManyToOne
+    @JoinColumn(name = "sanPham_id")
+    private SanPham sanPham ;
+
+    private int soLuong ;
 }
