@@ -15,7 +15,7 @@ import org.springframework.cglib.core.Local;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "hoadons")
+@Table(name = "orders")
 public class HoaDon {
 
 	@Id
@@ -30,18 +30,65 @@ public class HoaDon {
 	private Double thanhTien ;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "nhan_vien_id")
-	private NhanVien nhanVien ;
+	@JoinColumn(name = "customer_id")
+	private NhanVien customer ;
+
+	@Enumerated(EnumType.STRING)
+	private OrderStatus status ;
+
+	@OneToMany(mappedBy = "order" , cascade = CascadeType.ALL , orphanRemoval = true)
+	@OrderBy("updatedTime ASC")
+	private List<OrderTrack> tracks = new ArrayList<>();
 
 
-	public HoaDon(Double thanhTien, NhanVien nhanVien) {
+	public HoaDon(Double thanhTien, NhanVien customer) {
 		this.thanhTien = thanhTien;
-		this.nhanVien = nhanVien;
+		this.customer = customer;
 	}
 
-	public HoaDon(LocalDateTime ngayTao, Double thanhTien, NhanVien nhanVien) {
+	public HoaDon(LocalDateTime ngayTao, Double thanhTien, NhanVien customer) {
 		this.ngayTao = ngayTao;
 		this.thanhTien = thanhTien;
-		this.nhanVien = nhanVien;
+		this.customer = customer;
+	}
+
+	@Transient
+	public String getRecipientName() {
+		return customer.getFullName();
+	}
+	@Transient
+	public String getRecipientAddress() {
+		return customer.getDiaChi();
+	}
+	@Transient
+	public String getPhoneNumber() {
+		return customer.getSdt();
+	}
+
+	public boolean hasStatus(OrderStatus status) {
+		for (OrderTrack aTrack : tracks) {
+			if (aTrack.getStatus().equals(status)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	@Transient
+	public boolean isPicked() {
+		return hasStatus(OrderStatus.PICKED);
+	}
+	@Transient
+	public boolean isShipping() {
+		return hasStatus(OrderStatus.SHIPPING);
+	}
+	@Transient
+	public boolean isDelivered() {
+		return hasStatus(OrderStatus.DELIVERED);
+	}
+
+	@Transient
+	public boolean isReturned() {
+		return hasStatus(OrderStatus.RETURNED);
 	}
 }

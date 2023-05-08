@@ -125,9 +125,10 @@ h2{
 *.icon-silver {color: silver}
 *.icon-green {color: green}
 *.icon-dark {color: gray}
+*.icon-blue {color: blue}
 
 .product{
-    margin: 30px;
+    margin: 10px 30px;
     display: flex;
     gap:30px;
     height: 500px ;

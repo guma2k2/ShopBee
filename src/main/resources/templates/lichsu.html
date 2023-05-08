@@ -4,31 +4,71 @@
 <head th:replace = "~{fragments :: page_head}">
 <body>
 	<div th:replace="~{navigation :: nav}"></div>
+	<div class="container" >
+		<h2 class="text-center" >Đơn hàng của bạn</h2>
 	<table class="table table-bordered table-striped table-hover">
 		<thead class="thead-light" >
 		  <tr>
-			 <th>Stt</th>
-			  <th>Ma hoa don</th>
-			  <th>Ngay giao dich</th>
-			  <th>San pham(ten , so luong , tong gia)</th>
-			  <th>Tong tien</th>
+			  <th>ID</th>
+			  <th>Thời gian giao dịch</th>
+			  <th>Sản phẩm</th>
+			  <th>Tổng tiền</th>
+			  <th>Trang thái</th>
+			  <th></th>
 		  </tr>
 		</thead>
 		<tbody th:each = "his , status : ${history}" >
 		  <tr  >
-			  <td>[[${status.count}]]</td>
 			  <td>[[${his.idHoaDon}]]</td>
 			  <td th:text ="${#temporals.format(his.ngayGiaoDich, 'dd-MM-yyyy HH:mm')}" ></td>
 			  <td>
-				 <th:block th:each = "sp : ${his.listSP}" >
-					 <div>[[${sp.tenSanPham}]] / [[${sp.soLuong}]] / [[${#numbers.formatInteger(sp.gia,3,'POINT')}]] đồng  </div>
-				 </th:block>
+				  <ul>
+					 <th:block th:each = "sp : ${his.listSP}" >
+						 <li>[[${sp.tenSanPham}]]</li>
+					 </th:block>
+				  </ul>
 			  </td>
+
 			  <td>
 				  [[${#numbers.formatInteger(his.tongTien,3,'POINT')}]] đồng
+			  </td>
+			  <td>[[${his.statusName}]]</td>
+			  <td class="d-flex align-items-center justify-content-between">
+				  <a class="fa fa-file fa-solid fa-2x link-detail icon-green"
+					 th:href="@{'/hoadon/view/' +${his.idHoaDon}}">
+				  </a>
+				  <a th:if="${his.canReturn}" class="fa fa-undo fa-2x link-return " th:href="@{'/hoadon/modal/return/' + ${his.idHoaDon}}" ></a>
 			  </td>
 		  </tr>
 		</tbody>
 	</table>
+	</div>
+	<div class="modal fade" id="detailModal">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="returnModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+	   $(".link-detail").on('click' , function(e){
+		  e.preventDefault();
+		  linkDetail = $(this).attr("href");
+		  $("#detailModal").modal("show").find(".modal-content").load(linkDetail);
+	   });
+	   $(".link-return").on('click' , function(e){
+		  e.preventDefault();
+		  linkDetail = $(this).attr("href");
+		  $("#returnModal").modal("show").find(".modal-content").load(linkDetail);
+	   });
+	});
+</script>
 </body>
 </html>

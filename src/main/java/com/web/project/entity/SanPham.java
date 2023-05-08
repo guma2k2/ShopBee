@@ -36,12 +36,41 @@ public class SanPham {
 	@JoinColumn(name = "loai_san_pham_id")
 	private LoaiSanPham loaiSanPham;
 
-
+	@OneToMany(mappedBy = "sanPham", cascade = CascadeType.ALL)
+	private List<Review> reviews = new ArrayList<>() ;
 
 	@Transient
 	public String getPhotosImagePath() {
 		if (id == null || anh == null) return "/images/default-user.png";
 		return "/sanpham-photos/" + this.id + "/" + this.anh;
+	}
+
+	@Transient
+	private boolean canReview ;
+
+	@Transient
+	private boolean didReview ;
+
+	@Transient
+	public int getReviewCount() {
+		return reviews.size() > 0 ? reviews.size() : 0 ;
+	}
+
+	@Transient
+	public Double getAverageRating() {
+		return reviews.stream().mapToInt(Review::getRating).average().orElse(0);
+	}
+
+	public SanPham(Integer id, String ten, int gia, String anh, String size, String moTa, boolean trangThai, LoaiSanPham loaiSanPham, List<Review> reviews) {
+		this.id = id;
+		this.ten = ten;
+		this.gia = gia;
+		this.anh = anh;
+		this.size = size;
+		this.moTa = moTa;
+		this.trangThai = trangThai;
+		this.loaiSanPham = loaiSanPham;
+		this.reviews = reviews;
 	}
 
 	public SanPham(Integer id, String ten, int gia, String anh, String size, String moTa, boolean trangThai, LoaiSanPham loaiSanPham) {
@@ -122,4 +151,27 @@ public class SanPham {
 		this.loaiSanPham = loaiSanPham;
 	}
 
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
+
+	public boolean isCanReview() {
+		return canReview;
+	}
+
+	public void setCanReview(boolean canReview) {
+		this.canReview = canReview;
+	}
+
+	public boolean isDidReview() {
+		return didReview;
+	}
+
+	public void setDidReview(boolean didReview) {
+		this.didReview = didReview;
+	}
 }

@@ -1,45 +1,85 @@
-<div class="modal-header">
-  <h4 class="modal-title">Chi tiết hóa đơn</h4>
-  <button type="button" class="close" data-dismiss="modal">&times;</button>
-</div>
-<div class="modal-content" >
-  <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Mã người lập:</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" th:value="${hoaDon.nhanVien.id}" readonly />
+<div th:fragment="content" th:remove="tag">
+  <div class="row my-2" sec:authorize = "hasAuthority('Customer')" >
+    <div class="col-3 d-flex flex-column align-items-center justify-content-center ">
+        <i class="fas fa-spinner fa-2x icon-green"></i>
+        <div class="title mt-3" >
+          PROCESSING
+        </div>
+    </div>
+    <div class="col-3 d-flex flex-column align-items-center justify-content-center ">
+      <div class="icon" >
+        <th:block th:if="${hoaDon.picked}">
+          <i class="fas fa-people-carry fa-2x icon-green"></i>
+        </th:block>
+        <th:block th:unless="${hoaDon.picked}">
+          <i class="fas fa-people-carry fa-2x icon-dark linkUpdateStatus"></i>
+        </th:block>
+      </div>
+      <div class="title mt-3" >
+        PICKED
+      </div>
+    </div>
+    <div class="col-3 d-flex flex-column align-items-center justify-content-center ">
+      <div class="icon" >
+        <th:block th:if="${hoaDon.shipping}">
+          <i class="fas fa-shipping-fast fa-2x icon-green"></i>
+        </th:block>
+        <th:block th:unless="${hoaDon.shipping}">
+          <i class="fas fa-shipping-fast fa-2x icon-dark linkUpdateStatus"></i>
+        </th:block>
+      </div>
+      <div class="title mt-3" >
+        SHIPPING
+      </div>
+    </div>
+    <div class="col-3 d-flex flex-column align-items-center justify-content-center ">
+      <div class="icon" >
+        <th:block th:if="${hoaDon.delivered}">
+          <i class="fas fa-box-open fa-2x icon-green"></i>
+        </th:block>
+        <th:block th:unless="${hoaDon.delivered}">
+          <i class="fas fa-box-open fa-2x icon-dark linkUpdateStatus"></i>
+        </th:block>
+      </div>
+      <div class="title mt-3" >
+        DELIVERED
+      </div>
     </div>
   </div>
   <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Ngày lập:</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" th:value="${#temporals.format(hoaDon.ngayTao, 'dd-MM-yyyy HH:mm')}" readonly />
+      <label class="col-sm-2 col-form-label">Mã người lập:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" th:value="${hoaDon.customer.id}" readonly />
+      </div>
     </div>
-  </div>
-  <div class="form-group row">
-    <table class="table-invoice" border="1" >
-      <thead class="thead-light">
-        <tr>
-          <th>Ten san pham</th>
-          <th>So luong </th>
-          <th>Tong so tien</th>
-        </tr>
-       </thead>
-      <tbody>
-       <tr th:each = "ct : ${listCthd}" >
-         <td>[[${ct.sanPham.ten}]]</td>
-         <td>[[${ct.soLuong}]]</td>
-         <td>[[${#numbers.formatInteger(ct.gia,3,'POINT')}]] đồng</td>
-       </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="2" align="right" >Tổng tiền</td>
-          <td >[[${#numbers.formatInteger(hoaDon.thanhTien,3,'POINT')}]] đồng</td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-</div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Ngày lập:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" th:value="${#temporals.format(hoaDon.ngayTao, 'dd-MM-yyyy HH:mm')}" readonly />
+      </div>
+    </div>
+    <div class="form-group row">
+      <table class="table-invoice" border="1" >
+        <thead class="thead-light">
+          <tr>
+            <th>Ten san pham</th>
+            <th>So luong </th>
+            <th>Tong so tien</th>
+          </tr>
+         </thead>
+        <tbody>
+         <tr th:each = "ct : ${listCthd}" >
+           <td>[[${ct.sanPham.ten}]]</td>
+           <td>[[${ct.soLuong}]]</td>
+           <td>[[${#numbers.formatInteger(ct.gia,3,'POINT')}]] đồng</td>
+         </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" align="right" >Tổng tiền</td>
+            <td >[[${#numbers.formatInteger(hoaDon.thanhTien,3,'POINT')}]] đồng</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
 </div>

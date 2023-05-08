@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace = "~{fragments :: page_head}"/>
+<body>
+<div th:replace="~{navigation :: nav}"></div>
+<div class = "text-center">
+	<div class="m-3">
+		<h2>Sorry, you don't have permission to access this page</h2>
+	</div>
+</div>
+</body>
+
+</html>

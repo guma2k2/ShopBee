@@ -20,7 +20,11 @@ public class LichSuGiaoDich {
 
     private List<LichSuSanPham> listSP = new ArrayList<>();
 
+    private String statusName ;
+
     private Double tongTien ;
+
+    private boolean canReturn;
 
     public void addSanPham(LichSuSanPham sanPham){
         this.listSP.add(sanPham);

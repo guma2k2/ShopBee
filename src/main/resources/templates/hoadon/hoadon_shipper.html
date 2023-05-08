@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "~{fragments :: page_head}">
+<body>
+<div th:replace="~{navigation :: nav}"></div>
+
+<div class="container-fluid">
+    <div th:if="${message != null}" class="alert alert-warning" role="alert" >
+        [[${message}]]
+    </div>
+    <h2 class="text-center">Quản lý đơn đặt hàng</h2>
+    <div class="row m-1">
+        <th:block th:each="order : ${listHd}">
+            <div class="card col-3" style="height: 300px;" >
+                        <div class="row" style="border-bottom: 1px solid black;" >
+                            <div class="col-6">
+                                <span>Order ID #[[${order.id}]]</span>
+                            </div>
+                            <div class="col-6">
+                                <div class="float-right">
+                                    <a class="fa fa-file-alt fa-2x icon-green linkOrderDetail"
+                                       th:href="@{'/hoadon/view/' + ${order.id}}"
+                                       title="View details of this order"
+                                    ></a>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="card-body" style="position: relative;" >
+                        <div style="margin-bottom: 10px;" >
+                            <i class="fa fa-user"></i>
+                            <b>[[${order.recipientName}]]</b>
+                        </div>
+                        <div style="margin-bottom: 10px;" >
+                            <i class="fa fa-home"></i>
+                            [[${order.recipientAddress}]]
+                        </div>
+                        <div style="margin-bottom: 10px;" >
+                            <i class="fa fa-phone-alt"></i>
+                            [[${order.phoneNumber}]]
+                        </div>
+                        <div style="margin-bottom: 10px;" >
+                            <div>Total: <span>[[${#numbers.formatInteger(order.thanhTien,3,'POINT')}]] đồng</span></div>
+                        </div>
+                        <div class="row" style="position: absolute; bottom: 10px; "  >
+                            <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.picked}, 'PICKED', 'fa-people-carry')}"></div>
+
+                            <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.shipping}, 'SHIPPING', 'fa-shipping-fast')}"></div>
+
+                            <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.delivered}, 'DELIVERED', 'fa-box-open')}"></div>
+
+                            <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.returned}, 'RETURNED', 'fa-undo')}"></div>
+
+                        </div>
+                    </div>
+                </div>
+        </th:block>
+    </div>
+</div>
+<div class="modal fade" id="detailModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Delete Information</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <span id="confirmText"></span>
+            </div>
+
+            <div class="modal-footer">
+                <a href="" class="btn btn-success" id="YesButton">Yes</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+   $(".linkOrderDetail").on('click' , function(e){
+      e.preventDefault();
+      linkDetail = $(this).attr("href");
+      $("#detailModal").modal("show").find(".modal-content").load(linkDetail);
+   });
+   $(".linkUpdateStatus").on('click', function(e) {
+        e.preventDefault()
+        link = $(this);
+        var orderId = link.data("id");
+        var orderStatus = link.attr("statusName");
+        console.log(orderStatus);
+        console.log(orderId);
+        $("#YesButton").attr("href",link.attr("href"));
+        $("#confirmText").text("Bạn có thật sự muốn cập nhật đơn hàng :#"
+                        + orderId + " thành trạng thái " + orderStatus + " ?");
+        $("#confirmModal").modal();
+    })
+})
+
+
+</script>
+</body>
+</html>

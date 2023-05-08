@@ -1,0 +1,59 @@
+<div class="modal-header">
+  <h4 class="modal-title">Chi tiết đánh giá sản phẩm</h4>
+  <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+
+<div class="modal-body">
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Mã đánh giá:</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control" th:value="${review.id}" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Sản phẩm:</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control" th:value="${review.sanPham.ten}" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Khách hàng:</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control" th:value="${review.khachHang.fullName}" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Tóm tắt:</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control" th:value="${review.headline}" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Rating:</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control" th:value="${review.rating}" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Bình luận:</label>
+    <div class="col-sm-10">
+      <textarea rows="3" class="form-control" readonly>[[${review.comment}]]</textarea>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Thời gian đánh giá:</label>
+    <div class="col-sm-10 mt-2">
+      <span th:text="${#temporals.format(review.reviewTime, 'dd-MM-yyyy HH:mm')}"></span>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+</div>

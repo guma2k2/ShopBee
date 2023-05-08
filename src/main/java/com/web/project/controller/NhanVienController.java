@@ -33,10 +33,7 @@ public class NhanVienController {
 	private HoaDonService hoaDonService;
 	
 	
-	@GetMapping("/nhanvien")
-	public String listByPage(Model model) {
-		return listByPage(1 , model ,"ho" , "asc" ,null );
-	}
+
 	
 	@GetMapping("/nhanvien/new")
 	public String addNhanVien(Model model) {
@@ -121,6 +118,10 @@ public class NhanVienController {
 		service.updateTrangThaiNV(id, trangThai);
 		redirectAttributes.addFlashAttribute("message", "Update Status successful");
 		return "redirect:/nhanvien";
+	}
+	@GetMapping("/nhanvien")
+	public String listByPage(Model model) {
+		return listByPage(1 , model ,"ho" , "asc" ,null );
 	}
 	
 	@GetMapping("/nhanvien/page/{pageNum}")

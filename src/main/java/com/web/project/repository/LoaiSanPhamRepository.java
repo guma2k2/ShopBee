@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.web.project.entity.LoaiSanPham;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public interface LoaiSanPhamRepository extends JpaRepository<LoaiSanPham, Integer> {
 
 	@Query("UPDATE LoaiSanPham l SET l.trangThai = ?2 WHERE l.id = ?1")

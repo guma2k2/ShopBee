@@ -13,7 +13,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
           </a>
           
           <div class = "collapse navbar-collapse">
-             <ul class ="navbar-nav" >
+             <ul class ="navbar-nav" style="position: relative;" >
                  <th:block sec:authorize="!isAuthenticated()">
                  <li class = "nav-item" >
                      <a class = "nav-link" th:href = "@{/}">Trang chủ</a>
@@ -29,16 +29,19 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                 <li class = "nav-item" sec:authorize = "hasAuthority('Admin')" >
                   <a class = "nav-link" th:href = "@{/sanpham}">Sản phẩm</a>
                 </li>
-                <li class = "nav-item" sec:authorize = "hasAuthority('Admin')" >
-                  <a class = "nav-link" th:href = "@{/hoadon}">Hóa đơn</a>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Shipper')">
+                  <a class = "nav-link" th:href = "@{/hoadon}">Đơn đặt hàng</a>
                 </li>
+                 <li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Customer')">
+                     <a class = "nav-link" th:href = "@{/review}">Đánh giá sản phẩm</a>
+                 </li>
                 <li class = "nav-item" sec:authorize = "hasAuthority('Admin')" >
                   <a class = "nav-link" th:href = "@{/doanhthu}">Doanh thu</a>
                 </li>
                  <li class = "nav-item" sec:authorize = "hasAuthority('Admin')">
                      <a class = "nav-link" th:href = "@{/setting}">Cài đặt </a>
                  </li>
-                 <li class = "nav-item" >
+                 <li class = "nav-item" sec:authorize = "hasAuthority('Customer')"  >
                      <a class = "nav-link" th:href = "@{/cart}">
                          <i class="fa fa-shopping-cart fa-2x fa-solid"></i>
                      </a>
@@ -48,12 +51,12 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                          <a class = "nav-link" th:href = "@{/login}">Login</a>
                      </li>
                  </th:block>
-                 <th:block sec:authorize="isAuthenticated()">
+                 <th:block sec:authorize="hasAuthority('Customer')">
                      <li class = "nav-item" >
                          <a class = "nav-link" th:href = "@{/history}">Lịch sử</a>
                      </li>
                  </th:block>
-                <li class = "nav-item dropdown nav-user" sec:authorize="isAuthenticated()" >
+                <li class = "nav-item dropdown nav-user" sec:authorize="isAuthenticated()"   >
                     <a  id ="photo" th:href = "@{account}">
                         <th:block th:if="${session.imagePath == null}">
                            <i  class = "fa fa-user fa-2x fa-solid"></i>

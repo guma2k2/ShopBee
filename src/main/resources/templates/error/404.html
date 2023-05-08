@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace = "~{fragments :: page_head}"/>
+<body>
+<div th:replace="~{navigation :: nav}"></div>
+	<div class="m-3">
+		<h2>Sorry, the requested page could not be found</h2>
+	</div>
+	<div th:if="${message != null}" >
+		<span>[[${message}]]</span>
+	</div>
+</body>
+
+</html>

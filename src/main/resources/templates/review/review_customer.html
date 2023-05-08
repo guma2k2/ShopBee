@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "~{fragments :: page_head}">
+<body>
+<div th:replace="~{navigation :: nav}"></div>
+
+<div class="container-fluid">
+    <h2>Đánh giá của tôi</h2>
+    <div>
+        <form th:action="@{/review/page/1}" class="form-inline m-3">
+            <input type="hidden" name="sortField" th:value="${sortField}" /> <input
+                type="hidden" name="sortDir" th:value="${sortDir}" />
+
+            Filter:&nbsp; <input type="search" name="keyword"
+                                 th:value="${keyword}" class="form-control" required />
+            &nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary"
+                    onclick="clearFilter()">
+                <i class="fa fa-eraser"></i>
+            </button>
+        </form>
+
+        <div th:if="${message != null}"
+             class="alert alert-success text-center">[[${message}]]
+        </div>
+    </div>
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-light">
+        <tr>
+            <th>Id</th>
+            <th>Sản phẩm</th>
+            <th>Tóm tắt</th>
+            <th>Rating</th>
+            <th th:replace = "~{fragments :: column-link('reviewTime' , 'Thời gian đánh giá' ,'/review/page/')}">
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="rv : ${reviews}">
+            <td>[[${rv.id}]]</td>
+            <td>[[${rv.sanPham.ten}]]</td>
+            <td>[[${rv.headline}]]</td>
+            <td>[[${rv.rating}]]</td>
+            <td th:text ="${#temporals.format(rv.reviewTime, 'dd-MM-yyyy HH:mm')}" ></td>
+            <td>
+                <a class="fas fa-file fa-solid fa-2x link-detail"
+                   th:href="@{'/review/view/' +${rv.id}}">
+                </a>
+             </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace = "~{fragments :: pagination('đánh giá' , '/review/page/')}"></div>
+<div class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Xác nhân xóa đánh giá</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <span id="confirmText"></span>
+            </div>
+
+            <div class="modal-footer">
+                <a href="" class="btn btn-success" id="YesButton">Xác nhận</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy bỏ</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="detailModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".link-detail").on('click' , function(e){
+          e.preventDefault();
+          linkDetail = $(this).attr("href");
+          $("#detailModal").modal("show").find(".modal-content").load(linkDetail);
+       });
+    });
+   function clearFilter() {
+    window.location = "[[@{/review}]]";
+   }
+</script>
+</body>
+</html>

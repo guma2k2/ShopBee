@@ -24,9 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 
 @Controller
@@ -47,6 +45,9 @@ public class MainController {
 	private CthdService cthdService;
 
 	@Autowired
+	private ReviewService reviewService ;
+
+	@Autowired
 	private LoaiSanPhamService loaiSanPhamService;
 
 	@Autowired
@@ -55,6 +56,10 @@ public class MainController {
 	public String viewHomePage(Model model , HttpServletRequest request ,HttpSession session ) {
 		 String email = Utility.getEmailOfAuthenticatedCustomer(request);
 		 NhanVien nhanVien = nhanVienService.findByEmail(email);
+//		 Set<Role> roles = nhanVien.getRoles() ;
+//		 for(Role role : roles) {
+//			 System.out.println(role.getName());
+//		 }
 		 if (nhanVien != null) {
 			 if (nhanVien.getPhotos() != null && !nhanVien.getPhotos().isEmpty()) {
 				 String imagePath = nhanVien.getPhotosImagePath();
@@ -146,16 +151,46 @@ public class MainController {
 		return customerEmail;
 	}
 	@GetMapping("/product_details/{id}")
-	public String chiTietSanPham(@PathVariable("id")Integer id, Model model , RedirectAttributes re) {
+	public String chiTietSanPham(@PathVariable("id")Integer productId,
+								 Model model ,
+								 RedirectAttributes re ,
+								 HttpServletRequest request) {
 		try {
-			SanPham sanPham = sanPhamService.get(id);
+			SanPham sanPham = sanPhamService.get(productId);
+			List<Review> reviews = reviewService.findByProduct(productId) ;
+			String email = Utility.getEmailOfAuthenticatedCustomer(request) ;
+			if(email != null) {
+				reviewService.updateVoteForUser(email, reviews) ;
+			}
+//			for (Review review : reviews) {
+//				System.out.println(review.voted);
+//			}
+			model.addAttribute("reviews", reviews) ;
 			model.addAttribute("sanpham" , sanPham);
+			return "sanpham/sanpham_chitiet";
 		}catch (SanPhamNotFoundException ex){
-			model.addAttribute("message" , ex.getMessage());
+			re.addFlashAttribute("message" , ex.getMessage());
+			return "error/404" ;
 		}
-		return "sanpham/sanpham_chitiet";
+
 	}
 
+	@GetMapping("/product_details/update/vote/{reviewId}")
+	public String updateVote(@PathVariable("reviewId")Long reviewId, HttpServletRequest request) {
+		String email = Utility.getEmailOfAuthenticatedCustomer(request) ;
+		if(email == null) {
+			return "login" ;
+		}
+		try {
+			Review review = reviewService.get(reviewId) ;
+			Integer sanPhamId = review.getSanPham().getId() ;
+			reviewService.saveOrUpdateVote(email, reviewId);
+			return "redirect:/product_details/" + sanPhamId ;
+		} catch (ReviewNotFoundException e) {
+			return "error/404" ;
+		}
+
+	}
 
 	@GetMapping("/register")
 	public String register (Model model , RedirectAttributes redirectAttributes) {
@@ -171,6 +206,13 @@ public class MainController {
 			return "redirect:/register";
 		}
 		Role role = new Role(3);
+		Customer newCustomer = new Customer() ;
+		newCustomer.setHo(customer.getHo());
+		newCustomer.setTen(customer.getTen());
+		newCustomer.setEmail(customer.getEmail());
+		newCustomer.setPassword(customer.getPassword());
+		newCustomer.setDiaChi(customer.getDiaChi());
+		newCustomer.setSdt(customer.getSdt());
 		customer.addRole(role);
 		nhanVienService.saveCustomer(customer);
 		sendVerificationEmail(request , customer);
@@ -215,6 +257,10 @@ public class MainController {
 		List<LichSuGiaoDich> history = new ArrayList<>();
 		for(HoaDon  hoaDon : hoaDonList){
 			LichSuGiaoDich lichSuGiaoDich = new LichSuGiaoDich();
+			if(!hoaDon.isReturned()) {
+				lichSuGiaoDich.setCanReturn(true);
+			}
+			lichSuGiaoDich.setStatusName(hoaDon.getStatus().toString());
 			lichSuGiaoDich.setIdHoaDon(hoaDon.getId());
 			lichSuGiaoDich.setNgayGiaoDich(hoaDon.getNgayTao());
 			List<LichSuSanPham> listSp = cthdService.listByDay(hoaDon.getNgayTao());

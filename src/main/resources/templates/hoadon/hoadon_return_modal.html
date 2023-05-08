@@ -1,0 +1,39 @@
+<div class="modal-content" >
+    <div class="modal-header">
+        <h5 class="modal-title">Phiếu trả của hóa đơn ID #[[${orderId}]]</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form th:action="@{'/hoadon/return/' + ${orderId} }" method="post"   >
+        <div class="modal-body">
+            <div id="divReason">
+                <div>Lý do:</div>
+                <div>
+                    <input type="radio" name="returnReason" value="I bought the wrong items" required />
+                    Tôi đã mua sai sản phẩm
+                </div>
+                <div>
+                    <input type="radio" name="returnReason" value="I received the wrong items" />
+                    Tôi đã nhận sai sản phẩm
+                </div>
+                <div>
+                    <input type="radio" name="returnReason" value="The product was damaged/defective" />
+                    Sản phẩm vừa nhận bị hư, không đúng
+                </div>
+                <div>
+                    <input type="radio" name="returnReason" value="The product arrived too late" />
+                    Sản phẩm bị trễ hạn giao hàng
+                </div>
+                <div class="m-1">
+						<textarea class="form-control" id="returnNote" rows="3" maxlength="120" name="returnNote"
+                                required placeholder="Ghi chú thêm"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success" id="firstButton">Gửi</button>
+            <button type="button" class="btn btn-danger" id="secondButton" data-dismiss="modal">Hủy bỏ</button>
+        </div>
+    </form>
+</div>

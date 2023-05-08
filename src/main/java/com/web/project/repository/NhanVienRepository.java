@@ -10,8 +10,9 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.web.project.entity.NhanVien;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
 
 	@Query("SELECT n FROM nhanviens n WHERE n.email = ?1")

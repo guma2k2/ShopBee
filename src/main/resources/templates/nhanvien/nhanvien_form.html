@@ -76,9 +76,11 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 					  <label class="col-sm-4 col-form-label">Vai tro:</label>
 					  <div class="col-sm-8">
 						  <th:block th:each = "role : ${listRoles}">
-							  <input type = "checkbox" th:field =*{roles} th:text = ${role.name} th:value = ${role.id} class ="m-2"/>
-							  - <small>[[${role.mota}]]</small>
-							  <br/>
+							  <th:block th:if="${role.name != 'Customer'}" >
+								  <input type = "checkbox" th:field =*{roles} th:text = ${role.name} th:value = ${role.id} class ="m-2"/>
+								  - <small>[[${role.mota}]]</small>
+								  <br/>
+							  </th:block>
 						  </th:block>
 					  </div>
 				  </div>

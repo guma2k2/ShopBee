@@ -1,0 +1,22 @@
+<div th:fragment="content" th:remove="tag">
+  <div class="container" >
+    <th:block th:each="ct : ${listCthd}"  th:with="sanpham=${ct.sanPham}" >
+      <div class="row border border-dark " style="height: 300px; margin-bottom: 10px; " >
+          <div class="col-4">
+            <span th:if="${sanpham.anh == null}"
+                  class="fa-portrait fa-3x">
+					</span>
+            <img th:if="${sanpham.anh != null}" th:src="@{${sanpham.photosImagePath}}" style="object-fit: cover; height:280px; " >
+          </div>
+          <div class="col-8 d-flex flex-column " >
+            <span style="margin-bottom: 10px; font-size:25px;"  th:text="${sanpham.ten}" ></span>
+            <span style="font-size: 20px;" > [[${ct.soLuong}]] X [[${sanpham.gia}]] = [[${#numbers.formatInteger(ct.gia,3,'POINT')}]] đồng </span>
+             <th:block sec:authorize = "hasAuthority('Customer')" >
+                 <a th:href="@{'/review/write/'  + ${sanpham.id}}" th:if="${!sanpham.didReview && sanpham.canReview}" class="btn btn-danger" style="width:150px;" >Viết đánh giá</a>
+                 <a th:href="@{'/review/page/1?sortField=reviewTime&sortDir=desc&keyword=' + ${sanpham.ten}}" th:if="${sanpham.didReview && sanpham.canReview}"  class="btn btn-info" style="width:150px;" >Xem đánh giá</a>
+             </th:block>
+          </div>
+      </div>
+    </th:block>
+  </div>
+</div>

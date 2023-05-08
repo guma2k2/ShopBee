@@ -1,10 +1,7 @@
 package com.web.project.controller;
 
 import com.web.project.Utility;
-import com.web.project.entity.Cart;
-import com.web.project.entity.HoaDon;
-import com.web.project.entity.NhanVien;
-import com.web.project.entity.SanPham;
+import com.web.project.entity.*;
 import com.web.project.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -24,6 +22,10 @@ public class CartController {
 
     @Autowired
     private CartService cartService;
+
+
+    @Autowired
+    private OrderTrackService orderTrackService ;
 
     @Autowired
     private NhanVienService khachHangService;
@@ -154,14 +156,19 @@ public class CartController {
                 .stream()
                 .map(g -> g.getTongGia())
                 .reduce(0,(g1 , g2) -> g1+g2));
-        HoaDon hoaDon = hoaDonService.saveHoaDon(tongTien,khachHang);
-
+        HoaDon order = hoaDonService.saveHoaDon(tongTien,khachHang);
+        OrderTrack track = new OrderTrack();
+        track.setOrder(order);
+        track.setUpdatedTime(LocalDateTime.now());
+        track.setNotes("Đon đặt hàng đã được đặt");
+        track.setStatus(OrderStatus.NEW);
+        orderTrackService.saveOrderTrack(track);
         // save cthd
         for(Cart cart : gioHang){
             int soLuong = cart.getSoLuong();
             Double gia = Double.valueOf(cart.getTongGia());
             SanPham sanPham = cart.getSanPham();
-            cthdService.save(soLuong,gia,sanPham,hoaDon);
+            cthdService.save(soLuong,gia,sanPham,order);
         }
         cartService.removeCartByKhachHang(khachHang);
         redirectAttributes.addFlashAttribute("message","Hóa đơn đã được thanh toán thành công");

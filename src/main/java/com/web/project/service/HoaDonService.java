@@ -2,6 +2,8 @@ package com.web.project.service;
 
 import com.web.project.entity.HoaDon;
 import com.web.project.entity.NhanVien;
+import com.web.project.entity.OrderStatus;
+import com.web.project.entity.OrderTrack;
 import com.web.project.repository.HoaDonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,15 @@ public class HoaDonService {
 
     @Autowired
     private HoaDonRepository hoaDonRepository;
+    @Autowired
+    private OrderTrackService orderTrackService ;
 
     public HoaDon saveHoaDon(Double tongTien , NhanVien khachHang ){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         HoaDon hoaDon = new HoaDon(now, tongTien , khachHang );
+        hoaDon.setStatus(OrderStatus.NEW);
+
+
         return hoaDonRepository.save(hoaDon);
     }
 
@@ -49,5 +55,63 @@ public class HoaDonService {
 
     public boolean canDeleteNv(Integer id) {
         return hoaDonRepository.findByIdNhanVien(id).isEmpty();
+    }
+
+    public void updateOrderTrack(Integer orderId , String statusName) throws HoaDonNotFoundExeption {
+        HoaDon order = hoaDonRepository.findById(orderId).orElseThrow(() -> new HoaDonNotFoundExeption("Hoa don not found")) ;
+        OrderTrack orderTrack = new OrderTrack() ;
+        orderTrack.setUpdatedTime(LocalDateTime.now());
+        switch (statusName){
+            case "PICKED":
+                orderTrack.setStatus(OrderStatus.PICKED);
+                orderTrack.setNotes(OrderStatus.PICKED.defaultDescription());
+                break;
+            case "SHIPPING":
+                if(!order.isPicked()){
+                    throw new HoaDonNotFoundExeption("Vui lòng cập nhật trạng thái picked trước khi shipping") ;
+                }
+                orderTrack.setStatus(OrderStatus.SHIPPING);
+                orderTrack.setNotes(OrderStatus.SHIPPING.defaultDescription());
+                break;
+            case "DELIVERED":
+                if(!order.isShipping()){
+                    throw new HoaDonNotFoundExeption("Vui lòng cập nhật trạng thái SHIPPING trước khi DELIVERED") ;
+                }
+                orderTrack.setStatus(OrderStatus.DELIVERED);
+                orderTrack.setNotes(OrderStatus.DELIVERED.defaultDescription());
+                break;
+            default:
+                if(!order.isReturned()){
+                    throw new HoaDonNotFoundExeption("Vui lòng cập nhật trạng thái DELIVERED trước khi RETURNED") ;
+                }
+                orderTrack.setStatus(OrderStatus.RETURNED);
+                orderTrack.setNotes(OrderStatus.RETURNED.defaultDescription());
+                break;
+        }
+        orderTrack.setOrder(order);
+        OrderStatus statusToUpdate = OrderStatus.valueOf(statusName);
+        order.setStatus(statusToUpdate);
+        order.getTracks().add(orderTrack);
+        hoaDonRepository.save(order);
+    }
+    public void returnOrder(Integer orderId, String reason , String note) throws HoaDonNotFoundExeption {
+        HoaDon order = hoaDonRepository.findById(orderId).orElseThrow(() -> new HoaDonNotFoundExeption("Hoa don not found")) ;
+        OrderTrack orderTrack = new OrderTrack() ;
+        orderTrack.setUpdatedTime(LocalDateTime.now());
+        orderTrack.setStatus(OrderStatus.RETURNED);
+        orderTrack.setOrder(order);
+        String notes = "" ;
+        if(!"".equals(reason)) {
+            notes+="Reason: " + reason ;
+        }
+        String firstChar = note.substring(0, 1);
+        String upperCaseFirstChar = firstChar.toUpperCase();
+        String result = upperCaseFirstChar + note.substring(1);
+        notes+= " " +  result;
+        orderTrack.setNotes(notes);
+        OrderStatus statusToUpdate = OrderStatus.RETURNED;
+        order.setStatus(statusToUpdate);
+        order.getTracks().add(orderTrack);
+        hoaDonRepository.save(order);
     }
 }

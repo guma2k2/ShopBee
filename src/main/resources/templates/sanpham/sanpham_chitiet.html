@@ -4,55 +4,107 @@
 <head th:replace = "~{fragments :: page_head}">
 <body>
   <div th:replace="~{navigation :: nav}"></div>
-			<nav class = "navigation_product">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item">
-						<a th:href="@{/}">Home</a>
-					</li>
+	  <div class="container mt-3 p-2"   >
+		<nav class = "navigation_product">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a th:href="@{/}">Home</a>
+				</li>
 
-					<li class="breadcrumb-item">
-						<a th:href = "@{'/listSpTheoLoai/'+ ${sanpham.loaiSanPham.id}}">[[${sanpham.loaiSanPham.ten}]]</a>
-					</li>
-					<li class="breadcrumb-item" th:if="${sanpham != null}">
-						<span>[[${sanpham.ten}]]</span>
-					</li>
+				<li class="breadcrumb-item">
+					<a th:href = "@{'/listSpTheoLoai/'+ ${sanpham.loaiSanPham.id}}">[[${sanpham.loaiSanPham.ten}]]</a>
+				</li>
+				<li class="breadcrumb-item" th:if="${sanpham != null}">
+					<span>[[${sanpham.ten}]]</span>
+				</li>
 
-				</ol>
-			</nav>
-	<div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
-	<div class="product">
-		<img class="product_image" th:src="@{${sanpham.photosImagePath}}" alt="Not Found Image">
-		<div class="product_details">
-			<h1 class="product_name" >[[${sanpham.ten}]]</h1>
-			<h2 class="product_price">[[${sanpham.gia}]] đồng </h2>
-			<div class="product_detail" th:utext ="${sanpham.moTa}"></div>
-			<form th:action = "@{'/cart/add/' + ${sanpham.id}}" method="post" class="add2cart">
-			  <div th:replace = "~{fragments :: quantityControl(${sanpham.id} , 1)}" ></div>
-			  <button type="submit" class="product_button">ADD TO CART</button>
-			</form>
-		</div>
-	</div>
-	<div class="modal fade text-center" id="modalDialog">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="modalTitle">Warning</h4>
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</ol>
+		</nav>
+		<div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+		<div class="product">
+			<img class="product_image" th:src="@{${sanpham.photosImagePath}}" alt="Not Found Image">
+			<div class="product_details">
+				<h1 class="product_name" >[[${sanpham.ten}]]</h1>
+				<h2 class="product_price">[[${sanpham.gia}]] đồng </h2>
+				<div class="product_detail" th:utext ="${sanpham.moTa}"></div>
+				<div class="row" >
+					<div class="col-xs" >
+						<input style="color: #ee4d2d;"  type="text" class="product-detail-rating" dir="ltr" data-size = "md" th:value="${sanpham.averageRating}" />
+					</div>
+					<div class="col-xs ml-1 mt-3  ">
+						[[${sanpham.reviewCount}]] Đánh giá
+					</div>
 				</div>
-
-				<div class="modal-body">
-					<span id="modalBody"></span>
-				</div>
-
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-				</div>
+				<form th:action = "@{'/cart/add/' + ${sanpham.id}}" method="post" class="add2cart">
+				  <div th:replace = "~{fragments :: quantityControl(${sanpham.id} , 1)}" ></div>
+				  <button type="submit" class="product_button">ADD TO CART</button>
+				</form>
 			</div>
 		</div>
-	</div>
+	  </div>
+	  <div class="container mt-3 p-2 border border-dark"  style="margin: 10px auto;width:1064px; "  >
+		 <h2 style="color: rgba(0,0,0,.87); text-transform: capitalize;" >ĐÁNH GIÁ SẢN PHẨM</h2>
+		  <div class="row"  style="height: 146px; background-color: #fffbf8; margin: 10px auto;" >
+			  <div class="col-4 d-flex flex-column " >
+				  <div class="content-top d-flex" >
+					  <span style="font-size:30px;">[[${sanpham.averageRating}]] </span>
+					  <span class="mt-3" style="font-size:18px;" > trên 5 </span>
+				  </div>
+				  <div class="content-bottom" >
+					  <input style="color: #ee4d2d;"  type="text" class="product-detail-rating" dir="ltr" data-size = "md" th:value="${sanpham.averageRating}" />
+				  </div>
+			  </div>
+			  <div class="col-8 d-flex flex-wrap ">
+				  <button class="ml-2 mt-2" style="height: 32px;" >All</button>
+				  <button class="ml-2 mt-2 " style="height: 32px;" >5 Sao</button>
+				  <button class="ml-2 mt-2 " style="height: 32px;" >4 Sao</button>
+				  <button class="ml-2 mt-2 "  style="height: 32px;">3 Sao</button>
+				  <button class="ml-2 mt-2 " style="height: 32px;" >2 Sao</button>
+				  <button class="ml-2 mt-2 " style="height: 32px;"> 1 Sao</button>
+			  </div>
+		  </div>
+		  <th:block th:each = "review : ${reviews}" th:with="customer=${review.khachHang}"   >
+			  <div class="row p-1" style="height: auto; border-bottom: 0.75px solid black; margin-top:10px; min-height: 170px; " >
+				  <div class="col-1" >
+					  <span th:if="${customer.photos == null}"
+							class="fa fa-portrait fa-2x">
+							</span>
+					  <img class="image-profile"
+						   th:if="${customer.photos != null}" th:src="@{${customer.photosImagePath}}"  style="width:40px; height: 40px;
+									border-radius: 50%;">
+				  </div>
+				  <div class="col-11 d-flex flex-column "  >
+					  <span class="mb-2" style="font-size: 12px;" >[[${customer.fullName}]]</span>
+					  <input type="text" class="product-detail-rating mb-2" dir="ltr" data-size = "xs" th:value="${review.rating}" />
+					  <span style="color: rgba(0,0,0,.54);" class="mb-2"  th:text ="${#temporals.format(review.reviewTime, 'dd-MM-yyyy HH:mm')}" ></span>
+					  <span style="color: rgba(0,0,0,.87); font-size: 20px;" class="mb-2">[[${review.headline}]]</span>
+					  <div style="font-size: .875rem; line-height: 1.25rem; color: rgba(0,0,0,.87);
+								word-break: break-word; white-space: pre-wrap;">[[${review.comment}]]</div >
+					  <div class="vote d-flex mt-2" style="color: rgba(0,0,0,.4);"  >
+						  <th:block th:if="${review.votes > 0}" >
+							  <a th:href="@{'/product_details/update/vote/'+ ${review.id}}" th:class="${review.voted ? 'fas fa-thumbs-up  icon-blue ' : 'fas fa-thumbs-up icon-dark '}" >
+							  </a>
+							  <span th:text="${review.votes}"></span>
+						  </th:block>
+						  <th:block th:if="${review.votes == 0}" >
+							  <a th:href="@{'/product_details/update/vote/'+ ${review.id}}" th:class="${review.voted ? 'fas fa-thumbs-up icon-blue ' : 'fas fa-thumbs-up icon-dark '}" >
+							  </a>
+							  <span class="ml-2">Hữu ích ?</span>
+						  </th:block>
+					  </div>
+				  </div>
+			  </div>
+		  </th:block>
+	  </div>
 <script type="text/javascript" th:src = "@{/js/quantityControl.js}"></script>
 <script type="text/javascript" >
 	productId = "[[${sanpham.id}]]";
+	$(".product-detail-rating").rating({
+		displayOnly: true,
+		hoverOnClera: false ,
+		showCaption: false,
+		theme: 'krajee-svg'
+	});
 </script>
 </body>
 </html>

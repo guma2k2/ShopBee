@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "~{fragments :: page_head}">
+<body>
+<div th:replace="~{navigation :: nav}"></div>
+
+<div class="container-fluid text-center">
+	<div><h2>Viết đánh giá sản phẩm</h2></div>
+	
+	<div>
+		<img th:src="@{${review.sanPham.photosImagePath}}" style="height: 200px" />
+	</div>
+	
+	<div>
+		<div><h4>[[${review.sanPham.ten}]]</h4></div>
+		<div>&nbsp;</div>
+		<div>
+			<span class="h4 text-success">Bạn đã viết đánh giá thành công!!</span>
+		</div>		
+	</div>
+	
+		<div class="border border-secondary rounded p-3">
+			<p>
+				<input type="text" th:value="${review.rating}" class="product-rating-star" dir="ltr" data-size="md" />
+			</p>
+			<p>
+				<input type="text" th:value="${review.headline}" class="form-control" readonly="readonly" />
+ 			</p>
+ 			<p>
+ 				<textarea rows="3" cols="10" class="form-control" readonly="readonly">[[${review.comment}]]</textarea>
+ 			</p>
+		</div>	
+
+</div>
+
+<script type="text/javascript">
+	$(".product-rating-star").rating({
+		displayOnly: true,
+		hoverOnClear: false,
+		showCaption: false,
+		theme: 'krajee-svg'
+	});	
+</script>
+</body>
+</html>

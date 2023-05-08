@@ -72,9 +72,8 @@ public class WebSecurityConfig {
 				.tokenValiditySeconds(7 * 24 * 60 * 60).and()
 			   .build();
 	}
-	@Bean
-	 WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("/images/**", "/js/**" , "/webjars/**","/webfonts/**" );
-	}
-
+//	 @Bean
+//	 WebSecurityCustomizer webSecurityCustomizer() {
+//		return (web) -> web.ignoring().requestMatchers("/images/**", "/js/**" , "/webjars/**","/webfonts/**" );
+//	}
 }

@@ -3,16 +3,18 @@ package com.web.project.repository;
 import com.web.project.dto.DoanhThuTheoSanPham;
 import com.web.project.dto.LichSuSanPham;
 import com.web.project.entity.ChiTietHoaDon;
+import com.web.project.entity.OrderStatus;
 import com.web.project.entity.SanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Repository
 public interface CthdRepository extends JpaRepository<ChiTietHoaDon , Integer> {
     @Query("SELECT c FROM ChiTietHoaDon c WHERE c.hoaDon.id = ?1")
     public List<ChiTietHoaDon> findByIdHoaDon(Integer maHoaDon);
@@ -49,4 +51,10 @@ public interface CthdRepository extends JpaRepository<ChiTietHoaDon , Integer> {
 
     @Query("SELECT c FROM ChiTietHoaDon c WHERE c.sanPham.id = ?1")
     public List<SanPham> listProductById(Integer idSp);
+
+
+    @Query("SELECT COUNT(ct) FROM ChiTietHoaDon ct " +
+            "JOIN OrderTrack ot ON ct.hoaDon.id = ot.order.id " +
+            "WHERE ct.hoaDon.customer.email = ?1 AND ct.sanPham.id = ?2 AND ot.status = ?3")
+    public long countByCustomerProductStatus(String email, Integer productId, OrderStatus status);
 }

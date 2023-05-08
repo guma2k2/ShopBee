@@ -4,8 +4,8 @@
 <head th:replace = "~{fragments :: page_head}">
 <body>
 	<div th:replace="~{navigation :: nav}"></div>
-
-    <div class = "containerSp">
+	<th:block sec:authorize="!isAuthenticated() or hasAuthority('Customer')" >
+    	<div class = "containerSp">
 		<div class="left_content">
 			<div class="categories">
 				<h1 class = "category-title">Categories</h1>
@@ -51,7 +51,15 @@
 			 <div th:if = "${listSP != null}" class="card" th:each ="sp : ${listSP}" >
 				 <a th:href = "@{'/product_details/'+ ${sp.id}}" class="link_product">
 				  <img class="card-img" th:src="@{${sp.photosImagePath}}" alt="not found" />
-				  <div class="content">
+					 <div class="row" >
+						 <div class="col-xs ml-5" >
+							 <input style="color: #ee4d2d; height:16px; "   type="text" class="product-detail-rating " dir="ltr"  th:value="${sp.averageRating}" />
+						 </div>
+						 <div class="col-xs ml-1 mt-3  ">
+							 [[${sp.reviewCount}]]
+						 </div>
+					 </div>
+				  <div class=" d-flex justify-content-around">
 					<div class="name">[[${sp.ten}]]</div>
 					<div class="price">[[${sp.gia}]] đồng</div>
 				  </div>
@@ -67,10 +75,25 @@
 		</div>
 
 	</div>
+	</th:block>
+	<th:block sec:authorize="hasAnyAuthority('Admin', 'Shipper')" >
+		<p >Xin chào,
+			<span sec:authentication = "principal.fullName" ></span>
+			[
+		<span th:each="authority : ${#authentication.authorities}" th:text="${authority.authority}"></span>
+			]
+		</p>
+	</th:block>
 <script type="text/javascript">
 	function clearFilter() {
 		window.location = "[[@{/}]]";
 	}
+	$(".product-detail-rating").rating({
+		displayOnly: true,
+		hoverOnClera: false ,
+		showCaption: false,
+		theme: 'krajee-svg'
+	});
 </script>
 </body>
 

@@ -48,13 +48,13 @@
         <form th:action = "@{/doanhthu/search}" method="post" onsubmit="return myfunction(this);" >
         <div class = "row search_panel ">
             <div class="col-1">
-                <label>Tu ngay: </label>
+                <label>Từ ngày: </label>
             </div>
             <div class="col-3">
                 <input class="input_search_date" type="date" th:name="from_date" th:value="${from_date}" />
             </div>
             <div class="col-1">
-                <label>Tu ngay: </label>
+                <label>Đến ngày: </label>
             </div>
             <div class="col-3">
                 <input class="input_search_date" type="date" th:name = "to_date" th:value="${to_date}" />
@@ -70,9 +70,9 @@
         <table class="table table-bordered table-striped table-hover">
             <thead class="thead-light">
             <tr>
-                <th>Mã san pham</th>
-                <th>Ten san pham</th>
-                <th>So luong</th>
+                <th>Mã sản phẩm</th>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
                 <th>Tổng tiền</th>
             </tr>
             <tr>

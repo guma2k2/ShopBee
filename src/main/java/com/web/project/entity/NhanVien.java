@@ -3,11 +3,7 @@ package com.web.project.entity;
 
 import jakarta.persistence.FetchType;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import java.util.*;
 
 
 import jakarta.persistence.CascadeType;
@@ -47,10 +43,7 @@ public class NhanVien {
 	@Column(name = "dia_chi")
 	private String DiaChi;
 	
-	@Column(name = "gioi_tinh")
-	@Enumerated(EnumType.STRING)
-	private GioiTinh gioiTinh ;
-	
+
 	@Column(name = "trang_thai")
 	private boolean trangThai ;
 	
@@ -64,7 +57,7 @@ public class NhanVien {
 	@Column(length = 64)
 	private String photos;
 	
-	@OneToMany(mappedBy = "nhanVien" , cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL)
 	private List<HoaDon> hoaDon  ;
 
 	@Column(name = "verification_code", length = 64)
@@ -159,15 +152,6 @@ public class NhanVien {
 	public void setDiaChi(String diaChi) {
 		DiaChi = diaChi;
 	}
-
-	public GioiTinh getGioiTinh() {
-		return gioiTinh;
-	}
-
-	public void setGioiTinh(GioiTinh gioiTinh) {
-		this.gioiTinh = gioiTinh;
-	}
-
 	public boolean isTrangThai() {
 		return trangThai;
 	}
@@ -211,14 +195,13 @@ public class NhanVien {
 	public void addRole(Role role) {
 		this.roles.add(role);
 	}
-	public NhanVien(Integer id, String ho, String ten, String sdt, String diaChi, GioiTinh gioiTinh, boolean trangThai,
+	public NhanVien(Integer id, String ho, String ten, String sdt, String diaChi, boolean trangThai,
 			String email, String password, String photos, Set<Role> roles) {
 		this.id = id;
 		this.ho = ho;
 		this.ten = ten;
 		this.sdt = sdt;
 		this.DiaChi = diaChi;
-		this.gioiTinh = gioiTinh;
 		this.trangThai = trangThai;
 		this.email = email;
 		this.password = password;
@@ -279,6 +262,18 @@ public class NhanVien {
 	public String getFullName(){
 		return this.ho + " " + this.ten;
 	}
-	
+
+	public boolean hasRole(String roleName) {
+		Iterator<Role> iterator = roles.iterator();
+
+		while (iterator.hasNext()) {
+			Role role = iterator.next();
+			if (role.getName().equals(roleName)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 	
 }
