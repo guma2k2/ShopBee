@@ -26,4 +26,8 @@ public class OrderTrack {
     @ManyToOne
     @JoinColumn(name = "order_id")
     private HoaDon order ;
+
+    @ManyToOne
+    @JoinColumn(name = "shipper_id")
+    private NhanVien shipper ;
 }
