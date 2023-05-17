@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "~{fragments :: page_head}">
+<body>
+
+<div th:replace="~{navigation :: nav}"></div>
+     <div>
+       <h2>Quản lý nhập hàng -> [[${pageTitle}]]</h2>
+     </div>
+      <div class = "container-fluid">
+		  <div th:if="${message != null}"
+			   class="alert alert-success text-center">[[${message}]]
+		  </div>
+		  <div class="modal fade text-center" id="modalDialog">
+			  <div class="modal-dialog">
+				  <div class="modal-content">
+					  <div class="modal-header">
+						  <h4 class="modal-title" id="modalTitle">Warning</h4>
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					  </div>
+
+					  <div class="modal-body">
+						  <span id="modalBody"></span>
+					  </div>
+
+					  <div class="modal-footer">
+						  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+     <form th:action = "@{/nhapHang/save}" method = "POST"
+		   enctype="multipart/form-data"
+		   th:object = "${nhaphang}"
+		   style="max-width: 700px; margin: 0 auto" >
+     <input type="hidden" th:field="*{id}" />
+     <div class="border border-secondary rounded p-3">
+		<div class="form-group row">
+			<label class="col-sm-4 col-form-label">Sản phẩm:</label>
+			<div class="col-sm-4">
+				<th:block th:if="${readOnly == false}" >
+					<select class="form-control" th:field="*{sanPham}" id="sp-list"  name="sanPham" >
+						<th:block th:each="sp : ${listSp}">
+							<option th:value="${sp.id}">[[${sp.ten}]]</option>
+						</th:block>
+					</select>
+				</th:block>
+				<th:block th:if="${readOnly == true}" >
+					<input type="hidden" class="form-control"   th:field="*{sanPham}" name="sanPham"  />
+					<input class="form-control"  th:value="${nhaphang.sanPham.ten}"  readonly/>
+				</th:block>
+			</div>
+			<div class="col-sm-4">
+				<a style="width: 100px; height: 38px;" id="searchSize" href=""  class="btn btn-primary" >Xác nhận</a>
+			</div>
+		</div>
+		 <div class="form-group row">
+			 <label class="col-sm-4 col-form-label">Size:</label>
+			 <div class="col-sm-8">
+				 <th:block th:if="${readOnly == false}" >
+					 <select class="form-control" th:field="*{size}"   name="size">
+						 <th:block th:each="s : ${sizes}">
+							 <option th:value="${s.id}">[[${s.ten}]]</option>
+						 </th:block>
+					 </select>
+				 </th:block>
+				 <th:block th:if="${readOnly == true}" >
+					 <input class="form-control" type="hidden" th:field="*{size}" name="size"   >
+					 <input class="form-control"  th:value="${nhaphang.size.ten}"  readonly/>
+				 </th:block>
+			 </div>
+		 </div>
+		 <div class="form-group row">
+			 <label class="col-sm-4 col-form-label">Giá mỗi sản phẩm :</label>
+			 <div class="col-sm-8">
+				 <input style="width: 100% ;"  min="1"  type="number" th:field="*{giaMoiSanPham}" required />
+			 </div>
+		 </div>
+		 <div class="form-group row">
+			 <label class="col-sm-4 col-form-label">Số lương :</label>
+			 <div class="col-sm-8">
+				 <input th:readonly="${readOnly}"  style="width: 100% ;"  min="1"  type="number" th:field="*{soLuong}" required />
+			 </div>
+		 </div>
+        <div class = "text-center">
+           <input type ="submit" class = "btn btn-primary" value = "Save" />
+           <input type="button" class = "btn btn-secondary" value = "Cancel" id = "buttonCancel"/>
+        </div>
+     </div>
+     </form>
+    </div>
+<script th:src = "@{/js/common_form.js}"></script>
+<script type="text/javascript">
+   moduleURL = "[[@{/nhapHang}]]";
+   var sanPhamId = $("#sp-list").val();
+   console.log(sanPhamId);
+   var urlGetSizeBySp = moduleURL+"/size/" + sanPhamId ;
+   $("#searchSize").attr("href", urlGetSizeBySp);
+   $(document).ready(function() {
+		$("#sp-list").on('change', function(){
+			var sanPhamId = $(this).val();
+			console.log(sanPhamId);
+			var urlGetSizeBySp = moduleURL+"/size/" + sanPhamId ;
+			$("#searchSize").attr("href", urlGetSizeBySp);
+		})
+
+   })
+</script>
+</body>
+</html>

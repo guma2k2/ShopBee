@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" th:remove="tag">
+    <div id="sizeList" >
+        <th:block th:each="size, status : ${sanpham.sizes}">
+            <div class="form-inline" th:id="'divDetail' + ${status.index}">
+                <input type="hidden" name="sizeIds" th:value="${size.id}" />
+                <label class="m-3">Tên kích thước:</label>
+                <input type="text" class="form-control w-25" name="sizeNames" maxlength="50"
+                       th:value="${size.ten}" />
+                <label class="m-3">Mô tả:</label>
+                <input type="text" class="form-control w-25" name="sizeDescriptions" maxlength="50"
+                       th:value="${size.moTa}" />
+                <a name="linkRemoveSize" class="btn fas fa-times-circle fa-2x icon-dark"
+                   title="Remove this size"></a>
+            </div>
+        </th:block>
+
+        <div class="form-inline" th:id="'divDetail' + ${#lists.size(sanpham.sizes)}">
+            <input type="hidden" name="sizeIds" value="0" />
+            <label class="m-3">Tên kích thước:</label>
+            <input type="text" class="form-control w-25" name="sizeNames" maxlength="50"  />
+            <label class="m-3">Mô tả:</label>
+            <input type="text" class="form-control w-25" name="sizeDescriptions" maxlength="50"  />
+        </div>
+    </div>
+</div>
+</body>
+</html>

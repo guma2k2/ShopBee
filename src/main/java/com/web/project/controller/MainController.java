@@ -1,5 +1,6 @@
-package com.web.project;
+package com.web.project.controller;
 
+import com.web.project.Utility;
 import com.web.project.dto.DoanhThuTheoSanPham;
 import com.web.project.dto.LichSuGiaoDich;
 import com.web.project.dto.LichSuSanPham;
@@ -164,6 +165,7 @@ public class MainController {
 			if(email != null) {
 				reviewService.updateVoteForUser(email, reviews) ;
 			}
+			model.addAttribute("count" , 0) ;
 			model.addAttribute("reviews", reviews) ;
 			model.addAttribute("sanpham" , sanPham);
 			return "sanpham/sanpham_chitiet";
@@ -172,6 +174,29 @@ public class MainController {
 			return "error/404" ;
 		}
 
+	}
+
+	@GetMapping("/product_details/{sanPhamId}/reviewCount/{count}")
+	public String getReviewCount(@PathVariable("sanPhamId")Integer sanPhamId,
+								 @PathVariable("count") int count, HttpServletRequest request,
+								 Model model,
+								 RedirectAttributes re) {
+
+		try {
+			SanPham sanPham = sanPhamService.get(sanPhamId);
+			List<Review> reviews = reviewService.findByProductAndRating(sanPhamId, count) ;
+			String email = Utility.getEmailOfAuthenticatedCustomer(request) ;
+			if(email != null) {
+				reviewService.updateVoteForUser(email, reviews) ;
+			}
+			model.addAttribute("count" , count) ;
+			model.addAttribute("reviews", reviews) ;
+			model.addAttribute("sanpham" , sanPham);
+			return "sanpham/sanpham_chitiet";
+		}catch (SanPhamNotFoundException ex){
+			re.addFlashAttribute("message" , ex.getMessage());
+			return "error/404" ;
+		}
 	}
 
 	@GetMapping("/product_details/update/vote/{reviewId}")

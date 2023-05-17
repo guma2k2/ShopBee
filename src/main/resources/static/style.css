@@ -141,7 +141,32 @@ h2{
 .product_details{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    min-height: 500px;
+    position: relative;
+}
+.btnSize:hover {
+    border-color: #ee4d2d;
+    color: #ee4d2d;
+}
+.btnSize {
+    color : rgba(0,0,0,.8);
+    padding: .25rem .75rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+     border-radius: 2px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.09);
+      outline:0;
+      text-align: left;
+    margin : 0 8px 8px 0;
+    min-width: 5rem;
+    min-height: 2.125rem;
+}
+.btnSize.active{
+    border-color: #ee4d2d;
+    color: #ee4d2d;
 }
 .product_name{
    font-size: 50px;

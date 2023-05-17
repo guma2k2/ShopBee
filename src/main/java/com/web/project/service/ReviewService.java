@@ -67,6 +67,9 @@ public class ReviewService {
     public List<Review> findByCustomerProduct(String email, Integer productId) {
         return reviewRepository.findByCustomerProduct(email, productId) ;
     }
+    public List<Review> findByProductAndRating(Integer sanPhamId, int rating) {
+        return reviewRepository.findByProductAndRating(sanPhamId, rating);
+    }
 
     public List<Review> findByProduct(Integer productId) {
         return reviewRepository.findByProduct(productId) ;

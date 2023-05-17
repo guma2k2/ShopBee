@@ -4,6 +4,8 @@ package com.web.project.controller;
 import java.io.IOException;
 
 import com.web.project.FileUploadUtil;
+import com.web.project.Utility;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Component;
@@ -29,8 +31,13 @@ public class AccountController {
 	private NhanVienService service ;
 	
 	@GetMapping("/account")
-	public String accountDetails(@AuthenticationPrincipal MyShopUserDetail loggedUser , Model model) {
-		String email = loggedUser.getUsername();
+	public String accountDetails(@AuthenticationPrincipal MyShopUserDetail loggedUser , Model model , HttpServletRequest request) {
+		String email;
+		if(loggedUser != null){
+			email = loggedUser.getUsername();
+		} else {
+			email = Utility.getEmailOfAuthenticatedCustomer(request) ;
+		}
 		NhanVien user = service.findByEmail(email);
 		model.addAttribute("nhanvien", user);
 		return "nhanvien/account_form";

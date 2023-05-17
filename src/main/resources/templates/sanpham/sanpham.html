@@ -38,6 +38,7 @@
             <tr>
                 <th th:replace = "~{fragments :: column-link('id' , 'Mã sản phẩm' , '/sanpham/page/')}"></th>
                 <th>Ảnh</th>
+                <th>Số lượng trong kho</th>
                 <th th:replace = "~{fragments :: column-link('ten' ,'Tên sản phẩm' , '/sanpham/page/')}"></th>
                 <th>Loại sản phẩm</th>
                 <th>Trạng thái</th>
@@ -52,6 +53,13 @@
 					</span>
                 <img class="image-SP"
                      th:if="${sp.anh != null}" th:src="@{${sp.photosImagePath}}"></td>
+            <td>
+                <ul>
+                    <th:block th:each="size : ${sp.sizes}" >
+                        <li>Size [[${size.ten}]] còn [[${size.soLuong}]]</li>
+                    </th:block>
+                </ul>
+            </td>
             <td>[[${sp.ten}]]</td>
             <td>[[${sp.loaiSanPham.ten}]]</td>
             <td>

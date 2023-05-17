@@ -21,15 +21,24 @@
                     <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">Tổng quan</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#description" role="tab">Mô tả</a>
+                    <a class="nav-link" data-toggle="tab" href="#description" role="tab">Kích thước</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#size" role="tab">Mô tả</a>
                 </li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active p-3" id="overview" role="tabpanel">
                     <div th:replace="~{sanpham/sanpham_tongquan :: content}"></div>
                 </div>
-                <div class="tab-pane" id="description" role="tabpanel">
+                <div class="tab-pane" id="size" role="tabpanel">
                     <div th:replace="~{sanpham/sanpham_mota :: content}"></div>
+
+                </div>
+                <div class="tab-pane" id="description" role="tabpanel">
+                    <div th:replace="~{sanpham/sanpham_size :: content}"></div>
+                    <input type="button" class="btn btn-secondary" style="width: 140px;"  value="Thêm kích thước"
+                           onclick="addSize()" />
                 </div>
             </div>
             <div class = "addNv text-center">
@@ -62,7 +71,44 @@
    moduleURL = "[[@{/sanpham}]]";
    $(document).ready(function(){
        $("#moTa").richText();
+       $("a[name='linkRemoveSize']").each(function(index) {
+		$(this).click(function() {
+			removeSizeByIndex(index);
+		});
+	});
    })
+
+   // javascript code in sanpham_size
+   function addSize() {
+      var allDivSize = $("[id^='divDetail']") ;
+      var divSizeCount = allDivSize.length;
+      console.log(divSizeCount);
+      var html = `
+        <div class="form-inline" id="divDetail${divSizeCount}">
+            <input type="hidden" name="sizeIds" value="0" />
+            <label class="m-3">Tên kích thước:</label>
+            <input type="text" class="form-control w-25" name="sizeNames" maxlength="50" />
+            <label class="m-3">Mô tả:</label>
+            <input type="text" class="form-control w-25" name="sizeDescriptions" maxlength="50" />
+        </div>` ;
+      $("#sizeList").append(html);
+      var lastSize = allDivSize.last();
+      var lastSizeId = lastSize.attr("id");
+      console.log(lastSizeId);
+      var htmlLinkRemove = `
+        <a class="btn fas fa-times-circle fa-2x icon-dark"
+            href="javascript:removeSizeById('${lastSizeId}')"
+            title="Remove this size"></a>
+      `;
+      lastSize.append(htmlLinkRemove);
+      $("input[name='sizeNames']").last().focus();
+   }
+   function removeSizeById(id) {
+       $("#"+id).remove();
+   }
+   function removeSizeByIndex(index) {
+       $("#divDetail" + index).remove();
+   }
 </script>
 </body>
 </html>

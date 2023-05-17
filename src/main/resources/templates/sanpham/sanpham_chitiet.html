@@ -24,21 +24,32 @@
 		<div class="product">
 			<img class="product_image" th:src="@{${sanpham.photosImagePath}}" alt="Not Found Image">
 			<div class="product_details">
-				<h1 class="product_name" >[[${sanpham.ten}]]</h1>
-				<h2 class="product_price">[[${sanpham.gia}]] đồng </h2>
-				<div class="product_detail" th:utext ="${sanpham.moTa}"></div>
-				<div class="row" >
-					<div class="col-xs" >
-						<input style="color: #ee4d2d;"  type="text" class="product-detail-rating" dir="ltr" data-size = "md" th:value="${sanpham.averageRating}" />
-					</div>
-					<div class="col-xs ml-1 mt-3  ">
-						[[${sanpham.reviewCount}]] Đánh giá
-					</div>
+				<h1 class="product_name mb-2" style="font-size:20px; font-weight: 500; line-height: 1.5rem; overflow-wrap: break-word" >[[${sanpham.ten}]]</h1>
+				<h2 class="product_price mb-2" style="font-size :1.875rem; font-weight: 500; " >[[${sanpham.gia}]] đồng </h2>
+<!--				<div class="product_detail" th:utext ="${sanpham.moTa}"></div>-->
+				<div class="row ml-2 mb-2" >
+						<div class="col-xs d-flex align-items-center justify-content-center" style="border-right: .5px solid #dbdbdb; " >
+							<span>[[${sanpham.averageRating}]]</span>
+							<input style="color: #ee4d2d;"  type="text" class="product-detail-rating mx-2" dir="ltr" data-size = "md" th:value="${sanpham.averageRating}" />
+						</div>
+						<div class="col-xs ml-1 mt-3 d-flex align-items-center justify-content-center" style="border-right: .5px solid #dbdbdb; " >
+							[[${sanpham.reviewCount}]] <span class="mx-2" >Đánh giá</span>
+						</div>
 				</div>
-				<form th:action = "@{'/cart/add/' + ${sanpham.id}}" method="post" class="add2cart">
+				<div class="product_size d-flex mb-2" >
+					<th:block th:each="size : ${sanpham.sizes}" >
+						<button class="btnSize"  th:sizeId="${size.id}" th:quantity="${size.soLuong}" >
+							[[${size.ten}]]
+						</button>
+					</th:block>
+				</div>
+				<form th:action = "@{'/cart/add/' + ${sanpham.id}}" method="post" class="add2cart" style="position:absolute; bottom:5px; left:5px;"
+						onsubmit="return checkValidForm(this);">
 				  <div th:replace = "~{fragments :: quantityControl(${sanpham.id} , 1)}" ></div>
+					<input type="hidden" name="idSize" value="0" />
 				  <button type="submit" class="product_button">ADD TO CART</button>
 				</form>
+				<span id="remainQuantity" style="position:absolute; bottom: 15px; left:130px; " >[[${sanpham.totalQuantity}]] sản phẩm có sẵn </span>
 			</div>
 		</div>
 	  </div>
@@ -55,12 +66,12 @@
 				  </div>
 			  </div>
 			  <div class="col-8 d-flex flex-wrap ">
-				  <button class="ml-2 mt-2" style="height: 32px;" >All</button>
-				  <button class="ml-2 mt-2 " style="height: 32px;" >5 Sao</button>
-				  <button class="ml-2 mt-2 " style="height: 32px;" >4 Sao</button>
-				  <button class="ml-2 mt-2 "  style="height: 32px;">3 Sao</button>
-				  <button class="ml-2 mt-2 " style="height: 32px;" >2 Sao</button>
-				  <button class="ml-2 mt-2 " style="height: 32px;"> 1 Sao</button>
+				  <a th:href="@{'/product_details/' + ${sanpham.id}}" th:class="${count == 0 ? 'ml-2 mt-2 btn btn-success' : 'ml-2 mt-2 btn btn-secondary'}" style="height: 32px; width: 100px;" >All</a>
+				  <a th:href="@{'/product_details/' + ${sanpham.id} + '/reviewCount/5'}" th:class="${count == 5 ? 'ml-2 mt-2 btn btn-success' : 'ml-2 mt-2 btn btn-secondary'}" style="height: 32px; width: 100px;" >5 Sao</a>
+				  <a th:href="@{'/product_details/' + ${sanpham.id} + '/reviewCount/4'}" th:class="${count == 4 ? 'ml-2 mt-2 btn btn-success' : 'ml-2 mt-2 btn btn-secondary'}" style="height: 32px;width: 100px;" >4 Sao</a>
+				  <a th:href="@{'/product_details/' + ${sanpham.id} + '/reviewCount/3'}" th:class="${count == 3 ? 'ml-2 mt-2 btn btn-success' : 'ml-2 mt-2 btn btn-secondary'}"  style="height: 32px;width: 100px;">3 Sao</a>
+				  <a th:href="@{'/product_details/' + ${sanpham.id} + '/reviewCount/2'}" th:class="${count == 2 ? 'ml-2 mt-2 btn btn-success' : 'ml-2 mt-2 btn btn-secondary'}" style="height: 32px;width: 100px;" >2 Sao</a>
+				  <a th:href="@{'/product_details/' + ${sanpham.id} + '/reviewCount/1'}" th:class="${count == 1 ? 'ml-2 mt-2 btn btn-success' : 'ml-2 mt-2 btn btn-secondary'}" style="height: 32px;width: 100px;"> 1 Sao</a>
 			  </div>
 		  </div>
 		  <th:block th:each = "review : ${reviews}" th:with="customer=${review.khachHang}"   >
@@ -74,7 +85,7 @@
 									border-radius: 50%;">
 				  </div>
 				  <div class="col-11 d-flex flex-column "  >
-					  <span class="mb-2" style="font-size: 12px;" >[[${customer.email}]]</span>
+					  <span class="mb-2" style="font-size: 12px;" >[[${customer.fullName}]]</span>
 					  <input type="text" class="product-detail-rating mb-2" dir="ltr" data-size = "xs" th:value="${review.rating}" />
 					  <span style="color: rgba(0,0,0,.54);" class="mb-2"  th:text ="${#temporals.format(review.reviewTime, 'dd-MM-yyyy HH:mm')}" ></span>
 					  <span style="color: rgba(0,0,0,.87); font-size: 20px;" class="mb-2">[[${review.headline}]]</span>
@@ -105,6 +116,25 @@
 		showCaption: false,
 		theme: 'krajee-svg'
 	});
+
+	$(".btnSize").click(function(){
+		$(".btnSize.active").removeClass("active");
+		$(this).addClass("active");
+		var sizeId = $(this).attr("sizeId");
+		console.log(sizeId);
+		$("input[name='idSize']").val(sizeId);
+		var quantity = $(this).attr("quantity");
+		$("#remainQuantity").text(quantity + " sản phẩm có sẵn");
+	});
+	function checkValidForm(form) {
+		var idSize = $("input[name='idSize']").val();
+		if(idSize != 0 ){
+			form.submit();
+		} else {
+			alert("Vui lòng chọn một size bắt kì");
+		}
+		return false ;
+	}
 </script>
 </body>
 </html>

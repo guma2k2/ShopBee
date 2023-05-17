@@ -41,6 +41,8 @@ public class HoaDon {
 	private List<OrderTrack> tracks = new ArrayList<>();
 
 
+
+
 	public HoaDon(Double thanhTien, Customer customer) {
 		this.thanhTien = thanhTien;
 		this.customer = customer;

@@ -23,6 +23,9 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                 <li class = "nav-item" sec:authorize = "hasAuthority('Admin')">
                   <a class = "nav-link" th:href = "@{/nhanvien}">Nhân Viên</a>
                 </li>
+                 <li class = "nav-item" sec:authorize = "hasAuthority('Admin')">
+                     <a class = "nav-link" th:href = "@{/nhapHang}">Nhập hàng</a>
+                 </li>
                 <li class = "nav-item" sec:authorize = "hasAuthority('Admin')" >
                   <a class = "nav-link" th:href = "@{/loaisanpham}">Loại sản phẩm</a>
                 </li>
@@ -35,6 +38,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                  <li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'Customer')">
                      <a class = "nav-link" th:href = "@{/review}">Đánh giá sản phẩm</a>
                  </li>
+
                 <li class = "nav-item" sec:authorize = "hasAuthority('Admin')" >
                   <a class = "nav-link" th:href = "@{/doanhthu}">Doanh thu</a>
                 </li>

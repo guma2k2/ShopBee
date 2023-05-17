@@ -128,7 +128,7 @@ public class NhanVienService {
 
 	public void  saveCustomer(NhanVien customer){
 		encodePassword(customer);
-		customer.setTrangThai(false);
+		customer.setTrangThai(true);
 		String randomCode = RandomString.make(64);
 		customer.setVerificationCode(randomCode);
 		customer.setAuthenticationType(AuthenticationType.DATABASE);

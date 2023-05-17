@@ -3,7 +3,9 @@ package com.web.project.controller;
 import com.web.project.FileUploadUtil;
 import com.web.project.entity.LoaiSanPham;
 import com.web.project.entity.SanPham;
+import com.web.project.entity.Size;
 import com.web.project.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -18,13 +20,18 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Slf4j
 public class SanPhamController {
 
     @Autowired
     private SanPhamService service ;
+
+    @Autowired
+    private SizeService sizeService ;
 
     @Autowired
     private LoaiSanPhamService loaiService;
@@ -78,8 +85,13 @@ public class SanPhamController {
     @PostMapping("/sanpham/save")
     public String luuSanPham(RedirectAttributes redirectAttributes ,
                              Model model , SanPham sanPham ,
-                             @RequestParam("image")MultipartFile multipartFile )
+                             @RequestParam("image")MultipartFile multipartFile,
+                             @RequestParam("sizeIds")Long[]  sizeIds,
+                             @RequestParam("sizeNames")String[] sizeNames,
+                             @RequestParam("sizeDescriptions")String[] sizeDescriptions
+                             )
                              throws IOException {
+
         if (!service.checkTenUnique(sanPham.getTen(),sanPham.getId() )){
             model.addAttribute("message" , "tên sản phẩm này đã được sử dung!!");
             model.addAttribute("sanpham" , sanPham);
@@ -95,6 +107,28 @@ public class SanPhamController {
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }else {
             if(sanPham.getAnh().isEmpty()) sanPham.setAnh(null);
+            List<Size> sizes = new ArrayList<>() ;
+            if(sizeNames.length > 0 && sizeNames != null) {
+                for(int i = 0 ; i < sizeNames.length ;i++) {
+                    Long sizeId = sizeIds[i] ;
+                    String tenSize = sizeNames[i].trim() ;
+                    String moTaSize = sizeDescriptions[i];
+//                    log.info(String.valueOf(sizeId));
+//                    log.info(tenSize);
+                    if(!tenSize.trim().equals("")){
+                        Size size = new Size();
+                        size.setTen(tenSize);
+                        size.setMoTa(moTaSize);
+                        size.setSanPham(sanPham);
+                        if(sizeId != 0) {
+                            size.setId(sizeId);
+                        }
+                        sizeService.saveSize(size);
+                        sizes.add(size);
+                    }
+                }
+            }
+            sanPham.setSizes(sizes);
             service.save(sanPham);
         }
         redirectAttributes.addFlashAttribute("message", "Sản phẩm này đã được lưu thành công");

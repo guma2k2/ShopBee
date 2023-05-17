@@ -23,7 +23,7 @@
                         <div class="divCount">[[${status.count}]]</div>
                         <div>
                             <a class="fa fa-trash icon-dark linkRemove" th:rowNumber="${status.count}"
-                               th:href="@{'/cart/remove/' + ${sanpham.id}}"></a>
+                               th:href="@{'/cart/remove/' + ${item.id}}"></a>
                         </div>
                     </div>
                     <div class="col-3">
@@ -36,11 +36,14 @@
                                 <b>[[${sanpham.ten}]]</b>
                             </a>
                         </div>
-
+                        <div class="d-flex" >
+                            <div>Size : </div>
+                            <span class="ml-3" >[[${item.size.ten}]]</span>
+                        </div>
                         <nav>
                             <ul class="pagination">
                                 <li class="page-item">
-                                    <form th:action = "@{'/cart/updateMinus/' + ${sanpham.id}}" method="post" class="form-update">
+                                    <form th:action = "@{'/cart/updateMinus/' + ${sanpham.id} + '/' + ${item.size.id} }" method="post" class="form-update">
                                       <button type="submit"  class="page-link linkMinus" th:pid="${sanpham.id}"><b>-</b></button>
                                     </form>
                                 </li>
@@ -50,7 +53,7 @@
                                            class="form-control text-center" style="width: 55px" />
                                 </li>
                                 <li class="page-item">
-                                       <form th:action = "@{'/cart/updatePlus/' + ${sanpham.id}}" method="post" class="form-update">
+                                       <form th:action = "@{'/cart/updatePlus/' + ${sanpham.id} + '/' + ${item.size.id}}" method="post" class="form-update">
                                        <button  type="submit" class="page-link linkPlus" th:pid="${sanpham.id}" ><b>+</b></button>
                                        </form>
                                 </li>

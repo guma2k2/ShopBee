@@ -23,9 +23,6 @@ public class SanPham {
 	@Column(name = "anh" , nullable = false , length =100)
 	private String anh ;
 	
-	@Column(name = "size")
-	private String size ;
-	
 	@Column(name = "mo_ta" , length = 800)
 	private String moTa ;
 	
@@ -44,12 +41,22 @@ public class SanPham {
 		if (id == null || anh == null) return "/images/default-user.png";
 		return "/sanpham-photos/" + this.id + "/" + this.anh;
 	}
+	@OneToMany(mappedBy = "sanPham" , cascade = CascadeType.ALL , orphanRemoval = true)
+	private List<Size> sizes = new ArrayList<>();
 
 	@Transient
 	private boolean canReview ;
 
 	@Transient
 	private boolean didReview ;
+
+	public long getTotalQuantity() {
+		long total = 0 ;
+		for(Size size : sizes) {
+			total+=size.getSoLuong();
+		}
+		return total;
+	}
 
 	@Transient
 	public int getReviewCount() {
@@ -61,24 +68,30 @@ public class SanPham {
 		return reviews.stream().mapToInt(Review::getRating).average().orElse(0);
 	}
 
-	public SanPham(Integer id, String ten, int gia, String anh, String size, String moTa, boolean trangThai, LoaiSanPham loaiSanPham, List<Review> reviews) {
+	public List<Size> getSizes() {
+		return sizes;
+	}
+
+	public void setSizes(List<Size> sizes) {
+		this.sizes = sizes;
+	}
+
+	public SanPham(Integer id, String ten, int gia, String anh, String moTa, boolean trangThai, LoaiSanPham loaiSanPham, List<Review> reviews) {
 		this.id = id;
 		this.ten = ten;
 		this.gia = gia;
 		this.anh = anh;
-		this.size = size;
 		this.moTa = moTa;
 		this.trangThai = trangThai;
 		this.loaiSanPham = loaiSanPham;
 		this.reviews = reviews;
 	}
 
-	public SanPham(Integer id, String ten, int gia, String anh, String size, String moTa, boolean trangThai, LoaiSanPham loaiSanPham) {
+	public SanPham(Integer id, String ten, int gia, String anh, String moTa, boolean trangThai, LoaiSanPham loaiSanPham) {
 		this.id = id;
 		this.ten = ten;
 		this.gia = gia;
 		this.anh = anh;
-		this.size = size;
 		this.moTa = moTa;
 		this.trangThai = trangThai;
 		this.loaiSanPham = loaiSanPham;
@@ -119,13 +132,7 @@ public class SanPham {
 		this.anh = anh;
 	}
 
-	public String getSize() {
-		return size;
-	}
 
-	public void setSize(String size) {
-		this.size = size;
-	}
 
 	public String getMoTa() {
 		return moTa;

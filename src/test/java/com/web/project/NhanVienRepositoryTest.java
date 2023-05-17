@@ -31,10 +31,12 @@ public class NhanVienRepositoryTest {
 
 	@Test
 	public void testCreateNhanVien() {
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		NhanVien nhanVien = new NhanVien(2 , "Ngo" ,"Thuan" , "0918462888" , "thuanngo723@yahoo.com" );
-		Role roleAdmin = entityManager.find(Role.class, 2);
-
+		Role roleAdmin = entityManager.find(Role.class, 1);
 		nhanVien.addRole(roleAdmin);
+		String pass = "thuan2023" ;
+		nhanVien.setPassword(bCryptPasswordEncoder.encode(pass));
 		NhanVien NV = repo.save(nhanVien);
 		assertThat(NV.getId()).isGreaterThan(0);
 	}

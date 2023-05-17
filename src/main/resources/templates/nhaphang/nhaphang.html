@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace = "~{fragments :: page_head}">
+<body>
+<div th:replace="~{navigation :: nav}"></div>
+
+<div class="container-fluid">
+    <h2>Quản lý nhập hàng</h2>
+    <a class="btn btn-primary" th:href="@{/nhapHang/new}">
+        <i class="fa fa-plus"></i>
+    </a>
+
+    <div>
+        <form th:action="@{/nhapHang/page/1}" class="form-inline m-3">
+            <input type="hidden" name="sortField" th:value="${sortField}"/>
+            <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+
+            Filter:&nbsp;
+            <input placeholder="Search by id" type="search" name="keyword" th:value="${keyword}" class="form-control" required/>
+            &nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary"
+                    onclick="clearFilter()">
+                <i class="fa fa-eraser"></i>
+            </button>
+        </form>
+
+        <div th:if="${message != null}"
+             class="alert alert-success text-center">[[${message}]]
+        </div>
+    </div>
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th th:replace = "~{fragments :: column-link('id' , 'Mã nhập hàng' , '/nhapHang/page/')}"></th>
+                <th>Tên nhân viên</th>
+                <th>Tên sản phẩm</th>
+                <th>Size sản phẩm</th>
+                <th th:replace = "~{fragments :: column-link('thoiGianNhap' , 'Thời gian nhập' , '/nhapHang/page/')}"></th>
+                <th>Số lương</th>
+                <th>Giá mỗi sản phẩm</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr th:each="sp : ${listCtn}">
+            <td>[[${sp.id}]]</td>
+            <td>[[${sp.nhanVien.fullName}]]</td>
+            <td>[[${sp.sanPham.ten}]]</td>
+            <td>[[${sp.size.ten}]]</td>
+            <td th:text ="${#temporals.format(sp.thoiGianNhap, 'dd-MM-yyyy HH:mm')}" ></td>
+            <td>[[${sp.soLuong}]]</td>
+            <td>[[${sp.giaMoiSanPham}]]</td>
+            <td>
+                <a class="mr-2 fa fa-edit fa-2x "
+                   th:href="@{'/nhapHang/edit/' +${sp.id}}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace = "~{fragments :: pagination('Nhập hàng' , '/nhapHang/page/')}"></div>
+<div class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Delete Information</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <span id="confirmText"></span>
+            </div>
+
+            <div class="modal-footer">
+                <a href="" class="btn btn-success" id="YesButton">Yes</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+		function clearFilter() {
+			window.location = "[[@{/nhapHang}]]";
+		}
+</script>
+</body>
+</html>

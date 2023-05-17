@@ -31,6 +31,10 @@ public class ChiTietHoaDon {
 	@JoinColumn(name = "san_pham_id")
 	private SanPham sanPham ;
 
+	@ManyToOne
+	@JoinColumn(name = "size_id")
+	private Size size;
+
 	public ChiTietHoaDon(int soLuong, Double gia, HoaDon hoaDon, SanPham sanPham) {
 		this.soLuong = soLuong;
 		this.gia = gia;

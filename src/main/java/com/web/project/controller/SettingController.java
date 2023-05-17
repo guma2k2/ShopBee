@@ -4,6 +4,7 @@ import com.web.project.entity.LoaiSetting;
 import com.web.project.entity.Setting;
 import com.web.project.service.SettingService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.util.List;
 
 @Controller
+@Slf4j
 public class SettingController {
 
     @Autowired

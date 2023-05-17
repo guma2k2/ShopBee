@@ -36,23 +36,34 @@ public class CartController {
     @Autowired
     private CthdService cthdService;
 
+    @Autowired
+    private SizeService sizeService;
+
 
 
     @PostMapping("/cart/add/{sanphamId}")
     public String addToCart(@PathVariable("sanphamId") Integer sanphamId ,
                             @RequestParam("quantity") int soluong ,
+                            @RequestParam("idSize") Long idSize ,
                             HttpServletRequest request ,
                             RedirectAttributes re){
         try {
+            Size size = sizeService.get(idSize) ;
+            if(size.getSoLuong() < soluong) {
+                re.addFlashAttribute("message", "Sản phẩm chỉ còn " +size.getSoLuong() + " cái !!");
+                return "redirect:/product_details/" + sanphamId;
+            }
             NhanVien khachHang = getKhachHang(request);
-            cartService.addToCart(sanphamId , khachHang , soluong);
+            cartService.addToCart(sanphamId , khachHang , soluong , idSize);
             re.addFlashAttribute("message" , "Thêm thành công vào giỏ hàng !!");
+            return "redirect:/product_details/" + sanphamId;
         } catch (NhanVienNotFoundException e) {
             return "login";
         } catch (SanPhamNotFoundException e) {
-
+            re.addFlashAttribute("message" , "Sản phẩm không được tìm thấy");
+            return "redirect:/product_details/" + sanphamId;
         }
-        return "redirect:/product_details/" + sanphamId;
+
     }
 
     private NhanVien getKhachHang(HttpServletRequest request) throws NhanVienNotFoundException {
@@ -76,15 +87,17 @@ public class CartController {
     }
 
 
-    @PostMapping("/cart/updateMinus/{sanPhamId}")
+    @PostMapping("/cart/updateMinus/{sanPhamId}/{sizeId}")
     public String updateMinus(@PathVariable("sanPhamId")Integer sanPhamId,
+                              @PathVariable("sizeId")Long sizeId,
                               HttpServletRequest request ,
                               Model model ,
                               RedirectAttributes redirectAttributes){
         try {
             String email = Utility.getEmailOfAuthenticatedCustomer(request);
             NhanVien khachHang = khachHangService.findByEmail(email);
-            cartService.updateSoLuongMinus(khachHang,sanPhamId);
+            cartService.updateSoLuongMinus(khachHang,sanPhamId, sizeId);
+
             List<Cart> gioHang = cartService.findByKhachHang(khachHang);
             Long tongTien = Long.valueOf(gioHang
                     .stream()
@@ -99,15 +112,16 @@ public class CartController {
         }
 
     }
-    @PostMapping("/cart/updatePlus/{sanPhamId}")
+    @PostMapping("/cart/updatePlus/{sanPhamId}/{sizeId}")
     public String updatePlus(@PathVariable("sanPhamId")Integer sanPhamId,
+                             @PathVariable("sizeId")Long sizeId,
                              HttpServletRequest request ,
                              Model model ,
                              RedirectAttributes redirectAttributes){
         try {
             String email = Utility.getEmailOfAuthenticatedCustomer(request);
             NhanVien khachHang = khachHangService.findByEmail(email);
-            cartService.updateSoLuongPlus(khachHang,sanPhamId);
+            cartService.updateSoLuongPlus(khachHang,sanPhamId, sizeId);
             List<Cart> gioHang = cartService.findByKhachHang(khachHang);
             Long tongTien = Long.valueOf(gioHang
                     .stream()
@@ -121,15 +135,15 @@ public class CartController {
             return "cart/cart";
         }
     }
-    @GetMapping("/cart/remove/{sanPhamId}")
-    public String removeCart(@PathVariable("sanPhamId")Integer sanPhamId,
+    @GetMapping("/cart/remove/{cartId}")
+    public String removeCart(@PathVariable("cartId")Integer cartId,
                              HttpServletRequest request ,
                              Model model ,
                              RedirectAttributes redirectAttributes){
         try {
             String email = Utility.getEmailOfAuthenticatedCustomer(request);
             NhanVien khachHang = khachHangService.findByEmail(email);
-            cartService.removeCart(khachHang,sanPhamId);
+            cartService.removeCart(cartId);
             List<Cart> gioHang = cartService.findByKhachHang(khachHang);
             Long tongTien = Long.valueOf(gioHang
                     .stream()
@@ -166,9 +180,21 @@ public class CartController {
         // save cthd
         for(Cart cart : gioHang){
             int soLuong = cart.getSoLuong();
+            Size size = cart.getSize();
+            if(size.getSoLuong() < soLuong) {
+                redirectAttributes.addFlashAttribute("message", "Sản phẩm chỉ còn " +size.getSoLuong() + " cái !!");
+                return "redirect:/cart";
+            }
+
             Double gia = Double.valueOf(cart.getTongGia());
             SanPham sanPham = cart.getSanPham();
-            cthdService.save(soLuong,gia,sanPham,order);
+            try {
+                sizeService.updateSoLuong( -cart.getSoLuong() , size.getId());
+            } catch (SanPhamNotFoundException e) {
+                redirectAttributes.addFlashAttribute("message","Sản phẩm không được tìm thấy");
+                return "redirect:/cart";
+            }
+            cthdService.save(soLuong,gia,sanPham,order, size);
         }
         cartService.removeCartByKhachHang(khachHang);
         redirectAttributes.addFlashAttribute("message","Hóa đơn đã được thanh toán thành công");

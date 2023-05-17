@@ -14,10 +14,10 @@ import java.util.Objects;
 @Data
 public class Setting {
     @Id
-    @Column( name = "`key`",nullable = false , unique = true , length = 20)
+    @Column( name = "`key`",nullable = false , unique = true , length = 100)
     private String key ;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 1000)
     private String value ;
 
     @Column(name = "loai" ,nullable = false )

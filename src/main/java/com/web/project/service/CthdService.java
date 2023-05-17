@@ -2,10 +2,7 @@ package com.web.project.service;
 
 import com.web.project.dto.DoanhThuTheoSanPham;
 import com.web.project.dto.LichSuSanPham;
-import com.web.project.entity.ChiTietHoaDon;
-import com.web.project.entity.HoaDon;
-import com.web.project.entity.OrderStatus;
-import com.web.project.entity.SanPham;
+import com.web.project.entity.*;
 import com.web.project.repository.CthdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -22,8 +19,9 @@ public class CthdService {
     @Autowired
     private CthdRepository repo;
 
-    public ChiTietHoaDon save(int soLuong , Double gia , SanPham sanPham , HoaDon hoaDon) {
+    public ChiTietHoaDon save(int soLuong , Double gia , SanPham sanPham , HoaDon hoaDon, Size size) {
         ChiTietHoaDon cthd = new ChiTietHoaDon(soLuong,gia,hoaDon , sanPham);
+        cthd.setSize(size);
         return repo.save(cthd);
     }
 

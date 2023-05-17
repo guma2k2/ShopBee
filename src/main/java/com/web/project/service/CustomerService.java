@@ -23,6 +23,8 @@ public class CustomerService {
         Customer newCustomer = new Customer() ;
         setName(name , customer);
         newCustomer.setEmail(email);
+        newCustomer.setHo(customer.getHo());
+        newCustomer.setTen(customer.getTen());
         customer.addRole(new Role(3));
         customer.setEmail(email);
         customer.setTrangThai(true);

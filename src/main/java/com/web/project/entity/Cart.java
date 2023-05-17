@@ -25,6 +25,10 @@ public class Cart {
     @JoinColumn(name = "san_pham_id")
     private SanPham sanPham;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "size_id")
+    private Size size;
+
     @Column(name = "so_luong")
     private int soLuong ;
 
