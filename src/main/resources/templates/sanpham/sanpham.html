@@ -48,15 +48,19 @@
         <tbody>
         <tr th:each="sp : ${listSP}">
             <td>[[${sp.id}]]</td>
-            <td><span th:if="${sp.anh == null}"
+            <td>
+                <span th:if="${sp.anh == null}"
                       class="fa-portrait fa-3x">
 					</span>
                 <img class="image-SP"
                      th:if="${sp.anh != null}" th:src="@{${sp.photosImagePath}}"></td>
             <td>
                 <ul>
-                    <th:block th:each="size : ${sp.sizes}" >
-                        <li>Size [[${size.ten}]] còn [[${size.soLuong}]]</li>
+                    <th:block  th:each="size : ${sp.sizes}" >
+                        <li>Size: [[${size.ten}]] còn [[${size.soLuong}]]</li>
+                    </th:block>
+                    <th:block th:if="${#lists.size(sp.sizes) == 0}" >
+                        <li>Số lượng: [[${sp.soLuong}]] </li>
                     </th:block>
                 </ul>
             </td>
@@ -72,9 +76,9 @@
                     class="fa fa-check-circle fa-2x icon-silver "
                     th:href="@{'/sanpham/' + ${sp.id} + '/enabled/true'}"></a></td>
             </td>
-            <td>
+            <td class="d-flex justify-content-between" >
                 <a class="mr-2 fa fa-edit fa-2x "
-                   th:href="@{'/sanpham/edit/' +${sp.id}}"></a> &nbsp;
+                   th:href="@{'/sanpham/edit/' +${sp.id}}"></a>
                 <a class="link-delete fa fa-trash fa-2x" th:spId = "${sp.id}"
                    th:href="@{'/sanpham/delete/' + ${sp.id}}"></a>
             </td>
@@ -104,22 +108,18 @@
 </div>
 
 <script type="text/javascript">
-     $(document).ready(
-			function() {
-				$(".link-delete")
-						.on(
-								'click',
-								function(e) {
-									e.preventDefault()
-									link = $(this);
-									userId = link.attr("spId");
-									$("#YesButton").attr("href",
-											link.attr("href"));
-									$("#confirmText").text(
-											"Are u want to delete the category of "
-													+ userId + "?");
-									$("#confirmModal").modal();
-								})
+     $(document).ready(function() {
+        $(".link-delete").on('click', function(e) {
+            e.preventDefault()
+            link = $(this);
+            userId = link.attr("spId");
+            $("#YesButton").attr("href",
+                    link.attr("href"));
+            $("#confirmText").text(
+                    "Are u want to delete the category of "
+                            + userId + "?");
+            $("#confirmModal").modal();
+        })
 	});
 		function clearFilter() {
 			window.location = "[[@{/sanpham}]]";

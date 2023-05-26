@@ -47,14 +47,14 @@
             <td>[[${rv.khachHang.fullName}]]</td>
             <td>[[${rv.rating}]]</td>
             <td th:text ="${#temporals.format(rv.reviewTime, 'dd-MM-yyyy HH:mm')}" ></td>
-            <td>
-                <a class="fas fa-file fa-solid fa-2x"
+            <td  class="d-flex " >
+                <a class="fas fa-file fa-solid fa-2x link-detail ml-2 "
                    th:href="@{'/review/view/' +${rv.id}}">
-                </a> &nbsp;
-                <a class="fa fa-edit fa-2x mr-2"
-                   th:href="@{'/review/edit/' +${rv.id}}"></a> &nbsp;
-                <a class="fa fa-trash fa-2x link-delete"
-                    th:href="@{'/review/delete/' + ${rv.id}}" th:reviewId="${rv.id}"></a></td>
+                </a>
+                <a class="fa fa-trash fa-2x link-delete ml-2"
+                    th:href="@{'/review/delete/' + ${rv.id}}" th:reviewId="${rv.id}">
+                </a>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -79,23 +79,32 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="detailModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
 
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
-		$(document).ready(
-            function() {
-                $(".link-delete")
-                    .on('click', function(e) {
-                        e.preventDefault()
-                        link = $(this);
-                        userId = link.attr("userId");
-                        $("#YesButton").attr("href",
-                                link.attr("href"));
-                        $("#confirmText").text(
-                                "Are u want to delete the review id  "
-                                        + userId + "?");
-                        $("#confirmModal").modal();
-                    })
-            });
+		$(document).ready(function(){
+            $(".link-delete").on('click', function(e) {
+                e.preventDefault()
+                link = $(this);
+                reviewId = link.attr("reviewId");
+                console.log(reviewId);
+                $("#YesButton").attr("href",
+                        link.attr("href"));
+                $("#confirmText").text(
+                        "Bạn có chắc chắn muốn xóa bài review " + reviewId + "?");
+                $("#confirmModal").modal();
+            })
+            $(".link-detail").on('click' , function(e){
+              e.preventDefault();
+              linkDetail = $(this).attr("href");
+              $("#detailModal").modal("show").find(".modal-content").load(linkDetail);
+           });
+        });
 		function clearFilter() {
 			window.location = "[[@{/review}]]";
 		}

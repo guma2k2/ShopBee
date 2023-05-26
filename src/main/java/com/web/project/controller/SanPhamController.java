@@ -52,6 +52,7 @@ public class SanPhamController {
             @PathVariable("pageNum") int pageNum ,
             Model model
     ){
+        // Lấy ra danh sách sản phẩm dựa theo cac param
         Page<SanPham> page = service.listByPage( sortDir, sortField , keyword , pageNum );
         List<SanPham> listSP = page.getContent();
         int start = (pageNum - 1) * SanPhamService.sanPhamMoiPage + 1;
@@ -91,7 +92,7 @@ public class SanPhamController {
                              @RequestParam("sizeDescriptions")String[] sizeDescriptions
                              )
                              throws IOException {
-
+        // Kiểm tra tên sản phẩm
         if (!service.checkTenUnique(sanPham.getTen(),sanPham.getId() )){
             model.addAttribute("message" , "tên sản phẩm này đã được sử dung!!");
             model.addAttribute("sanpham" , sanPham);
@@ -107,30 +108,31 @@ public class SanPhamController {
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }else {
             if(sanPham.getAnh().isEmpty()) sanPham.setAnh(null);
-            List<Size> sizes = new ArrayList<>() ;
-            if(sizeNames.length > 0 && sizeNames != null) {
-                for(int i = 0 ; i < sizeNames.length ;i++) {
-                    Long sizeId = sizeIds[i] ;
-                    String tenSize = sizeNames[i].trim() ;
-                    String moTaSize = sizeDescriptions[i];
-//                    log.info(String.valueOf(sizeId));
-//                    log.info(tenSize);
-                    if(!tenSize.trim().equals("")){
-                        Size size = new Size();
-                        size.setTen(tenSize);
-                        size.setMoTa(moTaSize);
-                        size.setSanPham(sanPham);
-                        if(sizeId != 0) {
-                            size.setId(sizeId);
-                        }
-                        sizeService.saveSize(size);
-                        sizes.add(size);
+        }
+        List<Size> sizes = new ArrayList<>() ;
+        // Lấy ra một mảng các size
+        if(sizeNames.length > 0 && sizeNames != null) {
+            for(int i = 0 ; i < sizeNames.length ;i++) {
+                Long sizeId = sizeIds[i] ;
+                String tenSize = sizeNames[i].trim() ;
+                String moTaSize = sizeDescriptions[i];
+                if(!tenSize.trim().equals("")){
+                    Size size = new Size();
+                    size.setTen(tenSize);
+                    size.setMoTa(moTaSize);
+                    size.setSanPham(sanPham);
+                    if(sizeId != 0) {
+                        size.setId(sizeId);
                     }
+                    // Lưu các size theo sản phẩm
+                    sizeService.saveSize(size);
+                    sizes.add(size);
                 }
             }
             sanPham.setSizes(sizes);
-            service.save(sanPham);
         }
+        // Lưu sản phẩm
+        service.save(sanPham);
         redirectAttributes.addFlashAttribute("message", "Sản phẩm này đã được lưu thành công");
         return "redirect:/sanpham";
     }
@@ -149,7 +151,9 @@ public class SanPhamController {
         }
     }
     @GetMapping("/sanpham/{id}/enabled/{status}")
-    public String updateTrangThai(@PathVariable("id")Integer id , @PathVariable("status")boolean status ,RedirectAttributes re) {
+    public String updateTrangThai(@PathVariable("id")Integer id ,
+                                  @PathVariable("status")boolean status ,
+                                  RedirectAttributes re) {
         service.updateTrangThai(id, status);
         re.addFlashAttribute("message" ," Cập nhật trạng thái thành công");
         return "redirect:/sanpham";
@@ -158,6 +162,7 @@ public class SanPhamController {
     @GetMapping("/sanpham/delete/{id}")
     public String delete(@PathVariable("id")Integer id ,RedirectAttributes redirectAttributes){
         try {
+            // Kiểm tra xem sảnp phẩm này có nằm trong đơn đặt hàng nào không
             if(!cthdService.canDeleteSp(id)){
                 redirectAttributes.addFlashAttribute("message" , "Không thể xóa sản phẩm này");
                 return "redirect:/sanpham";

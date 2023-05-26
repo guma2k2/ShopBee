@@ -23,7 +23,7 @@ public class SanPham {
 	@Column(name = "anh" , nullable = false , length =100)
 	private String anh ;
 	
-	@Column(name = "mo_ta" , length = 800)
+	@Column(name = "mo_ta" , length = 1500)
 	private String moTa ;
 	
 	@Column(name = "trang_thai")
@@ -35,6 +35,10 @@ public class SanPham {
 
 	@OneToMany(mappedBy = "sanPham", cascade = CascadeType.ALL)
 	private List<Review> reviews = new ArrayList<>() ;
+
+	private int soLuong;
+
+
 
 	@Transient
 	public String getPhotosImagePath() {
@@ -50,10 +54,16 @@ public class SanPham {
 	@Transient
 	private boolean didReview ;
 
+
+	@Transient
 	public long getTotalQuantity() {
 		long total = 0 ;
-		for(Size size : sizes) {
-			total+=size.getSoLuong();
+		if(sizes.size() > 0) {
+			for(Size size : sizes) {
+				total+=size.getSoLuong();
+			}
+		} else {
+			total = soLuong ;
 		}
 		return total;
 	}
@@ -73,7 +83,10 @@ public class SanPham {
 	}
 
 	public void setSizes(List<Size> sizes) {
-		this.sizes = sizes;
+		this.sizes.clear();
+		if(sizes != null) {
+			this.sizes.addAll(sizes);
+		}
 	}
 
 	public SanPham(Integer id, String ten, int gia, String anh, String moTa, boolean trangThai, LoaiSanPham loaiSanPham, List<Review> reviews) {
@@ -180,5 +193,12 @@ public class SanPham {
 
 	public void setDidReview(boolean didReview) {
 		this.didReview = didReview;
+	}
+	public int getSoLuong() {
+		return soLuong;
+	}
+
+	public void setSoLuong(int soLuong) {
+		this.soLuong = soLuong;
 	}
 }

@@ -106,4 +106,8 @@ public class SanPhamService {
     public boolean canDeleteLoai(Integer idLoai){
         return repo.listSpTheoLoai(idLoai).size() == 0;
     }
+
+    public void updateQuantity(int quantity, SanPham sanPham) {
+        repo.updateQuantity(quantity, sanPham);
+    }
 }

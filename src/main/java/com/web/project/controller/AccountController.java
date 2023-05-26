@@ -5,7 +5,9 @@ import java.io.IOException;
 
 import com.web.project.FileUploadUtil;
 import com.web.project.Utility;
+import com.web.project.service.NhanVienNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Component;
@@ -31,7 +33,10 @@ public class AccountController {
 	private NhanVienService service ;
 	
 	@GetMapping("/account")
-	public String accountDetails(@AuthenticationPrincipal MyShopUserDetail loggedUser , Model model , HttpServletRequest request) {
+	public String accountDetails(@AuthenticationPrincipal MyShopUserDetail loggedUser ,
+								 Model model ,
+								 HttpServletRequest request) {
+		// Lấy ra email của user đang đăng nhập
 		String email;
 		if(loggedUser != null){
 			email = loggedUser.getUsername();
@@ -45,20 +50,31 @@ public class AccountController {
 	@PostMapping("account/update")
 	public String save(NhanVien nhanvien , RedirectAttributes re ,
 					   @RequestParam("image") MultipartFile multipartFile ,
-					   @AuthenticationPrincipal MyShopUserDetail account) throws IOException {
-		if (!multipartFile.isEmpty()) {
+					   @AuthenticationPrincipal MyShopUserDetail account ,
+					   HttpServletRequest request,
+					   HttpSession session) throws IOException {
+		if (!multipartFile.isEmpty()) { // Kiểm tra xem bạn có thay đổi ảnh đại diện hay không
+			// Lấy ra tên file ảnh mà bạn đã upload Vd test.png
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-			nhanvien.setPhotos(fileName);
-			NhanVien savedUser = service.save(nhanvien);
-			
-			String uploadDir = "nhanvien-photos/" + savedUser.getId();
 
+			nhanvien.setPhotos(fileName);
+
+			// Vì chúng ta dùng hàm này chung với cập nhật tài khoản
+			// Nên ta cần kiểm tra xem account hiện tại có trùng với tài khoản mà admin chỉnh sửa không
+			String email = Utility.getEmailOfAuthenticatedCustomer(request);
+			if(nhanvien.getEmail().equals(email)) { // Nếu trùng thì cập nhật session để hiện thì ảnh mới của account
+				String imagePath = nhanvien.getPhotosImagePath();
+				session.setAttribute("imagePath", imagePath);
+			}
+			String uploadDir = "nhanvien-photos/" + nhanvien.getId();
 			FileUploadUtil.cleanDir(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 			
-		} else {
-			if (nhanvien.getPhotos().isEmpty()) nhanvien.setPhotos(null);
+		}
+		try {
 			service.updateAccount(nhanvien);
+		} catch (NhanVienNotFoundException e) {
+			re.addFlashAttribute("message" , e.getMessage());
 		}
 		account.setHo(nhanvien.getHo());
 		account.setTen(nhanvien.getTen());

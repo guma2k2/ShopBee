@@ -85,6 +85,17 @@ h2{
     transform: translateZ(0);
     transition: transform 0.25s ease-out;
 }
+.card2 {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    background-color: white;
+    margin-bottom: 20px;
+    height: 450px;
+    cursor: pointer;
+    transform: translateZ(0);
+    transition: transform 0.25s ease-out;
+}
 .card_wrap{
   flex: 7 ;
   display:flex;

@@ -26,9 +26,11 @@ public class CartService {
     public void addToCart(Integer sanphamId  , NhanVien khachHang , int soLuong, Long sizeId) throws SanPhamNotFoundException {
         Customer customer = customerService.findByEmailCustomer(khachHang.getEmail()) ;
         SanPham sanPham = sanPhamService.get(sanphamId);
-        Size size = sizeService.get(sizeId);
+        Size size = sizeId != 0 ? sizeService.get(sizeId) : null;
         int updatedQuantity = soLuong;
-        Cart cart = repo.findByKhachHangAndSanPhamSize(customer , sanPham , size);
+        Cart cart = size != null ?
+                repo.findByKhachHangAndSanPhamSize(customer , sanPham, size) :
+                repo.findByKhachHangAndSanPham(customer , sanPham);
         if(cart != null){
             updatedQuantity+=cart.getSoLuong();
         }else{
@@ -49,8 +51,10 @@ public class CartService {
     public void updateSoLuongMinus(NhanVien khachHang , Integer sanPhamId, Long sizeId) throws SanPhamNotFoundException {
         SanPham sanPham = sanPhamService.get(sanPhamId);
         Customer customer = customerService.findByEmailCustomer(khachHang.getEmail()) ;
-        Size size = sizeService.get(sizeId);
-        Cart cart = repo.findByKhachHangAndSanPhamSize(customer , sanPham , size);
+        Size size = sizeId != 0 ? sizeService.get(sizeId) : null;
+        Cart cart = size != null ?
+                repo.findByKhachHangAndSanPhamSize(customer , sanPham, size) :
+                repo.findByKhachHangAndSanPham(customer , sanPham);
         int soLuong = cart.getSoLuong();
         if(soLuong > 1){
             soLuong-=1;
@@ -60,10 +64,12 @@ public class CartService {
     public void updateSoLuongPlus(NhanVien khachHang , Integer sanPhamId, Long sizeId) throws SanPhamNotFoundException {
         SanPham sanPham = sanPhamService.get(sanPhamId);
         Customer customer = customerService.findByEmailCustomer(khachHang.getEmail()) ;
-        Size size = sizeService.get(sizeId);
-        Cart cart = repo.findByKhachHangAndSanPhamSize(customer , sanPham, size);
+        Size size = sizeId != 0 ? sizeService.get(sizeId) : null;
+        Cart cart = size != null ?
+                repo.findByKhachHangAndSanPhamSize(customer , sanPham, size) :
+                repo.findByKhachHangAndSanPham(customer , sanPham);
         int soLuong = cart.getSoLuong();
-        repo.updateSoLuong(cart.getId(),soLuong+1);
+        repo.updateSoLuong(cart.getId(),soLuong + 1);
     }
 
     public void removeCart(Integer cartId) throws SanPhamNotFoundException {

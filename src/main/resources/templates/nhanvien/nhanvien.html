@@ -16,8 +16,8 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 				<input type="hidden" name="sortField" th:value="${sortField}" /> <input
 					type="hidden" name="sortDir" th:value="${sortDir}" />
 
-				Filter:&nbsp; <input type="search" name="keyword"
-					th:value="${keyword}" class="form-control" required />
+				Filter:&nbsp; <input type="search" name="keyword" style="width: 150px;"
+					th:value="${keyword}" class="form-control" required placeholder="Tìm kiếm theo họ tên và email" />
 				&nbsp;&nbsp;
 				<button type="submit" class="btn btn-primary">
 					<i class="fa fa-search"></i>
@@ -29,8 +29,8 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 				</button>
 			</form>
 
-			<div th:if="${message != null}"
-				class="alert alert-success text-center">[[${message}]]
+			<div th:if="${message != null}" class="alert alert-success text-center">
+				[[${message}]]
 			</div>
 		</div>
 		<table class="table table-bordered table-striped table-hover">
@@ -44,12 +44,12 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 					<th th:replace = "~{fragments :: column-link('ten' , 'Tên','/nhanvien/page/')}">
 					</th>
 					<th class="text-black">Email</th>
-					<th class="text-black">Vai tro</th>
+					<th class="text-black">Vai trò</th>
 					<th><a th:if="${sortField != 'trangThai'}" class = "icon-dark"
-						th:href="@{'/nhanvien/page/' + ${currentPage} +'?sortField=trangThai&sortDir=' + ${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}">Trang
-							Thai</a> <a th:if="${sortField == 'trangThai'}" class = "icon-dark"
-						th:href="@{'/nhanvien/page/' + ${currentPage} +'?sortField=trangThai&sortDir=' + ${reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">Trang
-							Thai</a> <span th:if="${sortField == 'trangThai'}"
+						th:href="@{'/nhanvien/page/' + ${currentPage} +'?sortField=trangThai&sortDir=' + ${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}">Trạng
+							thái</a> <a th:if="${sortField == 'trangThai'}" class = "icon-dark"
+						th:href="@{'/nhanvien/page/' + ${currentPage} +'?sortField=trangThai&sortDir=' + ${reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">Trạng
+							thái</a> <span th:if="${sortField == 'trangThai'}"
 						th:class="${sortDir == 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down'}"></span>
 					</th>
 					<th></th>

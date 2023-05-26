@@ -63,14 +63,19 @@ public class LoaiSanPhamService {
 		repo.deleteById(id);
 	}
 	public boolean checkTenUnique(Integer id,String ten){
+		// Tìm kiếm tên loại theo tên
 		LoaiSanPham loaiSanPham = repo.findByName(ten);
 		if(loaiSanPham == null) return true ;
+
+		// Kiểm tra xem là cập nhật hay thêm mới
 		boolean isCreateNew = (id == null);
+
 		if(isCreateNew){
 			if(loaiSanPham != null){
 				return false;
 			}
 		}else {
+			// kiểm tra trường hợp tên trùng với tên loại cập nhật
 			if(loaiSanPham.getId() != id){
 				return false;
 			}

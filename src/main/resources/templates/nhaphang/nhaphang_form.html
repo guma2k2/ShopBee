@@ -59,15 +59,18 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 			 <label class="col-sm-4 col-form-label">Size:</label>
 			 <div class="col-sm-8">
 				 <th:block th:if="${readOnly == false}" >
-					 <select class="form-control" th:field="*{size}"   name="size">
-						 <th:block th:each="s : ${sizes}">
+					 <select class="form-control" th:field="*{size}" >
+						 <th:block  th:each="s : ${sizes}">
 							 <option th:value="${s.id}">[[${s.ten}]]</option>
+						 </th:block>
+						 <th:block th:if="${sizes == null}" >
+							 <option value="noSize">No size</option>
 						 </th:block>
 					 </select>
 				 </th:block>
 				 <th:block th:if="${readOnly == true}" >
-					 <input class="form-control" type="hidden" th:field="*{size}" name="size"   >
-					 <input class="form-control"  th:value="${nhaphang.size.ten}"  readonly/>
+					 <input class="form-control" type="hidden" th:field="*{size}"  >
+					 <input class="form-control"  th:value="${nhaphang.size != null ? nhaphang.size.ten : '' }"  readonly/>
 				 </th:block>
 			 </div>
 		 </div>

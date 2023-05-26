@@ -12,8 +12,8 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
              ShopBee
           </a>
           
-          <div class = "collapse navbar-collapse">
-             <ul class ="navbar-nav" style="position: relative;" >
+          <div class = "collapse navbar-collapse d-flex justify-content-between ">
+             <ul class ="navbar-nav "  >
                  <th:block sec:authorize="!isAuthenticated()">
                  <li class = "nav-item" >
                      <a class = "nav-link" th:href = "@{/}">Trang chủ</a>
@@ -43,7 +43,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                   <a class = "nav-link" th:href = "@{/doanhthu}">Doanh thu</a>
                 </li>
                  <li class = "nav-item" sec:authorize = "hasAuthority('Admin')">
-                     <a class = "nav-link" th:href = "@{/setting}">Cài đặt </a>
+                     <a class = "nav-link" th:href = "@{/c}">Cài đặt </a>
                  </li>
                  <li class = "nav-item" sec:authorize = "hasAuthority('Customer')"  >
                      <a class = "nav-link" th:href = "@{/cart}">
@@ -61,7 +61,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                      </li>
                  </th:block>
                 <li class = "nav-item dropdown nav-user" sec:authorize="isAuthenticated()"   >
-                    <a  id ="photo" th:href = "@{account}">
+                    <a  id ="photo" th:href = "@{/account}">
                         <th:block th:if="${session.imagePath == null}">
                            <i  class = "fa fa-user fa-2x fa-solid"></i>
                         </th:block>

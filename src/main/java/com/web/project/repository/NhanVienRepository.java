@@ -18,7 +18,7 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
 	@Query("SELECT n FROM NhanVien n WHERE n.email = ?1")
 	public NhanVien findByEmail(String email);
 	
-	@Query("SELECT n FROM NhanVien n WHERE CONCAT(n.ho,' ' ,n.ten) LIKE %?1%")
+	@Query("SELECT n FROM NhanVien n WHERE CONCAT(n.ho,' ' ,n.ten) LIKE %?1% OR n.email LIKE %?1%")
 	public Page<NhanVien> findAll(String keyword , Pageable pageable);
 	
 	public Long countById(Integer id );

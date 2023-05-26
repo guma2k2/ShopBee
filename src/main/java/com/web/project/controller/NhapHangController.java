@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -47,25 +48,31 @@ public class NhapHangController {
     }
 
     @PostMapping("/nhapHang/save")
-    public String saveNhapHang(ChiTietNhap chiTietNhap , HttpServletRequest request , RedirectAttributes redirectAttributes) {
+    public String saveNhapHang(ChiTietNhap chiTietNhap ,
+                               HttpServletRequest request ,
+                               RedirectAttributes redirectAttributes) {
+        // Lấy ra thông tin người dùng đang đăng nhập
         String email = Utility.getEmailOfAuthenticatedCustomer(request);
         NhanVien nhanVien = nhanVienService.findByEmail(email);
-        log.info(String.valueOf(chiTietNhap.getId()));
-        if (chiTietNhap.getSize() == null ) {
-            redirectAttributes.addFlashAttribute("nhaphang" , chiTietNhap) ;
-            redirectAttributes.addFlashAttribute("message" , "Size của sản phẩm không được để trống !!") ;
-            return "redirect:/nhapHang/new";
-        }
         try {
+            // Lấy ra size có thể bằng null
             Size size = chiTietNhap.getSize();
+
+            // Lấy ra sản phẩm
+            SanPham sanPham = chiTietNhap.getSanPham();
+
             chiTietNhap.setNhanVien(nhanVien);
             chiTietNhap.setThoiGianNhap(LocalDateTime.now());
+
+            // Lưu nhập hàng
             nhapHangService.saveNhapHang(chiTietNhap);
-            sizeService.updateSoLuong(chiTietNhap.getSoLuong(), size.getId());
+            // Cập nhật số lượng trong kho
+            sizeService.updateSoLuong(chiTietNhap.getSoLuong(), size, sanPham);
             return "redirect:/nhapHang";
         } catch (SanPhamNotFoundException e) {
             redirectAttributes.addFlashAttribute("nhaphang" , chiTietNhap) ;
-            redirectAttributes.addFlashAttribute("message" , "Size của sản phẩm không tìm thấy!") ;
+            redirectAttributes.addFlashAttribute("message" ,
+                    "Size của sản phẩm không tìm thấy!") ;
             return "redirect:/nhapHang/new";
         }
 
@@ -75,9 +82,14 @@ public class NhapHangController {
     public String formNhapHangWithSize(Model model, @PathVariable("sanPhamId") Integer sanPhamId){
         ChiTietNhap chiTietNhap = new ChiTietNhap() ;
         try {
+            // Lấy ra sản phẩm theo id
             SanPham sanPham = sanPhamService.get(sanPhamId);
+
             chiTietNhap.setSanPham(sanPham);
+
+            // Tìm kiếm các size của sản phẩm đó
             List<Size> sizes = sizeService.findBySanPham(sanPhamId);
+            model.addAttribute("readOnly" , false);
             model.addAttribute("pageTitle" , "Quản lý nhập hàng");
             model.addAttribute("nhaphang" , chiTietNhap);
             model.addAttribute("sizes" , sizes);
@@ -115,7 +127,10 @@ public class NhapHangController {
             @PathVariable("pageNum") int pageNum ,
             Model model
     ){
+        // Lấy ra danh sách các phiếu nhập theo các param của một trang
+        // môt trang báo gồm `NhapHangService.ctnPerPage`
         Page<ChiTietNhap> page = nhapHangService.listByPage( sortDir, sortField , keyword , pageNum );
+
         List<ChiTietNhap> listCtn = page.getContent();
         int start = (pageNum - 1) * NhapHangService.ctnPerPage + 1;
         int end = start + NhapHangService.ctnPerPage - 1;

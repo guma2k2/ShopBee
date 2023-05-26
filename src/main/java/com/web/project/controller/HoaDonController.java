@@ -8,6 +8,7 @@ import com.web.project.entity.SanPham;
 import com.web.project.repository.HoaDonRepository;
 import com.web.project.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Controller
+@Slf4j
 public class HoaDonController {
 
 
@@ -37,9 +39,15 @@ public class HoaDonController {
     private ReviewService reviewService ;
     @GetMapping("/hoadon")
     public String listHoaDon(Model model, HttpServletRequest request){
+        // Lấy ra thông tin user đang đăng nhập
         String email = Utility.getEmailOfAuthenticatedCustomer(request);
+
+        // Lấy ra các đơn đặt hàng
         List<HoaDon> listHd = hoaDonService.listAll();
+
+        // Sắp xếp theo thời gian tăng dần
         listHd.stream().sorted(Comparator.comparing(HoaDon::getNgayTao));
+
         NhanVien nhanVien = nhanVienService.findByEmail(email);
         if(!nhanVien.hasRole("Admin") && nhanVien.hasRole("Shipper")) {
             model.addAttribute("listHd" , listHd);
@@ -57,10 +65,20 @@ public class HoaDonController {
                             HttpServletRequest request){
 
         try {
+            // Lấy ra thông tin user đã đăng nhập
             String email = Utility.getEmailOfAuthenticatedCustomer(request) ;
+
+            // Lấy ra thông tin hóa đơn theo Id của hóa đơn
             HoaDon hoaDon = hoaDonService.get(id);
+
+            // Lấy ra danh sách `Chi tiết hóa đơn` của hóa đơn đó
             List<ChiTietHoaDon> listCthd = cthdService.findByIdHoaDon(id);
+
+            // Kiểm tra xem người dùng đã đánh giá sản phẩm hay chưa
+            // Nêu chưa hiển thì nút `Viết đánh giá` nếu sản phẩm đã được giao hoặc thanh toán
+            // Ngược lại sẽ hiện nút `Xem đánh giá` của sản phẩm
             setProductReviewStatus(email, listCthd) ;
+
             model.addAttribute("hoaDon", hoaDon);
             model.addAttribute("listCthd" , listCthd);
             return "hoadon/hoadon_tongquan";
@@ -87,12 +105,18 @@ public class HoaDonController {
     public String updateStatusOrder(
             @PathVariable("orderId") Integer orderId,
             @PathVariable("statusName") String statusName,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            HttpServletRequest request
     ) {
         try {
-            hoaDonService.updateOrderTrack(orderId, statusName);
+            // Lấy thông tin người dùng đang đăng nhập
+            String email = Utility.getEmailOfAuthenticatedCustomer(request);
+            NhanVien shipper = nhanVienService.findByEmail(email);
+            // Cập nhật của khách hàng
+            hoaDonService.updateOrderTrack(orderId, statusName, shipper);
             return "redirect:/hoadon" ;
         } catch (HoaDonNotFoundExeption e) {
+            log.info(e.getMessage());
             redirectAttributes.addFlashAttribute("message" , e.getMessage());
             return "redirect:/hoadon" ;
         }

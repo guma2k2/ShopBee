@@ -41,4 +41,8 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
     @Query("SELECT s FROM SanPham s WHERE s.loaiSanPham.id = ?1 AND s.trangThai = true ")
     public  Page<SanPham> findByCategory(int idLoai, Pageable pageable);
+
+    @Query("UPDATE SanPham s SET s.soLuong = ?1 WHERE s = ?2")
+    @Modifying
+    public void updateQuantity(int quantity, SanPham sanPham);
 }

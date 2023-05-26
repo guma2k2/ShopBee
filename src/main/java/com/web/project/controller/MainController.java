@@ -59,10 +59,6 @@ public class MainController {
 	public String viewHomePage(Model model , HttpServletRequest request ,HttpSession session ) {
 		 String email = Utility.getEmailOfAuthenticatedCustomer(request);
 		 NhanVien nhanVien = nhanVienService.findByEmail(email);
-//		 Set<Role> roles = nhanVien.getRoles() ;
-//		 for(Role role : roles) {
-//			 System.out.println(role.getName());
-//		 }
 		 if (nhanVien != null) {
 			 if (nhanVien.getPhotos() != null && !nhanVien.getPhotos().isEmpty()) {
 				 String imagePath = nhanVien.getPhotosImagePath();
@@ -73,8 +69,6 @@ public class MainController {
 		 }else{
 			 session.setAttribute("imagePath" , null);
 		 }
-
-
 		 return listByNoCategory(model,"desc","gia",null,1);
 	}
 	@GetMapping("/listSpTheoLoai/{idLoai}")
@@ -88,10 +82,14 @@ public class MainController {
 								 @Param("keyword") String keyword ,
 								 @PathVariable("pageNum") int pageNum ,
 								 @PathVariable("idLoai") int idLoai) {
+		// Lấy tất cả sản phẩm theo loại cụ thể và tên sản phẩm với `keyword`
 		Page<SanPham> listSanPham =
 				sanPhamService.listSanPhamByCategory(idLoai, keyword, sortDir, sortField, pageNum);
 		List<SanPham> listSP = listSanPham.getContent();
+
+		// Lấy tất cả loại sản phẩm mà trạng thái bằng `true`
 		List<LoaiSanPham> listLoai = loaiSanPhamService.listAllEnable();
+
 		int start = (pageNum - 1) * SanPhamService.sanPhamMoiPage + 1;
 		int end = start + SanPhamService.sanPhamMoiPage - 1;
 		if(end > listSanPham.getTotalElements()) {
@@ -118,7 +116,10 @@ public class MainController {
 								 @Param("keyword") String keyword ,
 								 @PathVariable("pageNum") int pageNum
 								  ) {
+		// Lấy tất cả các loại sản phẩm có trạng thái bằng `true`
 		List<LoaiSanPham> listLoai = loaiSanPhamService.listAllEnable();
+		// Lấy tất cả các sản phẩm theo keyword, sắp xếp theo 1 trong số các thuộc tính của sản phẩm theo thứ tự
+		// gỉảm dần hoặc tăng dần và có thể chọn bất kỳ trang nào
 		Page<SanPham> page = sanPhamService.listByPageEnable( sortDir, sortField , keyword , pageNum );
 		List<SanPham> listSP = page.getContent();
 		int start = (pageNum - 1) * SanPhamService.sanPhamMoiPage + 1;
@@ -201,13 +202,17 @@ public class MainController {
 
 	@GetMapping("/product_details/update/vote/{reviewId}")
 	public String updateVote(@PathVariable("reviewId")Long reviewId, HttpServletRequest request) {
+		// Kiểm tra xem người dùng có đăng nhập hay chưa
+		// Nếu chưa trả về trang login
 		String email = Utility.getEmailOfAuthenticatedCustomer(request) ;
 		if(email == null) {
 			return "login" ;
 		}
 		try {
+			// Lấy bài review theo Id
 			Review review = reviewService.get(reviewId) ;
 			Integer sanPhamId = review.getSanPham().getId() ;
+			// Vote hoặc unvote review
 			reviewService.saveOrUpdateVote(email, reviewId);
 			return "redirect:/product_details/" + sanPhamId ;
 		} catch (ReviewNotFoundException e) {
@@ -225,11 +230,15 @@ public class MainController {
 	public String saveCustomer(Model model,NhanVien customer , RedirectAttributes redirectAttributes ,
 							   HttpServletRequest request)
 			throws MessagingException, UnsupportedEncodingException {
+		// Kiểm tra email đã tồn tại chưa
 		if(!nhanVienService.checkUniqueEmailCustomer(customer.getEmail())){
-			redirectAttributes.addFlashAttribute("message" , "email cua ban da duoc dang ki");
+			redirectAttributes.addFlashAttribute("message" , "Email của bạn đẵ tồn tại");
 			return "redirect:/register";
 		}
+		// Mặc định user sẽ có vai trò là Khách hàng
 		Role role = new Role(3);
+
+		// Lưu thông tin khách hàng
 		Customer newCustomer = new Customer() ;
 		newCustomer.setHo(customer.getHo());
 		newCustomer.setTen(customer.getTen());
@@ -242,14 +251,18 @@ public class MainController {
 		customerService.saveCustomer(newCustomer) ;
 		nhanVienService.saveCustomer(customer);
 		sendVerificationEmail(request , customer);
-		return "register_success";
+		return "register_inform";
 	}
 
 	private void sendVerificationEmail(HttpServletRequest request, NhanVien customer)
 			throws MessagingException, UnsupportedEncodingException {
 		JavaMailSenderImpl mailSender = Utility.prepareMailSender(settingService);
 		String toAddress = customer.getEmail();
+
+		// Lấy đoạn text đã được lưu trong phần setting
 		String subject = settingService.getCustomerVerifySubject();
+
+		// Lấy nội dung trong phần setting
 		String content = settingService.getCustomerVerifyContent();
 
 		MimeMessage message = mailSender.createMimeMessage();
@@ -266,20 +279,25 @@ public class MainController {
 		content = content.replace("[[URL]]", verifyURL);
 
 		helper.setText(content, true);
-
 		mailSender.send(message);
 	}
 
 	@GetMapping("/verify")
 	public String verifyCode(@Param("code") String code){
+		// Kiểm tra xem đoạn code có chính xác với đoạn code, server vừa gửi
 		boolean verify = nhanVienService.verify(code);
 		return verify ? "register_success" : "register_fail";
 	}
 
 	@GetMapping("/history")
 	public String history(HttpServletRequest request , Model model ){
+		// Lấy thông tin user đã đăng nhập
 		String email = Utility.getEmailOfAuthenticatedCustomer(request);
+
+		// Lấy ra tất cả các đơn hàng của người dùng
 		List<HoaDon> hoaDonList = hoaDonService.findByEmail(email);
+
+		// Chuyển đổi thông tin của đơn đặt hàng thành 1 Object `LichSuGiaoDich`
 		List<LichSuGiaoDich> history = new ArrayList<>();
 		for(HoaDon  hoaDon : hoaDonList){
 			LichSuGiaoDich lichSuGiaoDich = new LichSuGiaoDich();
@@ -289,6 +307,9 @@ public class MainController {
 			lichSuGiaoDich.setStatusName(hoaDon.getStatus().toString());
 			lichSuGiaoDich.setIdHoaDon(hoaDon.getId());
 			lichSuGiaoDich.setNgayGiaoDich(hoaDon.getNgayTao());
+
+			// Lấy ra tất cả sản phẩm của đơn hàng đó
+			// rồi chuyển đổi thành object `LichSuSanPham`
 			List<LichSuSanPham> listSp = cthdService.listByDay(hoaDon.getNgayTao());
 			lichSuGiaoDich.setListSP(listSp);
 			lichSuGiaoDich.setTongTien(hoaDon.getThanhTien());
@@ -305,11 +326,18 @@ public class MainController {
 	}
 	@PostMapping("/verifypassword")
 	public String forgotPassword(HttpServletRequest request ,Model model){
+		// Lấy email đã được nhập để lấy lại mật khẩu
 		String email = request.getParameter("email");
 		try {
+			// Nếu email tồn tại sẽ tạo ra một đoạn token
 			String codeVerify = nhanVienService.updatePasswordCustomer(email);
+
+			// Gắn token vào link
 			String link =  Utility.getSiteURL(request) +  "/reset_password?token=" + codeVerify;
+
+			// Send email
 			sendVerifyPassword(request ,email,link);
+
 			model.addAttribute("message" , "Gui email thanh cong !!" );
 		} catch (NhanVienNotFoundException e) {
 			model.addAttribute("error" , "Mat khau ban nhap sai hoac khong ton tai !!");
@@ -321,6 +349,8 @@ public class MainController {
 	@GetMapping("/reset_password")
 	public String forgotPasswordForm(@Param("token") String token,
 									 Model model) {
+
+		// Kiểm tra token có chuẩn với email của người dùng không
 		NhanVien customer = nhanVienService.findByToken(token);
 		if(customer != null) {
 			model.addAttribute("token" ,token);

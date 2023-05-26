@@ -53,13 +53,23 @@ public class HoaDonService {
     }
 
     public boolean canDeleteNv(Integer id) {
+        // kiểm tra xem nhân viên đó có nằm trong đơn đặt hàng không
         return hoaDonRepository.findByIdNhanVien(id).isEmpty();
     }
 
-    public void updateOrderTrack(Integer orderId , String statusName) throws HoaDonNotFoundExeption {
+    public void updateOrderTrack(Integer orderId , String statusName, NhanVien shipper)
+            throws HoaDonNotFoundExeption {
+
+        // Lấy ra đơn đặt hàng theo id
         HoaDon order = hoaDonRepository.findById(orderId).orElseThrow(() -> new HoaDonNotFoundExeption("Hoa don not found")) ;
+
+        // Tạo ra một OrderTrack
         OrderTrack orderTrack = new OrderTrack() ;
         orderTrack.setUpdatedTime(LocalDateTime.now());
+        orderTrack.setShipper(shipper);
+
+        // Các trạng thái phải đươc cập nhật tuần tự
+        // Ví dụ Trước khi cập nhật tràng thái SHIPPING thì phải cập nhật trạng thái PICKED
         switch (statusName){
             case "PICKED":
                 orderTrack.setStatus(OrderStatus.PICKED);
@@ -94,7 +104,9 @@ public class HoaDonService {
         hoaDonRepository.save(order);
     }
     public void returnOrder(Integer orderId, String reason , String note) throws HoaDonNotFoundExeption {
-        HoaDon order = hoaDonRepository.findById(orderId).orElseThrow(() -> new HoaDonNotFoundExeption("Hoa don not found")) ;
+        HoaDon order = hoaDonRepository.findById(orderId).orElseThrow(() ->
+                new HoaDonNotFoundExeption("Hoa don not found")) ;
+        // Tạo một OrderTrack với trạng thái `RETURNED`
         OrderTrack orderTrack = new OrderTrack() ;
         orderTrack.setUpdatedTime(LocalDateTime.now());
         orderTrack.setStatus(OrderStatus.RETURNED);
@@ -111,6 +123,8 @@ public class HoaDonService {
         OrderStatus statusToUpdate = OrderStatus.RETURNED;
         order.setStatus(statusToUpdate);
         order.getTracks().add(orderTrack);
+
+        // Lưu từng thông tin của Order Track
         hoaDonRepository.save(order);
     }
 }

@@ -40,6 +40,7 @@ public class LoaiSanPhamController {
 			@Param("sortField") String sortField ,
 			@Param("sortDir") String sortDir ,
 			@Param("keyword")String keyword) {
+		// Lấy ra danh sách lọai sản phẩm của 1 trang theo các param
 		Page<LoaiSanPham> page = service.listByPage( sortDir, sortField , keyword , pageNum );
 		List<LoaiSanPham> listSP = page.getContent();
 		int start = (pageNum - 1) * LoaiSanPhamService.LoaiSpPerPage + 1;
@@ -70,7 +71,8 @@ public class LoaiSanPhamController {
 	}
 	
 	@GetMapping("/loaisanpham/{id}/enabled/{enabled}")
-	public String updateStatus(@PathVariable("id")Integer id , @PathVariable("enabled")boolean trangThai ,RedirectAttributes re) {
+	public String updateStatus(@PathVariable("id")Integer id , @PathVariable("enabled")boolean trangThai ,
+							   RedirectAttributes re) {
 		service.updateTrangThai(id, trangThai);
 		re.addFlashAttribute("message", "Cập nhật trạng thái thành công !!");
 		return "redirect:/loaisanpham";
@@ -82,12 +84,16 @@ public class LoaiSanPhamController {
 					   @RequestParam("image") MultipartFile multipartFile ,
 					   RedirectAttributes re)
 			throws IOException {
+		// Kiểm tra tên loại sản phẩm có bị trùng không
 		if(!service.checkTenUnique(loaisanpham.getId(),loaisanpham.getTen())){
 			model.addAttribute("message" , "Tên loại sản phẩm này đã được đặt");
 			model.addAttribute("loai" ,loaisanpham);
-			model.addAttribute("pageTitle", loaisanpham.getId() != null ? "Sửa loại sản phẩm" : "Thêm lọai sản phẩm");
+			model.addAttribute("pageTitle", loaisanpham.getId() != null ? "Sửa loại sản phẩm" :
+					"Thêm lọai sản phẩm");
 			return "loaisanpham/loaisanpham_form";
 		}
+
+		// Kiểm tra bạn có upload file ảnh không:
 		if(!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 			loaisanpham.setPhoto(fileName);
@@ -120,6 +126,8 @@ public class LoaiSanPhamController {
 	@GetMapping("/loaisanpham/delete/{id}")
 	public String delete (@PathVariable("id") Integer id , RedirectAttributes re) {
 		try {
+			// Kiểm tra xem loại sản phẩm thể xóa không
+			// Không thể xóa khi sản phẩm có loại này đã nằm trong đơn đặt hàng
 			if(!sanPhamService.canDeleteLoai(id)){
 				re.addFlashAttribute("message" , "Không thể xóa loại sản phẩm có id là:" + id);
 				return "redirect:/loaisanpham";

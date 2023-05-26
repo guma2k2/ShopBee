@@ -43,6 +43,9 @@
 						</button>
 					</th:block>
 				</div>
+				<div class="row ml-2"   >
+					<div  style="text-align: left;"  th:utext="${sanpham.moTa}"></div>
+				</div>
 				<form th:action = "@{'/cart/add/' + ${sanpham.id}}" method="post" class="add2cart" style="position:absolute; bottom:5px; left:5px;"
 						onsubmit="return checkValidForm(this);">
 				  <div th:replace = "~{fragments :: quantityControl(${sanpham.id} , 1)}" ></div>
@@ -128,7 +131,8 @@
 	});
 	function checkValidForm(form) {
 		var idSize = $("input[name='idSize']").val();
-		if(idSize != 0 ){
+		var btnSize = $(".btnSize").length;
+		if(btnSize == 0 || idSize != 0) {
 			form.submit();
 		} else {
 			alert("Vui lòng chọn một size bắt kì");

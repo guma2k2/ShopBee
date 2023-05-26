@@ -48,29 +48,40 @@ public class WebSecurityConfig {
 	
 
 
-	@Bean 
+	 @Bean
 	 SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	   return http
 			   .authorizeHttpRequests()
 			    .requestMatchers("/nhanvien/**" , "/loaisanpham/**" , "/sanpham/**" ,
-						"/hoadon/**" , "/doanhthu/**" , "/account/**" , "/cart/**" ).authenticated()
+						"/hoadon/**" , "/doanhthu/**" , "/account/**" , "/cart/**", "/review/**" , "/setting/**" ,
+						"/account/**" ,"/history/**" )
+			   .authenticated() // Tất cả các địa chỉ trên yêu cầu user đăng nhập thành công vào hệ thống
 			    .anyRequest()
-			    .permitAll()
+			    .permitAll() // các địa chỉ còn lại khác với các địa chỉ trên, sẽ được cho phép truy cập
 			    .and()
-				.formLogin().loginPage("/login")
-			   .usernameParameter("email")
-			   .successHandler(databaseLoginSuccessHandler)
-			     .permitAll().and()
-			    .oauth2Login()
-			   	.loginPage("/login")
+				.formLogin() // Cho phép người dùng xác thực bằng form login
+			   .loginPage("/login") // custom địa chỉ login (ví dụ có thể chuyển thành /customLogin)
+			    .usernameParameter("email") // sử dụng field `email` để kiểm tra người dùng có trong hệ thống không
+			    .successHandler(databaseLoginSuccessHandler) // custom khi đăng nhập thành công sẽ làm gì đó
+			    .permitAll() // Tất cả đều được truy cập vào địa chỉ này
+			    .and()
+			    .oauth2Login() // Cho phép người dùng xác thực bằng (Facebook, Google, Git, ... )
+			   	.loginPage("/login") // custom địa chỉ login (ví dụ có thể chuyển thành /customLogin)
 			   	.userInfoEndpoint()
-			   	.userService(customerOauth2UserService)
-			   .and().successHandler(loginSuccessHandler)
+			   	.userService(customerOauth2UserService) // khi đăng nhập thì Spring security sẽ lấy thông tin của
+			   											// customerOauth2UserService để kiểm tra
+			    .and()
+			    .successHandler(loginSuccessHandler) // giống với custom khi đặng nhập thành công trên
 			   	.and()
-				.logout().permitAll().and()
-				.rememberMe().key("AbcDefgHijKlmnOpqrs_1234567890")
-				.tokenValiditySeconds(7 * 24 * 60 * 60).and()
-			   .build();
+				.logout()// logout sễ cho phép tất cả
+			   .permitAll().and()
+				.rememberMe().key("AbcDefgHijKlmnOpqrs_1234567890") // sử dùng rememberMe để khi phần mềm restart
+			   												// hoặc out ra khỏi trang web
+			   												// nó sẽ mặc định nhớ thông tin user đã đăng nhập
+
+				.tokenValiditySeconds(7 * 24 * 60 * 60) // sẽ hết hạn theo milisecond ~ 7 ngày
+			   	.and()
+			   	.build();
 	}
 //	 @Bean
 //	 WebSecurityCustomizer webSecurityCustomizer() {

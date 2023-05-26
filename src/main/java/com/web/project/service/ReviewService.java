@@ -113,6 +113,10 @@ public class ReviewService {
         Review reviewDb = reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundException("Khong tim thay bai danh gia cua ban"));
         return reviewDb ;
     }
+    public void deleteReviewById(Long reviewId) throws ReviewNotFoundException {
+        Review reviewDb = reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundException("Khong tim thay bai danh gia cua ban"));
+        reviewRepository.delete(reviewDb);
+    }
 
 
 }

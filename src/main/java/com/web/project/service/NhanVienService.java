@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 import com.web.project.RandomString;
 import com.web.project.entity.AuthenticationType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ import jakarta.transaction.Transactional;
 
 @Transactional
 @Service
+@Slf4j
 public class NhanVienService {
 	public static final int NhanVienPerPage = 5 ;
 	@Autowired
@@ -53,9 +55,12 @@ public class NhanVienService {
 	}
 
 	public NhanVien save(NhanVien nhanvien) {
+		// Kiểm tra xem tạo mới hay cập nhật
 		boolean isUpdate = (nhanvien.getId() != null);
 		if(isUpdate) {
+			// nếu là cập nhật thì get Nhan vien theo id
 			NhanVien UpdatednhanVien = nhanVienRepository.findById(nhanvien.getId()).get();
+			// Cập nhật password với 2 trường hợp để trống hoặc khác null
 			if(nhanvien.getPassword().isEmpty()) {
 				nhanvien.setPassword(UpdatednhanVien.getPassword());
 			}else {
@@ -110,8 +115,8 @@ public class NhanVienService {
 	public NhanVien findByEmail(String email) {
 		return nhanVienRepository.findByEmail(email);
 	}
-	public NhanVien updateAccount(NhanVien account) {
-		NhanVien nhanVien = nhanVienRepository.findById(account.getId()).get();
+	public NhanVien updateAccount(NhanVien account) throws NhanVienNotFoundException {
+		NhanVien nhanVien = nhanVienRepository.findById(account.getId()).orElseThrow(() -> new NhanVienNotFoundException("Nhan vien not found"));
 		if(!account.getPassword().isEmpty()) {
 			nhanVien.setPassword(account.getPassword());
 			encodePassword(nhanVien);
@@ -128,7 +133,7 @@ public class NhanVienService {
 
 	public void  saveCustomer(NhanVien customer){
 		encodePassword(customer);
-		customer.setTrangThai(true);
+		customer.setTrangThai(false);
 		String randomCode = RandomString.make(64);
 		customer.setVerificationCode(randomCode);
 		customer.setAuthenticationType(AuthenticationType.DATABASE);
@@ -142,9 +147,12 @@ public class NhanVienService {
 
 	public boolean verify(String verification){
 		NhanVien customer = nhanVienRepository.findByVerificationCode(verification);
+
+		// Kiểm tra xem khách hàng này đã tồn tại chưa
 		if(customer == null || customer.isTrangThai()){
 			return false ;
 		}else {
+			// Nếu true cập nhật trạng thái của người dùng về true
 			nhanVienRepository.updateTrangThaiCustomer(customer.getId());
 			return true;
 		}

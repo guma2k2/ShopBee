@@ -13,7 +13,8 @@
             <span style="font-size: 20px;" > [[${ct.soLuong}]] X [[${sanpham.gia}]] = [[${#numbers.formatInteger(ct.gia,3,'POINT')}]] đồng </span>
              <th:block sec:authorize = "hasAuthority('Customer')" >
                  <a th:href="@{'/review/write/'  + ${sanpham.id}}" th:if="${!sanpham.didReview && sanpham.canReview}" class="btn btn-danger" style="width:150px;" >Viết đánh giá</a>
-                 <a th:href="@{'/review/page/1?sortField=reviewTime&sortDir=desc&keyword=' + ${sanpham.ten}}" th:if="${sanpham.didReview && sanpham.canReview}"  class="btn btn-info" style="width:150px;" >Xem đánh giá</a>
+                 <a th:href="@{'/review/page/1?sortField=reviewTime&sortDir=desc&keyword=' + ${sanpham.ten}}"
+                    th:if="${sanpham.didReview && sanpham.canReview}"  class="btn btn-info" style="width:150px;" >Xem đánh giá</a>
              </th:block>
           </div>
       </div>

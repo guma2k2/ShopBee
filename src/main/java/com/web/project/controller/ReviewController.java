@@ -62,10 +62,16 @@ public class ReviewController {
                              @RequestParam("sanPhamId") Integer sanPhamId,
                              RedirectAttributes redirectAttributes) {
         try {
+            // Lấy ra sản phẩm theo Id
             SanPham sanPham = sanPhamService.get(sanPhamId) ;
+
+            // Lấy ra thông tin khách hàng đã đăng nhập
             String email = Utility.getEmailOfAuthenticatedCustomer(request) ;
             NhanVien customer = nhanVienService.findByEmail(email) ;
+
+            // Lưu thông tìn Review mà khách hàng đã nhập thông tin
             Review savedReview = reviewService.saveReview(review , customer , sanPham) ;
+
             model.addAttribute("review" , savedReview ) ;
             model.addAttribute("sanPham" , sanPham) ;
             return "review/review_success" ;
@@ -83,9 +89,13 @@ public class ReviewController {
     public String listByPage(@PathVariable("pageNum") int pageNum , Model model ,
                              @Param("sortField") String sortField ,
                              @Param("sortDir") String sortDir ,
-                             @Param("keyword")String keyword ,HttpServletRequest request) {
+                             @Param("keyword")String keyword ,
+                             HttpServletRequest request) {
+        // Lấy thông tin user đã đăng nhập vào hệ thống
         String email = Utility.getEmailOfAuthenticatedCustomer(request) ;
         NhanVien user = nhanVienService.findByEmail(email) ;
+
+        // Lấy ra mốt trang danh sách Review
         Page<Review> page = reviewService.listByPage(pageNum , sortField , sortDir , keyword, email);
         List<Review> reviews = page.getContent();
         int start = (pageNum - 1) * ReviewService.reviewPerPage + 1;
@@ -104,10 +114,11 @@ public class ReviewController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("keyword", keyword);
         model.addAttribute("reverseSortDir", reverseSortDir);
-
+        // Nếu user có role `Customer` thì chuyển về trang đánh giá sản phẩm của khách hàng
         if(user.hasRole("Customer")) {
             return "review/review_customer";
         }
+        // Nếu user có role `Admin` thì chuyển về trang đánh giá sản phẩm của Admin
         return "review/review_admin";
     }
 
@@ -116,6 +127,7 @@ public class ReviewController {
                                    RedirectAttributes redirectAttributes,
                                    Model model) {
         try {
+            // Lấy ra Review theo id
             Review review = reviewService.get(reviewId) ;
             model.addAttribute("review" , review) ;
             return "review/review_detail_modal" ;
@@ -123,6 +135,16 @@ public class ReviewController {
             redirectAttributes.addFlashAttribute("message" , e.getMessage()) ;
             return "error/404" ;
         }
-
+    }
+    @GetMapping("/review/delete/{reviewid}")
+    public String deleteReview(@PathVariable("reviewId") Long reviewId ,
+                               RedirectAttributes redirectAttributes) {
+        try {
+            reviewService.deleteReviewById(reviewId);
+            return "redirect:/review";
+        } catch (ReviewNotFoundException e) {
+            redirectAttributes.addFlashAttribute("message" , e.getMessage());
+            return "redirect:/review";
+        }
     }
 }

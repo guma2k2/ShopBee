@@ -6,13 +6,14 @@
 <div th:replace="~{navigation :: nav}"></div>
 
 <div class="container-fluid">
-    <div th:if="${message != null}" class="alert alert-warning" role="alert" >
+    <div th:if="${message != null}" class="alert alert-warning text-center" role="alert" >
         [[${message}]]
     </div>
     <h2 class="text-center">Quản lý đơn đặt hàng</h2>
     <div class="row m-1">
         <th:block th:each="order : ${listHd}">
-            <div class="card col-3" style="height: 300px;" >
+            <div class=" col-4" >
+                    <div class="card2 p-2" style="height: 300px;" >
                         <div class="row" style="border-bottom: 1px solid black;" >
                             <div class="col-6">
                                 <span>Order ID #[[${order.id}]]</span>
@@ -26,31 +27,32 @@
                                 </div>
                             </div>
                         </div>
-                    <div class="card-body" style="position: relative;" >
-                        <div style="margin-bottom: 10px;" >
-                            <i class="fa fa-user"></i>
-                            <b>[[${order.customer.email}]]</b>
-                        </div>
-                        <div style="margin-bottom: 10px;" >
-                            <i class="fa fa-home"></i>
-                            [[${order.recipientAddress}]]
-                        </div>
-                        <div style="margin-bottom: 10px;" >
-                            <i class="fa fa-phone-alt"></i>
-                            [[${order.phoneNumber}]]
-                        </div>
-                        <div style="margin-bottom: 10px;" >
-                            <div>Total: <span>[[${#numbers.formatInteger(order.thanhTien,3,'POINT')}]] đồng</span></div>
-                        </div>
-                        <div class="row" style="position: absolute; bottom: 10px; "  >
-                            <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.picked}, 'PICKED', 'fa-people-carry')}"></div>
+                        <div class="card-body" style=" height: 200px;" >
+                            <div style="margin-bottom: 10px;" >
+                                <i class="fa fa-user"></i>
+                                <b>[[${order.customer.fullName}]]</b>
+                            </div>
+                            <div style="margin-bottom: 10px;" >
+                                <i class="fa fa-home"></i>
+                                [[${order.recipientAddress}]]
+                            </div>
+                            <div style="margin-bottom: 10px;" >
+                                <i class="fa fa-phone-alt"></i>
+                                [[${order.phoneNumber}]]
+                            </div>
+                            <div style="margin-bottom: 10px;" >
+                                <div>Total: <span>[[${#numbers.formatInteger(order.thanhTien,3,'POINT')}]] đồng</span></div>
+                            </div>
+                            <div class="row mt-2"   >
+                                <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.picked}, 'PICKED', 'fa-people-carry')}"></div>
 
-                            <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.shipping}, 'SHIPPING', 'fa-shipping-fast')}"></div>
+                                <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.shipping}, 'SHIPPING', 'fa-shipping-fast')}"></div>
 
-                            <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.delivered}, 'DELIVERED', 'fa-box-open')}"></div>
+                                <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.delivered}, 'DELIVERED', 'fa-box-open')}"></div>
 
-                            <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.returned}, 'RETURNED', 'fa-undo')}"></div>
+                                <div th:replace="~{hoadon/hoadon_status_fragment :: content(${order.returned}, 'RETURNED', 'fa-undo')}"></div>
 
+                            </div>
                         </div>
                     </div>
                 </div>

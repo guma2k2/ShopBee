@@ -6,7 +6,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
     <div th:replace="~{navigation :: nav}"></div>
      <div>
-       <h2 class = "text-center">Account</h2>
+       <h2 class = "text-center">Tài khoản của bạn</h2>
      </div>
 	<div th:if="${message != null}"
 		 class="alert alert-success text-center">[[${message}]]
@@ -23,19 +23,19 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 			</div>
 		</div>
 		<div class="form-group row">
-			<label class="col-sm-4 col-form-label">Ho:</label>
+			<label class="col-sm-4 col-form-label">Họ:</label>
 			<div class="col-sm-8">
 				<input type="text" class="form-control" th:field="*{ho}" required  maxlength="128"  />
 			</div>
 		</div>
 		<div class="form-group row">
-			<label class="col-sm-4 col-form-label">Ten:</label>
+			<label class="col-sm-4 col-form-label">Tên:</label>
 			<div class="col-sm-8">
 				<input type="text" class="form-control" th:field="*{ten}" required  maxlength="128"  />
 			</div>
 		</div>
 		<div class="form-group row">
-			<label class="col-sm-4 col-form-label">Password:</label>
+			<label class="col-sm-4 col-form-label">Mật khẩu:</label>
 			<div class="col-sm-8">
 				<input type="password" th:field="*{password}" class="form-control"
 					placeholder="leave blank if you don't want to change password"
@@ -45,7 +45,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 			</div>
 		</div>
 		<div class="form-group row">
-			<label class="col-sm-4 col-form-label">Confirm Password:</label>
+			<label class="col-sm-4 col-form-label">Xác nhận mật khẩu:</label>
 			<div class="col-sm-8">
 				<input type="password" id="confirmPassword" class="form-control"
 					minlength="8" maxlength="20"
@@ -54,19 +54,20 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 			</div>
 		</div>	
 		<div class="form-group row">
-			<label class="col-sm-4 col-form-label">SDT:</label>
+			<label class="col-sm-4 col-form-label">Sđt:</label>
 			<div class="col-sm-8">
 				<input type="text" class="form-control" th:field="*{sdt}" required minlength="8" maxlength="128"  />
 			</div>
 		</div>
 		<div class="form-group row">
-			<label class="col-sm-4 col-form-label">Dia chi:</label>
+			<label class="col-sm-4 col-form-label">Địa chỉ:</label>
 			<div class="col-sm-8">
 				<input type="text" class="form-control" th:field="*{diaChi}" required  maxlength="128"  />
 			</div>
 		</div> 
 		<div class="form-group row" sec:authorize = "hasAuthority('Admin')" >
-			<label class="col-sm-4 col-form-label">Vai tro:</label>
+
+			<label class="col-sm-4 col-form-label">Vai trò:</label>
 			<div class="col-sm-8">
 			   <span><b>[[${nhanvien.roles}]]</b></span>
 			</div>
@@ -82,7 +83,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 			<div class="col-sm-8">
 			     <input type = "hidden" th:field = "*{photos}">
 			    <input type = "file" id="fileImage" name = "image" accept = "image/png , image/jpeg"  class = "mb-2"/>
-			    <img class = "img-fluid" id = "thumbnail" alt="" th:src="@{${nhanvien.photosImagePath}}">
+			    <img style="width: 50px ; height : 50px; object-fit: cover;" class = "img-fluid" id = "thumbnail" alt="" th:src="@{${nhanvien.photosImagePath}}">
 			</div>
 		</div>  
         <div class = "addNv text-center">

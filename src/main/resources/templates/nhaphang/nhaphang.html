@@ -51,7 +51,10 @@
             <td>[[${sp.id}]]</td>
             <td>[[${sp.nhanVien.fullName}]]</td>
             <td>[[${sp.sanPham.ten}]]</td>
-            <td>[[${sp.size.ten}]]</td>
+            <td>
+                <span th:if="${sp.size != null}" >[[${sp.size.ten}]]</span>
+                <span th:if="${sp.size == null}" >No size</span>
+            </td>
             <td th:text ="${#temporals.format(sp.thoiGianNhap, 'dd-MM-yyyy HH:mm')}" ></td>
             <td>[[${sp.soLuong}]]</td>
             <td>[[${sp.giaMoiSanPham}]]</td>

@@ -6,11 +6,10 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
    <div th:replace="~{navigation :: nav}"></div>
 
 	<div class="container-fluid">
-		<h2>Quan ly loai san pham</h2>
+		<h2>Quản lý loại sản phẩm</h2>
 		<a class = "btn btn-primary" th:href="@{/loaisanpham/new}">
 			<i class="fa fa-plus"></i>
 		</a>
-		
 		<div>
 			<form th:action="@{/loaisanpham/page/1}" class="form-inline m-3">
 				<input type="hidden" name="sortField" th:value="${sortField}" /> <input

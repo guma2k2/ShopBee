@@ -13,6 +13,8 @@ public interface CartRepository extends JpaRepository<Cart , Integer> {
 
     @Query("SELECT c FROM Cart c WHERE c.khachHang = ?1 AND c.sanPham = ?2 AND c.size = ?3")
     public Cart findByKhachHangAndSanPhamSize(Customer khachHang, SanPham sanPham , Size size);
+    @Query("SELECT c FROM Cart c WHERE c.khachHang = ?1 AND c.sanPham = ?2 ")
+    public Cart findByKhachHangAndSanPham(Customer khachHang, SanPham sanPham );
     @Query("SELECT c FROM Cart c WHERE c.khachHang = ?1")
     public List<Cart> findByKhachHang(Customer khachHang);
 

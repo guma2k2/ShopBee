@@ -1,8 +1,11 @@
 package com.web.project.service;
 
+import com.web.project.entity.SanPham;
 import com.web.project.entity.Size;
+import com.web.project.repository.SanPhamRepository;
 import com.web.project.repository.SizeRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +13,13 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class SizeService {
 
     @Autowired
     private SizeRepository sizeRepository ;
+    @Autowired
+    private SanPhamService sanPhamService ;
 
     public void saveSize(Size size) {
         sizeRepository.save(size);
@@ -27,15 +33,21 @@ public class SizeService {
         return sizeRepository.findBySanPham(sanPhamId);
     }
 
-    public void updateSoLuong(int soLuong , Long sizeId) throws SanPhamNotFoundException {
-        Size size =  get(sizeId);
+    public void updateSoLuong(int soLuong , Size size, SanPham sanPham) throws SanPhamNotFoundException {
         System.out.println(soLuong);
-        if(size.getSoLuong() == 0) {
-            sizeRepository.updateSoLuong(soLuong, sizeId);
-            System.out.println(size.getSoLuong());
+        if (size != null) {
+            Long sizeId = size.getId();
+            if(size.getSoLuong() == 0) {
+                sizeRepository.updateSoLuong(soLuong, sizeId);
+                log.info(String.valueOf(size.getSoLuong()));
+            } else {
+                sizeRepository.updateSoLuong(soLuong + size.getSoLuong() , sizeId);
+                log.info(String.valueOf(size.getSoLuong()));
+            }
         } else {
-            System.out.println(size.getSoLuong());
-            sizeRepository.updateSoLuong(soLuong + size.getSoLuong() , sizeId);
+            int currentQuantity = sanPham.getSoLuong();
+            int newQuantity = soLuong + currentQuantity ;
+            sanPhamService.updateQuantity(newQuantity, sanPham);
         }
     }
 }
