@@ -336,7 +336,7 @@ public class MainController {
 			String link =  Utility.getSiteURL(request) +  "/reset_password?token=" + codeVerify;
 
 			// Send email
-			sendVerifyPassword(request ,email,link);
+			sendVerifyPassword(email,link);
 
 			model.addAttribute("message" , "Gui email thanh cong !!" );
 		} catch (NhanVienNotFoundException e) {
@@ -362,21 +362,20 @@ public class MainController {
 		}
 	}
 
-	private void sendVerifyPassword(HttpServletRequest request, String email , String link)
+	private void sendVerifyPassword( String email , String link)
 			throws MessagingException, UnsupportedEncodingException {
 		JavaMailSenderImpl mailSender = Utility.prepareMailSender(settingService);
 		String toAddress = email;
 		String subject = "Xác nhân email và thay đổi mật khẩu " ;
-		String content = "<p>Xin chao,</p>" +
-						"<p> Ban da yeu cau thay doi mat khau </p>" +
-				 		"Vui long chon link ben duoi de thay doi mat khau:" +
+		String content = "<p>Xin chào,</p>" +
+						"<p> Bạn đã yêu cầu thay đổi mật khẩu </p>" +
+				 		"Vui lòng chọn link bên dưới để thay đổi mật khẩu:" +
 						"<p> <a href =\"" +link+ "\">Thay doi mat khau</a> </p>" +
 						"<br>" +
-						"<p>Xoa mail neu ban muon, ngay khi thay doi duoc mat khau</p>";
+						"<p>Xóa mail nếu bạn muốn, ngay khi thay đổi được mật khẩu</p>";
 
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
-
 		helper.setFrom(settingService.getFromAddress(), settingService.getSenderName());
 		helper.setTo(toAddress);
 		helper.setSubject(subject);

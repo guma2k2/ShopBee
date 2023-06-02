@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  mysql:
+    container_name: mysqldb
+    image: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=nhom11
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=123456
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./shopbee.sql:/docker-entrypoint-initdb.d/init.sql
+  web:
+    image: shopbee-spring
+    ports:
+      - "8091:8080"
+    depends_on:
+      - mysql
+volumes:
+  mysql-data:
