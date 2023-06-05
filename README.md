@@ -13,10 +13,10 @@
 
 #### With none Docker :
 ##### Step 1 : In My SQLWorkbench, create a schemas with name : nhom11
-##### Step 2 : You can see my script sql with name `ShopBee.sql`. After you create schemas success, you can import this script 
+##### Step 2 : You can see my script sql with name `shopbee.sql` in this git . After you create schemas success, you can import this script 
 ##### Step 3 : Run project with the link : http://localhost:8091/
 
 # I hope it help you. 
 # Note : 
-## This is my first readme, it can have some mistake and confusing 
-## Anyway, thanks for watching :)
+### This is my first readme, it can have some mistake and confusing.
+
